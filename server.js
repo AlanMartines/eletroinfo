@@ -8,7 +8,6 @@ const path = require('path');
 const http = require('http').Server(app);
 const config = require('./config.global');
 const { logger } = require('./utils/logger');
-const connectzapApi = require("./engines/connectzap");
 const eletroinfo = require("./engines/eletroinfo");
 // https://www.scaleway.com/en/docs/tutorials/socket-io/
 const io = require('socket.io')(http, {
@@ -187,5 +186,4 @@ process.on('SIGUSR2', exitHandler.bind(null, {
 process.on('uncaughtException', exitHandler.bind(null, {
 	exit: true
 }));
-//
 //
