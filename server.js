@@ -6,9 +6,13 @@ const app = express();
 const cors = require('cors');
 const path = require('path');
 const http = require('http').Server(app);
+const swaggerUi = require('swagger-ui-express')
+const yaml = require('js-yaml');
 const config = require('./config.global');
 const { logger } = require('./utils/logger');
 const eletroinfo = require("./engines/eletroinfo");
+const swaggerSpec = require('./swagger.js');
+const yamlSpec = yaml.dump(swaggerSpec);
 // https://www.scaleway.com/en/docs/tutorials/socket-io/
 const io = require('socket.io')(http, {
 	cors: {
@@ -101,6 +105,7 @@ try {
 	});
 	//
 	app.use("/", eletroinfo);
+	app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 	//
 	const sockets = {};
 	//socket
