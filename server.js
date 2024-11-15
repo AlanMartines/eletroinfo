@@ -134,11 +134,11 @@ try {
 			const port = http.address().port;
 			if (config.DOMAIN_SSL) {
 				logger?.info(`- HTTP Server running on`);
-				logger?.info(`- To start: https://${config.DOMAIN_SSL}/Start`);
+				logger?.info(`- To API: https://${config.DOMAIN_SSL}`);
 				logger?.info(`- To doc: https://${config.DOMAIN_SSL}/api-doc`);
 			} else {
 				logger?.info(`- HTTP Server running on`);
-				logger?.info(`- To start: http://${config.HOST}:${config.PORT}/Start`);
+				logger?.info(`- To API: http://${config.HOST}:${config.PORT}`);
 				logger?.info(`- To doc: http://${config.HOST}:${config.PORT}/api-doc`);
 			}
 		}
