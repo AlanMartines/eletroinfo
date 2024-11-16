@@ -108,8 +108,9 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 //
 router.post('/ConsultaIP', async (req, res, next) => {
 	//
+	let requestBody = req?.body;
 	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
-	let clientIp = requestIp?.getClientIp(req);
+	let clientIp = requestBody?.ip ? requestBody?.ip : requestIp?.getClientIp(req);
 	//
 	try {
 		$.get(`https://get.geojs.io/v1/ip/geo/${clientIp}.json`, function (result) {
