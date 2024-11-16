@@ -100,7 +100,7 @@ try {
 	});
 	//
 	// Rotas
-	app.get('/status', async (req, res, next) => {
+	app.get('/', async (req, res, next) => {
 		res.sendFile(path.join(__dirname, '/view.html'));
 	});
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
@@ -133,11 +133,11 @@ try {
 			const port = http.address().port;
 			if (config.DOMAIN_SSL) {
 				logger?.info(`- HTTP Server running on`);
-				logger?.info(`- To status: https://${config.DOMAIN_SSL}/status`);
+				logger?.info(`- To status: https://${config.DOMAIN_SSL}/`);
 				logger?.info(`- To doc: https://${config.DOMAIN_SSL}/docs`);
 			} else {
 				logger?.info(`- HTTP Server running on`);
-				logger?.info(`- To status: http://${config.HOST}:${config.PORT}/status`);
+				logger?.info(`- To status: http://${config.HOST}:${config.PORT}/`);
 				logger?.info(`- To doc: http://${config.HOST}:${config.PORT}/docs`);
 			}
 		}
