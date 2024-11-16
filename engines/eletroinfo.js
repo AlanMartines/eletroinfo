@@ -37,7 +37,6 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		};
 		//
 		// Configurando o cabeçalho e retornando o erro
-		res.setHeader('Content-Type', 'application/json');
 		return res.status(resultRes.status).json({
 			"Status": resultRes
 		});
@@ -54,7 +53,6 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		};
 		//
 		// Configurando o cabeçalho e retornando o erro
-		res.setHeader('Content-Type', 'application/json');
 		return res.status(resultRes.status).json({
 			"Status": resultRes
 		});
@@ -67,7 +65,6 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		};
 		//
 		// Configurando o cabeçalho e retornando o erro
-		res.setHeader('Content-Type', 'application/json');
 		return res.status(resultRes.status).json({
 			"Status": resultRes
 		});
