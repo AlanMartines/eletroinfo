@@ -27,9 +27,6 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 	let quantidade_baterias = requestBody?.quantidade_baterias;
 	let tipo_bateria = requestBody?.tipo_bateria;
 	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
 	// Verificando se algum campo obrigatório está ausente
 	if (!carga_aplicada || !tensao_bateria || !capacidade_bateria || !quantidade_baterias || !tipo_bateria) {
 		let resultRes = {
@@ -75,9 +72,6 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 			"Status": resultRes
 		});
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
 	//
 });
 //
