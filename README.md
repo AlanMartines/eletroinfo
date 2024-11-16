@@ -1,3 +1,10 @@
+Índice
+======
+
+1.  [Endpoint - Cálculo de Autonomia de Nobreak](#endpoint---calculo-de-autonomia-de-nobreak)
+2.  [Endpoint - Viabilidade da Instalação CFTV](#endpoint---viabilidade-da-instalacao-cftv)
+3.  [Endpoint - Consulta de IP](#endpoint---consulta-de-ip)
+
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
 ## Detalhes do Endpoint
