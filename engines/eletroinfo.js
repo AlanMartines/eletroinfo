@@ -113,16 +113,16 @@ router.post('/ConsultaIP', async (req, res, next) => {
 	let clientIp = requestBody?.ip ? requestBody?.ip : requestIp?.getClientIp(req);
 	//
 	try {
-		$.get(`https://get.geojs.io/v1/ip/geo/${clientIp}.json`, function (result) {
-			let resultIp = result;
-			// Retornando sucesso com o formato esperado
+		const res = await fetch(`https://get.geojs.io/v1/ip/geo/${clientIp}.json`);
+		if (res.ok) {
+			let data = await res.json();
 			return res.status(200).json({
 				error: false,
 				status: 200,
-				result: resultIp,
+				result: data,
 				message: "Consulta realizada com sucesso."
 			});
-		});
+		}
 	} catch (error) {
 		// Capturando e retornando erro interno
 		console.log(error);
