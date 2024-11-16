@@ -106,7 +106,7 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 });
 //
 //
-router.get('/ConsultaIP', async (req, res, next) => {
+router.post('/ConsultaIP', async (req, res, next) => {
 	//
 	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
 	let clientIp = requestIp?.getClientIp(req);
