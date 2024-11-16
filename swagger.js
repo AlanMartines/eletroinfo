@@ -10,7 +10,7 @@ module.exports = {
 	"openapi":"3.0.3",
 	"info":{
 		 "description":"EletroInfo :: Eletro Informática - Para assegurar a excelência dos nossos serviços, a Eletroinfo continua a explorar e adotar constantemente inovações tecnológicas, com o objetivo primordial de satisfazer plenamente os nossos clientes.",
-		 "version":"1.0.3",
+		 "version":"1.0.0",
 		 "title":"API - Eletro Info"
 	},
 	"tags":[
@@ -66,9 +66,6 @@ module.exports = {
 		 }
 	],
 	"components":{
-		 "securitySchemes":{
-				
-		 },
 		 "schemas":{
 				
 		 }
