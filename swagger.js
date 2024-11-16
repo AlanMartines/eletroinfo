@@ -13,51 +13,51 @@ module.exports = {
 		 "version":"1.0.0",
 		 "title":"API - Eletro Info"
 	},
-	"tags":[
-		 {
-				"name":"Cálculo de Autonomia de Nobreak",
-				"description":"Endpoint para calcular a autonomia de um nobreak."
-		 },
-		 {
-				"name":"Viabilidade de Instalação de CFTV",
-				"description":"Endpoint para verificar a viabilidade de instalação de sistemas de CFTV."
-		 },
-		 {
-				"name":"Consulta de IP",
-				"description":"Endpoint para retornar informações básicas sobre um endereço IP, como tipo, localização e provedor."
-		 },
-		 {
-				"name":"Calculadora de IP (IPv4)",
-				"description":"Endpoint para calcular sub-redes IPv4, fornecendo informações como máscara de rede, IP inicial e final, e quantidade de hosts disponíveis."
-		 },
-		 {
-				"name":"Calculadora de IP (IPv6)",
-				"description":"Endpoint para calcular sub-redes IPv6, fornecendo informações como máscara de rede, IP inicial e final, e quantidade de hosts disponíveis."
-		 },
-		 {
-				"name":"Geolocalização de IP",
-				"description":"Endpoint para determinar a localização aproximada de um endereço IP, incluindo país, cidade e provedor de internet."
-		 },
-		 {
-				"name":"Teste de Portas de Rede",
-				"description":"Endpoint para verificar a abertura ou bloqueio de portas específicas em uma rede, útil para diagnósticos de conexão."
-		 },
-		 {
-				"name":"Consulta de Fabricante de MAC",
-				"description":"Endpoint para identificar o fabricante de um dispositivo com base no endereço MAC fornecido."
-		 },
-		 {
-				"name":"Calculadora de Transferência de Dados",
-				"description":"Endpoint para calcular o tempo estimado de transferência de dados com base no tamanho do arquivo e na velocidade de conexão."
-		 },
-		 {
-				"name":"Cálculo de Latência e Largura de Banda",
-				"description":"Endpoint para calcular a performance da sua memória RAM com precisão, usando nossa calculadora de latência e largura de banda."
-		 },
-		 {
-				"name":"Calculadora de Metabolismo Basal (TMB)",
-				"description":"Endpoint para calcular o metabolismo basal de uma pessoa com base em dados como idade, peso, altura e gênero."
-		 }
+	"tags": [
+		{
+			"name": "Cálculo de Autonomia de Nobreak",
+			"description": "Calcula a autonomia de um nobreak com base no consumo, potência e tempo de operação, ajudando a determinar o modelo mais adequado para sua necessidade."
+		},
+		{
+			"name": "Viabilidade de Instalação de CFTV",
+			"description": "Analisa a viabilidade de instalação de sistemas de CFTV considerando fatores como área coberta, quantidade de câmeras e infraestrutura disponível."
+		},
+		{
+			"name": "Consulta de IP",
+			"description": "Fornece informações detalhadas sobre um endereço IP, como tipo (IPv4/IPv6), localização aproximada e provedor de internet."
+		},
+		{
+			"name": "Calculadora de IP (IPv4)",
+			"description": "Realiza cálculos de sub-redes IPv4, exibindo detalhes como máscara de rede, IP inicial e final, além da quantidade de hosts disponíveis."
+		},
+		{
+			"name": "Calculadora de IP (IPv6)",
+			"description": "Calcula sub-redes IPv6, gerando informações como prefixo de rede, IP inicial e final, e o total de endereços disponíveis na sub-rede."
+		},
+		{
+			"name": "Geolocalização de IP",
+			"description": "Localiza geograficamente um endereço IP, fornecendo informações como país, cidade e provedor associado ao endereço."
+		},
+		{
+			"name": "Teste de Portas de Rede",
+			"description": "Verifica a disponibilidade ou bloqueio de portas específicas em uma rede, auxiliando no diagnóstico de problemas de conectividade."
+		},
+		{
+			"name": "Consulta de Fabricante de MAC",
+			"description": "Identifica o fabricante de dispositivos a partir de endereços MAC, útil para diagnósticos e organização de redes."
+		},
+		{
+			"name": "Calculadora de Transferência de Dados",
+			"description": "Calcula o tempo necessário para transferir arquivos com base no tamanho e na velocidade da conexão, otimizando o planejamento de transferências."
+		},
+		{
+			"name": "Cálculo de Latência e Largura de Banda",
+			"description": "Avalia a performance da memória RAM calculando a latência e a largura de banda, fornecendo métricas detalhadas para otimização do sistema."
+		},
+		{
+			"name": "Calculadora de Metabolismo Basal (TMB)",
+			"description": "Calcula o metabolismo basal de uma pessoa usando dados como idade, peso, altura e gênero, auxiliando no planejamento de dietas e treinos."
+		}
 	],
 	"servers":[
 		 {
@@ -71,7 +71,7 @@ module.exports = {
 		 }
 	},
 	"paths":{
-		 "/api/Start":{
+		 "/api/AutonomiaNobreak":{
 				"post":{
 					 "tags":[
 							"Cálculo de Autonomia de Nobreak"
