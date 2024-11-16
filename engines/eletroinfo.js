@@ -19,57 +19,44 @@ const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 */
 //
 router.post('/AutonomiaNobreak', async (req, res, next) => {
-	//
+
 	let requestBody = req?.body;
 	let carga_aplicada = requestBody?.carga_aplicada;
 	let tensao_bateria = requestBody?.tensao_bateria;
 	let capacidade_bateria = requestBody?.capacidade_bateria;
 	let quantidade_baterias = requestBody?.quantidade_baterias;
 	let tipo_bateria = requestBody?.tipo_bateria;
-	//
+
 	// Verificando se algum campo obrigatório está ausente
 	if (!carga_aplicada || !tensao_bateria || !capacidade_bateria || !quantidade_baterias || !tipo_bateria) {
-		let resultRes = {
-			"error": true,
-			"status": 404,
-			"result": null,
-			"message": 'Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente.'
-		};
-		//
-		// Configurando o cabeçalho e retornando o erro
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+		return res.status(400).json({
+			error: true,
+			status: 400,
+			result: null,
+			message: 'Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente.'
 		});
 	}
-	//
+
 	try {
+		// Calculando a autonomia
 		const resultado = calcularAutonomia(carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria);
-		res.status(200).json(resultado);
-		let resultRes = {
-			"error": false,
-			"status": 200,
-			"result": resultado,
-			"message": "Cálculo realizado com sucesso."
-		};
-		//
-		// Configurando o cabeçalho e retornando o erro
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+
+		// Retornando sucesso com o formato esperado
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: resultado, // Inclui o objeto com tensaocorte e autonomia
+			message: "Cálculo realizado com sucesso."
 		});
 	} catch (error) {
-		let resultRes = {
-			"error": true,
-			"status": 500,
-			"result": null,
-			"message": 'Erro ao calcular a autonomia'
-		};
-		//
-		// Configurando o cabeçalho e retornando o erro
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+		// Capturando e retornando erro interno
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Erro ao calcular a autonomia'
 		});
 	}
-	//
 });
 //
 //
