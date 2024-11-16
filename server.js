@@ -100,11 +100,11 @@ try {
 	});
 	//
 	// Rotas
-	app.use("/", eletroinfo);
 	app.get('/status', async (req, res, next) => {
 		res.sendFile(path.join(__dirname, '/view.html'));
 	});
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+	app.use("/api", eletroinfo);
 	//
 	const sockets = {};
 	//socket
