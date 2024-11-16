@@ -101,7 +101,7 @@ try {
 	//
 	// Rotas
 	app.use("/", eletroinfo);
-	app.get('/status', function (req, res) {
+	app.get('/status', async (req, res, next) => {
 		res.sendFile(path.join(__dirname, '/view.html'));
 	});
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
