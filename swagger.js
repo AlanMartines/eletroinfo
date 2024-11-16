@@ -76,8 +76,8 @@ module.exports = {
 					 "tags":[
 							"Cálculo de Autonomia de Nobreak"
 					 ],
-					 "summary":"Iniciar sessão",
-					 "description":"Comando que inicia a sessão.",
+					 "summary":"",
+					 "description":"Comando que inicia o calculo.",
 					 "requestBody":{
 							"required":true,
 							"content":{
