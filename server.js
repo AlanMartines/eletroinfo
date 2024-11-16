@@ -6,13 +6,13 @@ const app = express();
 const cors = require('cors');
 const path = require('path');
 const http = require('http').Server(app);
-const swaggerUi = require('swagger-ui-express')
+const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
 const config = require('./config.global');
 const { logger } = require('./utils/logger');
 const eletroinfo = require("./engines/eletroinfo");
-const swaggerSpec = require('./swagger.js');
-const yamlSpec = yaml.dump(swaggerSpec);
+const swaggerFile = require('./swagger.js');
+const yamlSpec = yaml.dump(swaggerFile);
 // https://www.scaleway.com/en/docs/tutorials/socket-io/
 const io = require('socket.io')(http, {
 	cors: {
@@ -100,12 +100,11 @@ try {
 	});
 	//
 	// Rotas
-	app.get('/', function (req, res) {
+	app.use("/", eletroinfo);
+	app.get('/status', function (req, res) {
 		res.sendFile(path.join(__dirname, '/view.html'));
 	});
-	//
-	app.use("/", eletroinfo);
-	app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	//
 	const sockets = {};
 	//socket
@@ -134,12 +133,12 @@ try {
 			const port = http.address().port;
 			if (config.DOMAIN_SSL) {
 				logger?.info(`- HTTP Server running on`);
-				logger?.info(`- To API: https://${config.DOMAIN_SSL}`);
-				logger?.info(`- To doc: https://${config.DOMAIN_SSL}/api-doc`);
+				logger?.info(`- To status: https://${config.DOMAIN_SSL}/status`);
+				logger?.info(`- To doc: https://${config.DOMAIN_SSL}/docs`);
 			} else {
 				logger?.info(`- HTTP Server running on`);
-				logger?.info(`- To API: http://${config.HOST}:${config.PORT}`);
-				logger?.info(`- To doc: http://${config.HOST}:${config.PORT}/api-doc`);
+				logger?.info(`- To status: http://${config.HOST}:${config.PORT}/status`);
+				logger?.info(`- To doc: http://${config.HOST}:${config.PORT}/docs`);
 			}
 		}
 		//
