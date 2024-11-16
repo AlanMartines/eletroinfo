@@ -1,7 +1,7 @@
-function calcularViabilidadeInstalacaoCFTV(Bitola,	vfonte, vcamera,	icamera,	distanciau) {
+function ViabilidadeCFTV(bitola_cabo,	tensao_fonte, tensao_camera,	corrente_camera,	distancia) {
 	// Determinando a resistência com base no valor de Rcabo
 	let resistencia;
-	switch (Bitola) {
+	switch (bitola_cabo) {
 		case 0:
 			resistencia = 0.130584;
 			break;
@@ -31,12 +31,12 @@ function calcularViabilidadeInstalacaoCFTV(Bitola,	vfonte, vcamera,	icamera,	dis
 	}
 
 	// Realizando os cálculos
-	const vcmim = vcamera * 0.9; // Tensão mínima da câmera
-	const rmax = ((vfonte / vcmim) - 1) * (vcamera / icamera) / 2; // Resistência máxima permitida
-	const rtotal = distanciau * 2 * resistencia; // Resistência total
+	const vcmim = tensao_camera * 0.9; // Tensão mínima da câmera
+	const rmax = ((tensao_fonte / vcmim) - 1) * (tensao_camera / corrente_camera) / 2; // Resistência máxima permitida
+	const rtotal = distancia * 2 * resistencia; // Resistência total
 	const distanciamax = rmax / resistencia; // Distância máxima permitida
-	const isaida = vfonte / ((rtotal / 2) * 2 + vcamera / icamera); // Corrente de saída
-	const vsaida = vfonte - (isaida * (rtotal / 2) * 2); // Tensão fornecida
+	const isaida = tensao_fonte / ((rtotal / 2) * 2 + tensao_camera / corrente_camera); // Corrente de saída
+	const vsaida = tensao_fonte - (isaida * (rtotal / 2) * 2); // Tensão fornecida
 
 	// Determinando se a instalação é viável
 	const viavel = rmax >= (rtotal / 2);
@@ -53,5 +53,5 @@ function calcularViabilidadeInstalacaoCFTV(Bitola,	vfonte, vcamera,	icamera,	dis
 
 // Exportando as funções
 module.exports = {
-	calcularViabilidadeInstalacaoCFTV
+	ViabilidadeCFTV
 };

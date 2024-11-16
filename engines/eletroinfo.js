@@ -83,7 +83,7 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 
 	try {
 		// Calculando a autonomia
-		const resultado = ViabilidadeCFTV(carga_aplicada, bitola_cabo, distancia, tensao_camera, corrente_camera);
+		const resultado = ViabilidadeCFTV(bitola_cabo,	tensao_fonte, tensao_camera,	corrente_camera,	distancia);
 
 		// Retornando sucesso com o formato esperado
 		return res.status(200).json({
