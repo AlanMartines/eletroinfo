@@ -7,6 +7,7 @@ const mime = require('mime-types');
 const moment = require('moment');
 moment()?.format('YYYY-MM-DD HH:mm:ss');
 moment?.locale('pt-br');
+const requestIp = require('request-ip')
 const config = require('../config.global');
 const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
@@ -83,7 +84,7 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 
 	try {
 		// Calculando a autonomia
-		const resultado = ViabilidadeCFTV(bitola_cabo,	tensao_fonte, tensao_camera,	corrente_camera,	distancia);
+		const resultado = ViabilidadeCFTV(bitola_cabo, tensao_fonte, tensao_camera, corrente_camera, distancia);
 
 		// Retornando sucesso com o formato esperado
 		return res.status(200).json({
@@ -101,33 +102,35 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 			message: 'Erro ao calcular a viabilidade'
 		});
 	}
-	
+
 });
 //
 //
-router.post('/ConsultaIP', async (req, res, next) => {
+router.get('/ConsultaIP', async (req, res, next) => {
 	//
-	let requestBody = req?.body;
+	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
+	let clientIp = requestIp?.getClientIp(req);
 	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	try {
+		$.get(`https://get.geojs.io/v1/ip/geo/${clientIp}.json`, function (result) {
+			let resultIp = result;
+			// Retornando sucesso com o formato esperado
+			return res.status(200).json({
+				error: false,
+				status: 200,
+				result: resultIp,
+				message: "Consulta realizada com sucesso."
+			});
 		});
-		//
+	} catch (error) {
+		// Capturando e retornando erro interno
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Erro ao realizar consulta.'
+		});
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
 	//
 });
 //
