@@ -10,6 +10,7 @@ moment?.locale('pt-br');
 const config = require('../config.global');
 const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
+const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
 //
 //
 /*
@@ -45,7 +46,7 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		return res.status(200).json({
 			error: false,
 			status: 200,
-			result: resultado, // Inclui o objeto com tensaocorte e autonomia
+			result: resultado,
 			message: "Cálculo realizado com sucesso."
 		});
 	} catch (error) {
@@ -57,33 +58,50 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 			message: 'Erro ao calcular a autonomia'
 		});
 	}
+
 });
 //
 //
 router.post('/ViabilidadeCFTV', async (req, res, next) => {
-	//
+
 	let requestBody = req?.body;
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	let tensao_fonte = requestBody?.tensao_fonte;
+	let bitola_cabo = requestBody?.bitola_cabo;
+	let distancia = requestBody?.distancia;
+	let tensao_camera = requestBody?.tensao_camera;
+	let corrente_camera = requestBody?.corrente_camera;
+
+	// Verificando se algum campo obrigatório está ausente
+	if (!tensao_fonte || !bitola_cabo || !distancia || !tensao_camera || !corrente_camera) {
+		return res.status(400).json({
+			error: true,
+			status: 400,
+			result: null,
+			message: 'Todos os valores devem ser preenchidos: tensao_fonte, bitola_cabo, distancia, tensao_camera, corrente_camera. Por favor, corrija e tente novamente.'
 		});
-		//
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
+
+	try {
+		// Calculando a autonomia
+		const resultado = ViabilidadeCFTV(carga_aplicada, bitola_cabo, distancia, tensao_camera, corrente_camera);
+
+		// Retornando sucesso com o formato esperado
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: resultado,
+			message: "Cálculo realizado com sucesso."
+		});
+	} catch (error) {
+		// Capturando e retornando erro interno
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Erro ao calcular a autonomia'
+		});
+	}
+	
 });
 //
 //
