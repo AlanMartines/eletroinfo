@@ -9,9 +9,7 @@ moment()?.format('YYYY-MM-DD HH:mm:ss');
 moment?.locale('pt-br');
 const config = require('../config.global');
 const { logger } = require('../utils/logger');
-const agent = new https.Agent({
-	rejectUnauthorized: false
-});
+const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 //
 //
 /*
@@ -34,7 +32,7 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 	//
 	// Verificando se algum campo obrigatório está ausente
 	if (!carga_aplicada || !tensao_bateria || !capacidade_bateria || !quantidade_baterias || !tipo_bateria) {
-		var resultRes = {
+		let resultRes = {
 			"error": true,
 			"status": 404,
 			"message": 'Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente.'
@@ -47,7 +45,23 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		});
 	}
 	//
-	
+	try {
+		const resultado = calcularAutonomia(carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria);
+		res.status(200).json(resultado);
+		let resultRes = {
+			"error": false,
+			"status": 200,
+			"message": "Cálculo realizado com sucesso."
+		};
+		//
+		// Configurando o cabeçalho e retornando o erro
+		res.setHeader('Content-Type', 'application/json');
+		return res.status(resultRes.status).json({
+			"Status": resultRes
+		});
+	} catch (error) {
+		res.status(500).json({ error: true, message: 'Erro ao calcular a autonomia' });
+	}
 	//
 	logger?.info('=====================================================================================================');
 	logger?.info('=====================================================================================================');
