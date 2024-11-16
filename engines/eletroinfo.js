@@ -35,6 +35,7 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		let resultRes = {
 			"error": true,
 			"status": 404,
+			"result": null,
 			"message": 'Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente.'
 		};
 		//
@@ -51,6 +52,7 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		let resultRes = {
 			"error": false,
 			"status": 200,
+			"result": resultado,
 			"message": "Cálculo realizado com sucesso."
 		};
 		//
@@ -60,7 +62,18 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 			"Status": resultRes
 		});
 	} catch (error) {
-		res.status(500).json({ error: true, message: 'Erro ao calcular a autonomia' });
+		let resultRes = {
+			"error": true,
+			"status": 500,
+			"result": null,
+			"message": 'Erro ao calcular a autonomia'
+		};
+		//
+		// Configurando o cabeçalho e retornando o erro
+		res.setHeader('Content-Type', 'application/json');
+		return res.status(resultRes.status).json({
+			"Status": resultRes
+		});
 	}
 	//
 	logger?.info('=====================================================================================================');
