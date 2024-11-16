@@ -61,7 +61,7 @@ module.exports = {
 	],
 	"servers":[
 		 {
-				"url":"`${serverURL}`",
+				"url":`${serverURL}`,
 				"description":""
 		 }
 	],
