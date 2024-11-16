@@ -193,6 +193,8 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 router.post('/GeolocalizacaoIP', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
+	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
+	let clientIp = requestBody?.ip ? requestBody?.ip : requestIp?.getClientIp(req);
 	//
 	logger?.info('=====================================================================================================');
 	logger?.info('=====================================================================================================');
