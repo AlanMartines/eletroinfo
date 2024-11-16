@@ -98,7 +98,7 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 			error: true,
 			status: 500,
 			result: null,
-			message: 'Erro ao calcular a autonomia'
+			message: 'Erro ao calcular a viabilidade'
 		});
 	}
 	
