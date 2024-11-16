@@ -3,7 +3,7 @@
 ## Detalhes do Endpoint
 
 - **Método:** POST
-- **URL:** `{base_url}/AutonomiaNobreak`
+- **URL:** `{base_url}/api/AutonomiaNobreak`
 - **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
 
 ## Headers Necessários
@@ -13,8 +13,6 @@
   "Content-Type": "application/json"
 }
 ```
-
-**Nota:** Substitua `{seu_token}` por um token válido de autenticação, se necessário.
 
 ## Entradas Necessárias
 
@@ -84,7 +82,7 @@ O corpo da requisição deve ser enviado no formato JSON, contendo os seguintes 
 ## Detalhes do Endpoint
 
 - **Método:** POST
-- **URL:** `{base_url}/ViabilidadeCFTV`
+- **URL:** `{base_url}/api/ViabilidadeCFTV`
 - **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
 
 ## Headers Necessários
@@ -94,8 +92,6 @@ O corpo da requisição deve ser enviado no formato JSON, contendo os seguintes 
   "Content-Type": "application/json"
 }
 ```
-
-**Nota:** Substitua `{seu_token}` por um token válido de autenticação, se necessário.
 
 ## Entradas Necessárias
 
@@ -157,6 +153,85 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 - Os cálculos assumem que o material do cabo é cobre (resistividade de 1.68e-8 Ω·m).
 - A distância é considerada como ida e volta no cálculo da resistência.
 - Os resultados são estimativas baseadas nos parâmetros fornecidos.
+
+---
+
+---
+
+## Endpoint - Consulta de IP
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/ConsultaIP`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+Os seguintes parâmetros devem ser enviados no corpo da requisição:
+
+- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.
+
+## Exemplo de Requisição (Body)
+
+### Consulta de um IP Específico
+
+```json
+{
+  "ip": "192.168.1.1"
+}
+```
+
+### Consulta do IP Público Atual
+
+```json
+{
+  "ip": ""
+}
+```
+
+## Exemplo de Resposta
+
+A resposta será um JSON com os resultados do cálculo e a viabilidade da instalação:
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": {
+    "area_code": "45",
+    "organization_name": "FICTIONAL TELECOM LTDA",
+    "country_code": "US",
+    "country_code3": "USA",
+    "continent_code": "NA",
+    "region": "California",
+    "latitude": "34.0522",
+    "longitude": "-118.2437",
+    "accuracy": 4,
+    "city": "Los Angeles",
+    "timezone": "America/Los_Angeles",
+    "asn": 12345,
+    "ip": "192.168.1.1",
+    "organization": "AS12345 FICTIONAL TELECOM LTDA",
+    "country": "United States"
+  },
+  "message": "Consulta realizada com sucesso."
+}
+```
+
+## Notas
+
+- O parâmetro `ip` é opcional. Caso deixado em branco, a API consulta o IP público atual.
+- A precisão dos dados retornados pode variar dependendo da base de dados utilizada.
+- Certifique-se de enviar os dados no formato JSON correto.
 
 ---
 

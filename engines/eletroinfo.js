@@ -130,7 +130,7 @@ router.post('/ConsultaIP', async (req, res, next) => {
 			error: true,
 			status: 500,
 			result: null,
-			message: 'Erro ao realizar consulta.'
+			message: 'Endereço IP inválido ou não encontrado.'
 		});
 	}
 	//
