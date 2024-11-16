@@ -93,6 +93,7 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 			message: "Cálculo realizado com sucesso."
 		});
 	} catch (error) {
+		console.log(error);
 		// Capturando e retornando erro interno
 		return res.status(500).json({
 			error: true,
