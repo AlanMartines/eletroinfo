@@ -15,13 +15,15 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 	const usableIPRange = `${networkAddressParts.slice(0, 3).join('.')}.1 - ${broadcastAddressParts.slice(0, 3).join('.')}.254`;
 
 	// Additional features
-	const subnetMaskBinary = subnetMaskToBinary(maskParts.join('.'));
+	const dottedDecimalMask = maskParts.join('.');
+	const subnetMaskBinary = subnetMaskToBinary(dottedDecimalMask);
 	const ipClass = calculateIPClass(ipParts[0]);
-	const wildcardMask = calculateWildcardMask(maskParts.join('.'));
+	const wildcardMask = calculateWildcardMask(dottedDecimalMask);
 	const ipType = calculateIPType(ipParts);
 
 	return {
 			cidrNotation: `/${cidr}`,
+			subnetMask: dottedDecimalMask, // Adicionado Subnet Mask aqui
 			networkAddress: networkAddress,
 			broadcastAddress: broadcastAddress,
 			usableIPRange: usableIPRange,
@@ -32,6 +34,11 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 			wildcardMask: wildcardMask,
 			ipType: ipType
 	};
+}
+
+function validateIP(ip) {
+	const parts = ip.split('.');
+	return parts.length === 4 && parts.every(part => !isNaN(part) && part >= 0 && part <= 255);
 }
 
 function subnetMaskToCIDR(mask) {
