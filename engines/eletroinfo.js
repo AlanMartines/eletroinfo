@@ -12,6 +12,7 @@ const config = require('../config.global');
 const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
+const { calculateSubnetIPv4 } = require('../middleware/CalculadoraIPv4');
 //
 //
 /*
@@ -158,7 +159,7 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 
 	try {
 		// Calculando a autonomia
-		const resultado = calculateSubnet(requestBody?.ipAddress, requestBody?.subnetMask);
+		const resultado = calculateSubnetIPv4(requestBody?.ipAddress, requestBody?.subnetMask);
 
 		// Retornando sucesso com o formato esperado
 		return res.status(200).json({

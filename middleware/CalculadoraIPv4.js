@@ -1,4 +1,4 @@
-function calculateSubnet(ipAddress, subnetMask) {
+function calculateSubnetIPv4(ipAddress, subnetMask) {
 
 	const ipParts = ipAddress.split('.').map(part => parseInt(part));
 	const maskParts = subnetMaskToDottedDecimal(subnetMask);
@@ -104,5 +104,5 @@ try {
 
 // Exportando as funções
 module.exports = {
-	calculateSubnet
+	calculateSubnetIPv4
 };
