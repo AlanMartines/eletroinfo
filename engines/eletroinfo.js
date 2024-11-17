@@ -13,6 +13,7 @@ const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
 const { calculateSubnetIPv4 } = require('../middleware/CalculadoraIPv4');
+const { calculateSubnetIPv6 } = require('../middleware/CalculadoraIPv6');
 //
 //
 /*
