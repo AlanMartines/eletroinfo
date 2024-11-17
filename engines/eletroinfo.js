@@ -21,6 +21,7 @@ const { calculateSubnetIPv4 } = require('../middleware/CalculadoraIPv4');
 ╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 */
 //
+// Função para validar IPv4
 function isValidIP(ipAddress) {
 	const parts = ipAddress.split('.');
 	return (
@@ -32,6 +33,7 @@ function isValidIP(ipAddress) {
 	);
 }
 //
+
 router.post('/AutonomiaNobreak', async (req, res, next) => {
 
 	let requestBody = req?.body;
