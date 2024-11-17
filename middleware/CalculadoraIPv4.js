@@ -1,4 +1,4 @@
-function calculateSubnet(ipAddress, subnetMask) {
+function calculateSubnetIPv4(ipAddress, subnetMask) {
 	if (!validateIP(ipAddress)) {
 			return {
 					error: true,
@@ -49,7 +49,7 @@ function calculateSubnet(ipAddress, subnetMask) {
 							cidrNotation: `/${cidr}`,
 							ipType: ipType,
 			};
-			
+
 	} catch (error) {
 			return {
 					error: true,
