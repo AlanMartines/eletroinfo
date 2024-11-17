@@ -168,7 +168,7 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 		//
 	}
 
-	if (!isValidIP(ipAddress)) {
+	if (!isValidIP(requestBody?.ipAddress)) {
 		return res.status(400).json({
 			error: true,
 			status: 400,
