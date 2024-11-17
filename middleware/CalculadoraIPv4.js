@@ -52,7 +52,7 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 			ipClass: ipClass,
 			cidrNotation: `/${cidr}`,
 			ipType: ipType,
-			ShortIp: `${ipAddress}/${cidr}`
+			shortIp: `${ipAddress}/${cidr}`
 	};
 }
 
