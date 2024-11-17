@@ -65,13 +65,13 @@ function subnetMaskToBinary(mask) {
 
 function calculateIPClass(cidr) {
 	if (cidr <= 8) {
-		return 'A';
+			return 'A';
 	} else if (cidr <= 16) {
-		return 'B';
-	} else if (cidr <= 24) {
-		return 'C';
+			return 'B';
+	} else if (cidr <= 32) {
+			return 'C';
 	} else {
-		return 'Other';
+			return 'Other';
 	}
 }
 
