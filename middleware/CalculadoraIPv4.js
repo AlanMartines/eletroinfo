@@ -1,62 +1,53 @@
 function calculateSubnetIPv4(ipAddress, subnetMask) {
 	if (!validateIP(ipAddress)) {
-			return {
-					error: true,
-					status: 400,
-					message: "IP Address inválido.",
-			};
+		return {
+			error: true,
+			status: 400,
+			message: "IP Address inválido.",
+		};
 	}
 
-	try {
-			const ipParts = ipAddress.split('.').map(part => parseInt(part));
-			const maskParts = subnetMaskToDottedDecimal(subnetMask);
+	const ipParts = ipAddress.split('.').map(part => parseInt(part));
+	const maskParts = subnetMaskToDottedDecimal(subnetMask);
 
-			const networkAddressParts = ipParts.map((part, index) => part & maskParts[index]);
-			const broadcastAddressParts = ipParts.map((part, index) => part | (~maskParts[index] & 255));
+	const networkAddressParts = ipParts.map((part, index) => part & maskParts[index]);
+	const broadcastAddressParts = ipParts.map((part, index) => part | (~maskParts[index] & 255));
 
-			const networkAddress = networkAddressParts.join('.');
-			const broadcastAddress = broadcastAddressParts.join('.');
+	const networkAddress = networkAddressParts.join('.');
+	const broadcastAddress = broadcastAddressParts.join('.');
 
-			const cidr = subnetMask.startsWith('/') ? parseInt(subnetMask.slice(1)) : subnetMaskToCIDR(subnetMask);
-			const totalHosts = Math.pow(2, 32 - cidr);
-			const usableHosts = totalHosts - 2;
+	const cidr = subnetMask.startsWith('/') ? parseInt(subnetMask.slice(1)) : subnetMaskToCIDR(subnetMask);
+	const totalHosts = Math.pow(2, 32 - cidr);
+	const usableHosts = totalHosts - 2;
 
-			// Corrige o cálculo do Usable IP Range
-			const usableIPRange =
-					usableHosts > 0
-							? `${networkAddressParts.join('.').replace(/\d+$/, networkAddressParts[3] + 1)} - ${broadcastAddressParts
-										.join('.')
-										.replace(/\d+$/, broadcastAddressParts[3] - 1)}`
-							: "N/A";
+	// Corrige o cálculo do Usable IP Range
+	const usableIPRange =
+		usableHosts > 0
+			? `${networkAddressParts.join('.').replace(/\d+$/, networkAddressParts[3] + 1)} - ${broadcastAddressParts
+				.join('.')
+				.replace(/\d+$/, broadcastAddressParts[3] - 1)}`
+			: "N/A";
 
-			// Additional features
-			const dottedDecimalMask = maskParts.join('.');
-			const subnetMaskBinary = subnetMaskToBinary(dottedDecimalMask);
-			const ipClass = calculateIPClass(ipParts[0]);
-			const wildcardMask = calculateWildcardMask(dottedDecimalMask);
-			const ipType = calculateIPType(ipParts);
+	// Additional features
+	const dottedDecimalMask = maskParts.join('.');
+	const subnetMaskBinary = subnetMaskToBinary(dottedDecimalMask);
+	const ipClass = calculateIPClass(cidr);
+	const wildcardMask = calculateWildcardMask(dottedDecimalMask);
+	const ipType = calculateIPType(ipParts);
 
-			return {
-							networkAddress: networkAddress,
-							broadcastAddress: broadcastAddress,
-							usableIPRange: usableIPRange,
-							totalHosts: totalHosts,
-							usableHosts: usableHosts,
-							binarySubnetMask: subnetMaskBinary,
-							ipClass: ipClass,
-							wildcardMask: wildcardMask,
-							subnetMask: dottedDecimalMask,
-							cidrNotation: `/${cidr}`,
-							ipType: ipType,
-			};
-
-	} catch (error) {
-			return {
-					error: true,
-					status: 500,
-					message: "Erro interno durante o cálculo.",
-			};
-	}
+	return {
+		networkAddress: networkAddress,
+		broadcastAddress: broadcastAddress,
+		usableIPRange: usableIPRange,
+		totalHosts: totalHosts,
+		usableHosts: usableHosts,
+		binarySubnetMask: subnetMaskBinary,
+		ipClass: ipClass,
+		wildcardMask: wildcardMask,
+		subnetMask: dottedDecimalMask,
+		cidrNotation: `/${cidr}`,
+		ipType: ipType,
+	};
 }
 
 function validateIP(ip) {
@@ -72,17 +63,15 @@ function subnetMaskToBinary(mask) {
 	return mask.split('.').map(part => parseInt(part).toString(2).padStart(8, '0')).join('.');
 }
 
-function calculateIPClass(firstOctet) {
-	if (firstOctet >= 1 && firstOctet <= 126) {
-			return 'A';
-	} else if (firstOctet >= 128 && firstOctet <= 191) {
-			return 'B';
-	} else if (firstOctet >= 192 && firstOctet <= 223) {
-			return 'C';
-	} else if (firstOctet >= 224 && firstOctet <= 239) {
-			return 'D';
+function calculateIPClass(cidr) {
+	if (cidr <= 8) {
+		return 'A';
+	} else if (cidr <= 16) {
+		return 'B';
+	} else if (cidr <= 24) {
+		return 'C';
 	} else {
-			return 'E';
+		return 'Other';
 	}
 }
 
@@ -94,27 +83,27 @@ function calculateWildcardMask(subnetMask) {
 
 function calculateIPType(ipParts) {
 	const privateRanges = [
-			['10.0.0.0', '10.255.255.255'],
-			['172.16.0.0', '172.31.255.255'],
-			['192.168.0.0', '192.168.255.255']
+		['10.0.0.0', '10.255.255.255'],
+		['172.16.0.0', '172.31.255.255'],
+		['192.168.0.0', '192.168.255.255']
 	];
 
 	for (const [start, end] of privateRanges) {
-			const startIP = start.split('.').map(part => parseInt(part));
-			const endIP = end.split('.').map(part => parseInt(part));
-			const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
-			if (inRange) {
-					return 'Private';
-			}
+		const startIP = start.split('.').map(part => parseInt(part));
+		const endIP = end.split('.').map(part => parseInt(part));
+		const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
+		if (inRange) {
+			return 'Private';
+		}
 	}
 	return 'Public';
 }
 
 function subnetMaskToDottedDecimal(mask) {
 	if (mask.startsWith('/')) {
-			const cidr = parseInt(mask.slice(1));
-			let binaryMask = ''.padStart(cidr, '1').padEnd(32, '0');
-			return binaryMask.match(/.{8}/g).map(bin => parseInt(bin, 2));
+		const cidr = parseInt(mask.slice(1));
+		let binaryMask = ''.padStart(cidr, '1').padEnd(32, '0');
+		return binaryMask.match(/.{8}/g).map(bin => parseInt(bin, 2));
 	}
 	return mask.split('.').map(octet => parseInt(octet));
 }
