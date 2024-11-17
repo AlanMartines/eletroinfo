@@ -11,8 +11,9 @@ function calculateSubnetIPv6(ipAddress, prefixLength) {
 
 	// Cálculo do endereço de rede
 	const networkAddressParts = ipParts.map((part, index) => {
-			const bitShift = (index + 1) * 16 > networkBits ? 16 - (networkBits % 16) : 0;
-			return part & (0xffff << bitShift);
+			const relevantBits = Math.max(0, networkBits - index * 16);
+			const bitMask = relevantBits >= 16 ? 0xffff : 0xffff << (16 - relevantBits);
+			return part & bitMask;
 	});
 
 	// Endereço de rede formatado
@@ -31,7 +32,7 @@ function calculateSubnetIPv6(ipAddress, prefixLength) {
 			usableIPRange: `${firstUsableHost} - ${lastUsableHost}`,
 			totalHosts: totalHosts.toString(),
 			prefixLength: `/${prefixLength}`,
-			shortIp: `${ipAddress}/${prefixLength}`
+			ShortIp: `${ipAddress}/${prefixLength}`
 	};
 }
 
