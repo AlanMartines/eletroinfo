@@ -141,10 +141,7 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
 	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
+	if (!requestBody?.ipAddress || !requestBody?.subnetMask ) {
 		var resultRes = {
 			"error": true,
 			"status": 404,
@@ -158,9 +155,28 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 		//
 	}
 	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
+
+	try {
+		// Calculando a autonomia
+		const resultado = calculateSubnet(requestBody?.ipAddress, requestBody?.subnetMask);
+
+		// Retornando sucesso com o formato esperado
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: resultado,
+			message: "Cálculo realizado com sucesso."
+		});
+	} catch (error) {
+		// Capturando e retornando erro interno
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Erro ao calcular a sub-rede'
+		});
+	}
+
 });
 //
 //
