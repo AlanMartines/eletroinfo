@@ -169,9 +169,9 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 	}
 
 	if (!isValidIP(requestBody?.ipAddress)) {
-		return res.status(400).json({
+		return res.status(401).json({
 			error: true,
-			status: 400,
+			status: 401,
 			result: null,
 			message: "IP Address inválido.",
 		});
