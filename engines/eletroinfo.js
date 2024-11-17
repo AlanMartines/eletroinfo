@@ -185,14 +185,12 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
 	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
+	if (!requestBody?.ipAddress || !requestBody?.subnetMask) {
 		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+			error: true,
+			status: 400,
+			result: null,
+			message: 'Todos os valores devem ser preenchidos: ipAddress, subnetMask. Por favor, corrija e tente novamente.'
 		};
 		//
 		res.setHeader('Content-Type', 'application/json');
@@ -201,10 +199,28 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 		});
 		//
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
+
+	try {
+		// Calculando a autonomia
+		const resultado = calculateSubnetIPv4(requestBody?.ipAddress, requestBody?.subnetMask);
+
+		// Retornando sucesso com o formato esperado
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: resultado,
+			message: "Cálculo realizado com sucesso."
+		});
+	} catch (error) {
+		// Capturando e retornando erro interno
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Erro durante o cálculo.'
+		});
+	}
+
 });
 //
 //
