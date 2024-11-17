@@ -9,6 +9,11 @@ function calculateSubnetIPv6(ipAddress, prefixLength) {
 
 	const ipParts = expandIPv6(ipAddress).split(":").map(part => parseInt(part, 16));
 
+	// Verifica se todos os valores do IP foram convertidos corretamente
+	if (ipParts.some(isNaN)) {
+			throw new Error("Erro ao processar o endereço IPv6. Verifique o formato.");
+	}
+
 	// Cálculo do endereço de rede
 	const networkAddressParts = ipParts.map((part, index) => {
 			const relevantBits = Math.max(0, networkBits - index * 16);
@@ -57,7 +62,11 @@ function expandIPv6(ip) {
 
 // Função para calcular o último host utilizável em IPv6
 function calculateLastUsableHost(networkParts, hostBits) {
-	const networkBigInt = networkParts.reduce((acc, part) => (acc << BigInt(16)) | BigInt(part), BigInt(0));
+	const networkBigInt = networkParts.reduce((acc, part) => {
+			const value = BigInt(part);
+			if (isNaN(value)) throw new Error("Erro ao converter parte do IPv6 para BigInt.");
+			return (acc << BigInt(16)) | value;
+	}, BigInt(0));
 	const hostMask = (BigInt(1) << BigInt(hostBits)) - BigInt(1);
 	const lastHostBigInt = networkBigInt | hostMask;
 	const lastHostHex = lastHostBigInt.toString(16).padStart(32, "0");
@@ -66,7 +75,7 @@ function calculateLastUsableHost(networkParts, hostBits) {
 
 /*
 // Exemplo de uso:
-const ipAddress = "2001:db8::";
+const ipAddress = "2001:db8:85a3::8a2e:370:7334";
 const prefixLength = 64;
 
 try {
