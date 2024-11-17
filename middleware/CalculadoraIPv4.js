@@ -23,7 +23,7 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 
 	return {
 			cidrNotation: `/${cidr}`,
-			subnetMask: dottedDecimalMask, // Adicionado Subnet Mask aqui
+			subnetMask: dottedDecimalMask,
 			networkAddress: networkAddress,
 			broadcastAddress: broadcastAddress,
 			usableIPRange: usableIPRange,
