@@ -1,11 +1,4 @@
 function calculateSubnetIPv4(ipAddress, subnetMask) {
-	if (!validateIP(ipAddress)) {
-		return {
-			error: true,
-			status: 400,
-			message: "IP Address inválido.",
-		};
-	}
 
 	const ipParts = ipAddress.split('.').map(part => parseInt(part));
 	const maskParts = subnetMaskToDottedDecimal(subnetMask);
@@ -36,6 +29,7 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 	const ipType = calculateIPType(ipParts);
 
 	return {
+		ipAddress: ipAddress,
 		networkAddress: networkAddress,
 		broadcastAddress: broadcastAddress,
 		usableIPRange: usableIPRange,
@@ -48,11 +42,6 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 		cidrNotation: `/${cidr}`,
 		ipType: ipType,
 	};
-}
-
-function validateIP(ip) {
-	const parts = ip.split('.');
-	return parts.length === 4 && parts.every(part => !isNaN(part) && part >= 0 && part <= 255);
 }
 
 function subnetMaskToCIDR(mask) {

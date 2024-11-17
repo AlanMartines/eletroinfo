@@ -21,6 +21,17 @@ const { calculateSubnetIPv4 } = require('../middleware/CalculadoraIPv4');
 ╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 */
 //
+function isValidIP(ipAddress) {
+	const parts = ipAddress.split('.');
+	return (
+		parts.length === 4 &&
+		parts.every(part => {
+			const num = Number(part);
+			return !isNaN(num) && num >= 0 && num <= 255;
+		})
+	);
+}
+//
 router.post('/AutonomiaNobreak', async (req, res, next) => {
 
 	let requestBody = req?.body;
@@ -142,11 +153,12 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
 	//
-	if (!requestBody?.ipAddress || !requestBody?.subnetMask ) {
+	if (!requestBody?.ipAddress || !requestBody?.subnetMask) {
 		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+			error: true,
+			status: 400,
+			result: null,
+			message: 'Todos os valores devem ser preenchidos: ipAddress, subnetMask. Por favor, corrija e tente novamente.'
 		};
 		//
 		res.setHeader('Content-Type', 'application/json');
@@ -155,7 +167,15 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 		});
 		//
 	}
-	//
+
+	if (!isValidIP(ipAddress)) {
+		return res.status(400).json({
+			error: true,
+			status: 400,
+			result: null,
+			message: "IP Address inválido.",
+		});
+	}
 
 	try {
 		// Calculando a autonomia
