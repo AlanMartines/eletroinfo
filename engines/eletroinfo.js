@@ -190,12 +190,11 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 		});
 	} catch (error) {
 		// Capturando e retornando erro interno
-		console.log(error);
 		return res.status(500).json({
 			error: true,
 			status: 500,
 			result: null,
-			message: 'Erro ao calcular a sub-rede'
+			message: 'Erro durante o cálculo.'
 		});
 	}
 
