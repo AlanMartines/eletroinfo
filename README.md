@@ -1,5 +1,4 @@
-Índice
-======
+# Índice
 
 1.  [Endpoint - Cálculo de Autonomia de Nobreak](#endpoint---calculo-de-autonomia-de-nobreak)
 2.  [Endpoint - Viabilidade da Instalação CFTV](#endpoint---viabilidade-da-instalacao-cftv)
@@ -238,6 +237,122 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 
 - O parâmetro `ip` é opcional. Caso deixado em branco, a API consulta o IP público atual.
 - A precisão dos dados retornados pode variar dependendo da base de dados utilizada.
+- Certifique-se de enviar os dados no formato JSON correto.
+
+---
+
+---
+
+## Endpoint - Calculadora IPv4
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/CalculadoraIPv4`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+Os seguintes parâmetros devem ser enviados no corpo da requisição:
+
+- **ipAddress**: Representa o endereço IP que será analisado.
+- **subnetMask**: Deve ser informado no formato CIDR (ex.: /22) (ex.: 255.255.252.0).
+
+# Valores Válidos para o Campo `subnetMask`
+
+Os valores de prefixo CIDR (`/n`) e suas correspondentes máscaras de rede (Network Mask) são os seguintes:
+
+- `/1` - 128.0.0.0
+- `/2` - 192.0.0.0
+- `/3` - 224.0.0.0
+- `/4` - 240.0.0.0
+- `/5` - 248.0.0.0
+- `/6` - 252.0.0.0
+- `/7` - 254.0.0.0
+
+### Classe A
+
+- `/8` - 255.0.0.0
+- `/9` - 255.128.0.0
+- `/10` - 255.192.0.0
+- `/11` - 255.224.0.0
+- `/12` - 255.240.0.0
+- `/13` - 255.248.0.0
+- `/14` - 255.252.0.0
+- `/15` - 255.254.0.0
+
+### Classe B
+
+- `/16` - 255.255.0.0
+- `/17` - 255.255.128.0
+- `/18` - 255.255.192.0
+- `/19` - 255.255.224.0
+- `/20` - 255.255.240.0
+- `/21` - 255.255.248.0
+- `/22` - 255.255.252.0
+- `/23` - 255.255.254.0
+
+### Classe C
+
+- `/24` - 255.255.255.0
+- `/25` - 255.255.255.128
+- `/26` - 255.255.255.192
+- `/27` - 255.255.255.224
+- `/28` - 255.255.255.240
+- `/29` - 255.255.255.248
+- `/30` - 255.255.255.252
+- `/31` - 255.255.255.254
+- `/32` - 255.255.255.255
+
+Certifique-se de usar o prefixo CIDR correto conforme a necessidade de cálculo de rede.
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "ipAddress": "192.168.100.1",
+  "subnetMask": "/24"
+}
+```
+
+## Exemplo de Resposta
+
+A resposta será um JSON com os resultados do cálculo e a viabilidade da instalação:
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": {
+    "ipAddress": "192.168.100.1",
+    "networkAddress": "192.168.100.0",
+    "usableIPRange": "192.168.100.1 - 192.168.100.254",
+    "broadcastAddress": "192.168.100.255",
+    "totalHosts": 256,
+    "usableHosts": 254,
+    "subnetMask": "255.255.255.0",
+    "wildcardMask": "0.0.0.255",
+    "binarySubnetMask": "11111111.11111111.11111111.00000000",
+    "ipClass": "C",
+    "cidrNotation": "/24",
+    "ipType": "Private",
+    "ShortIp": "192.168.100.1/24"
+  },
+  "message": "Cálculo realizado com sucesso."
+}
+```
+
+## Notas
+
+- Os parâmetros **ipAddress** e **subnetMask** são obrigatórios.
 - Certifique-se de enviar os dados no formato JSON correto.
 
 ---
