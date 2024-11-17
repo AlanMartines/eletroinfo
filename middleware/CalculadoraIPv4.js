@@ -36,11 +36,6 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 	};
 }
 
-function validateIP(ip) {
-	const parts = ip.split('.');
-	return parts.length === 4 && parts.every(part => !isNaN(part) && part >= 0 && part <= 255);
-}
-
 function subnetMaskToCIDR(mask) {
 	return mask.split('.').reduce((cidr, octet) => cidr + (parseInt(octet).toString(2).match(/1/g) || []).length, 0);
 }
