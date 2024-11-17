@@ -31,16 +31,17 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 	return {
 		ipAddress: ipAddress,
 		networkAddress: networkAddress,
-		broadcastAddress: broadcastAddress,
 		usableIPRange: usableIPRange,
+		broadcastAddress: broadcastAddress,
 		totalHosts: totalHosts,
 		usableHosts: usableHosts,
+		subnetMask: dottedDecimalMask,
+		wildcardMask: wildcardMask,
 		binarySubnetMask: subnetMaskBinary,
 		ipClass: ipClass,
-		wildcardMask: wildcardMask,
-		subnetMask: dottedDecimalMask,
 		cidrNotation: `/${cidr}`,
 		ipType: ipType,
+		ShortIp: `${ipAddress}/${cidr}`,
 	};
 }
 
