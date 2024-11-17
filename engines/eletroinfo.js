@@ -202,7 +202,7 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 
 	try {
 		// Calculando a autonomia
-		const resultado = calculateSubnetIPv4(requestBody?.ipAddress, requestBody?.subnetMask);
+		const resultado = calculateSubnetIPv6(requestBody?.ipAddress, requestBody?.subnetMask);
 
 		// Retornando sucesso com o formato esperado
 		return res.status(200).json({
