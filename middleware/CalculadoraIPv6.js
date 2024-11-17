@@ -31,7 +31,7 @@ function calculateSubnetIPv6(ipAddress, prefixLength) {
 			usableIPRange: `${firstUsableHost} - ${lastUsableHost}`,
 			totalHosts: totalHosts.toString(),
 			prefixLength: `/${prefixLength}`,
-			ShortIp: `${ipAddress}/${prefixLength}`
+			shortIp: `${ipAddress}/${prefixLength}`
 	};
 }
 
