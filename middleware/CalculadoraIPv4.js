@@ -22,8 +22,6 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 	const ipType = calculateIPType(ipParts);
 
 	return {
-			cidrNotation: `/${cidr}`,
-			subnetMask: dottedDecimalMask,
 			networkAddress: networkAddress,
 			broadcastAddress: broadcastAddress,
 			usableIPRange: usableIPRange,
@@ -32,6 +30,8 @@ function calculateSubnetIPv4(ipAddress, subnetMask) {
 			binarySubnetMask: subnetMaskBinary,
 			ipClass: ipClass,
 			wildcardMask: wildcardMask,
+			subnetMask: dottedDecimalMask,
+			cidrNotation: `/${cidr}`,
 			ipType: ipType
 	};
 }
