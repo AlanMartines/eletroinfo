@@ -1,39 +1,67 @@
-function calculateSubnetIPv4(ipAddress, subnetMask) {
+function calculateSubnet(ipAddress, subnetMask) {
+	if (!validateIP(ipAddress)) {
+			return {
+					error: true,
+					status: 400,
+					message: "IP Address inválido.",
+			};
+	}
 
-	const ipParts = ipAddress.split('.').map(part => parseInt(part));
-	const maskParts = subnetMaskToDottedDecimal(subnetMask);
+	try {
+			const ipParts = ipAddress.split('.').map(part => parseInt(part));
+			const maskParts = subnetMaskToDottedDecimal(subnetMask);
 
-	const networkAddressParts = ipParts.map((part, index) => part & maskParts[index]);
-	const broadcastAddressParts = ipParts.map((part, index) => part | (~maskParts[index] & 255));
+			const networkAddressParts = ipParts.map((part, index) => part & maskParts[index]);
+			const broadcastAddressParts = ipParts.map((part, index) => part | (~maskParts[index] & 255));
 
-	const networkAddress = networkAddressParts.join('.');
-	const broadcastAddress = broadcastAddressParts.join('.');
+			const networkAddress = networkAddressParts.join('.');
+			const broadcastAddress = broadcastAddressParts.join('.');
 
-	const cidr = subnetMask.startsWith('/') ? parseInt(subnetMask.slice(1)) : subnetMaskToCIDR(subnetMask);
-	const totalHosts = Math.pow(2, 32 - cidr);
-	const usableHosts = totalHosts - 2;
-	const usableIPRange = `${networkAddressParts.slice(0, 3).join('.')}.1 - ${broadcastAddressParts.slice(0, 3).join('.')}.254`;
+			const cidr = subnetMask.startsWith('/') ? parseInt(subnetMask.slice(1)) : subnetMaskToCIDR(subnetMask);
+			const totalHosts = Math.pow(2, 32 - cidr);
+			const usableHosts = totalHosts - 2;
 
-	// Additional features
-	const dottedDecimalMask = maskParts.join('.');
-	const subnetMaskBinary = subnetMaskToBinary(dottedDecimalMask);
-	const ipClass = calculateIPClass(ipParts[0]);
-	const wildcardMask = calculateWildcardMask(dottedDecimalMask);
-	const ipType = calculateIPType(ipParts);
+			// Corrige o cálculo do Usable IP Range
+			const usableIPRange =
+					usableHosts > 0
+							? `${networkAddressParts.join('.').replace(/\d+$/, networkAddressParts[3] + 1)} - ${broadcastAddressParts
+										.join('.')
+										.replace(/\d+$/, broadcastAddressParts[3] - 1)}`
+							: "N/A";
 
-	return {
-			networkAddress: networkAddress,
-			broadcastAddress: broadcastAddress,
-			usableIPRange: usableIPRange,
-			totalHosts: totalHosts,
-			usableHosts: usableHosts,
-			binarySubnetMask: subnetMaskBinary,
-			ipClass: ipClass,
-			wildcardMask: wildcardMask,
-			subnetMask: dottedDecimalMask,
-			cidrNotation: `/${cidr}`,
-			ipType: ipType
-	};
+			// Additional features
+			const dottedDecimalMask = maskParts.join('.');
+			const subnetMaskBinary = subnetMaskToBinary(dottedDecimalMask);
+			const ipClass = calculateIPClass(ipParts[0]);
+			const wildcardMask = calculateWildcardMask(dottedDecimalMask);
+			const ipType = calculateIPType(ipParts);
+
+			return {
+							networkAddress: networkAddress,
+							broadcastAddress: broadcastAddress,
+							usableIPRange: usableIPRange,
+							totalHosts: totalHosts,
+							usableHosts: usableHosts,
+							binarySubnetMask: subnetMaskBinary,
+							ipClass: ipClass,
+							wildcardMask: wildcardMask,
+							subnetMask: dottedDecimalMask,
+							cidrNotation: `/${cidr}`,
+							ipType: ipType,
+			};
+			
+	} catch (error) {
+			return {
+					error: true,
+					status: 500,
+					message: "Erro interno durante o cálculo.",
+			};
+	}
+}
+
+function validateIP(ip) {
+	const parts = ip.split('.');
+	return parts.length === 4 && parts.every(part => !isNaN(part) && part >= 0 && part <= 255);
 }
 
 function subnetMaskToCIDR(mask) {
