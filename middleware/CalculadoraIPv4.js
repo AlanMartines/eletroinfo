@@ -114,7 +114,7 @@ const ipAddress = "192.168.0.1";
 const subnetMask = "/24";
 
 try {
-	const result = calculateSubnet(ipAddress, subnetMask);
+	const result = calculateSubnetIPv4(ipAddress, subnetMask);
 	console.log(result);
 } catch (error) {
 	console.error(error.message);
