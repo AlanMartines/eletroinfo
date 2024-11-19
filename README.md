@@ -69,10 +69,14 @@ O corpo da requisição deve ser enviado no formato JSON, contendo os seguintes 
 
 ```json
 {
-  "tempo_estimado": "01:30:00", // Tempo estimado de autonomia (HH:MM:SS)
-  "tensao_corte": 10.5, // Tensão mínima de corte da bateria em volts (V)
+  "tempo_estimado": "01:30:00",
+  "tensao_corte": 10.5,
   "mensagem": "Cálculo realizado com sucesso."
 }
+```
+```
+Tempo estimado de autonomia (HH:MM:SS)
+Tensão mínima de corte da bateria em volts (V)
 ```
 
 ## Notas
