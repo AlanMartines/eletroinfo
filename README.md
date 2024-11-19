@@ -4,6 +4,7 @@
 2.  [Endpoint - Viabilidade da Instalação CFTV](#endpoint---viabilidade-da-instalacao-cftv)
 3.  [Endpoint - Consulta de IP](#endpoint---consulta-de-ip)
 4.  [Endpoint - Calculadora de IP (IPv4)](#endpoint---calculadora-de-ip-ipv4)
+5.  [Endpoint - Calculadora de IP (IPv6)](#endpoint---calculadora-de-ip-ipv6)
 
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
@@ -359,3 +360,25 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 ---
 
 ---
+## Endpoint - Calculadora de IP (IPv6)
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/CalculadoraIPv6`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+Os seguintes parâmetros devem ser enviados no corpo da requisição:
+
+- **ipAddress**: Representa o endereço IP que será analisado.
+- **subnetMask**: Deve ser informado no formato CIDR (ex.: /64).
