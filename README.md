@@ -244,7 +244,7 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 
 ---
 
-## Endpoint - Calculadora de IP IPv4
+## Endpoint - Calculadora de IP (IPv4)
 
 ## Detalhes do Endpoint
 
