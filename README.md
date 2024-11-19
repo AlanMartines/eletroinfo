@@ -3,7 +3,7 @@
 1.  [Endpoint - Cálculo de Autonomia de Nobreak](#endpoint---calculo-de-autonomia-de-nobreak)
 2.  [Endpoint - Viabilidade da Instalação CFTV](#endpoint---viabilidade-da-instalacao-cftv)
 3.  [Endpoint - Consulta de IP](#endpoint---consulta-de-ip)
-4.  [Endpoint - Calculadora de IP (IPv4)](#endpoint---calculadora-de-ip-(ipv4))
+4.  [Endpoint - Calculadora de IP (IPv4)](#endpoint---calculadora-de-ip-ipv4)
 
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
@@ -244,7 +244,7 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 
 ---
 
-## Endpoint - Calculadora de IP (IPv4)
+## Endpoint - Calculadora de IP IPv4
 
 ## Detalhes do Endpoint
 
