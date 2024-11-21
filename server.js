@@ -144,17 +144,25 @@ try {
 	});
 	*/
 	//
-	// Rotas
-	const definitions = {
-		info: {
-			// API information (required)
-			title: 'API - Eletro Info', // Title (required)
-			version: '1.0.0', // Version (required)
+	const swaggerOptions = {
+		definition: {
+			openapi: '3.0.3',
+			info: {
+				title: 'API Eletro Info',
+				version: '1.0.0',
+				description: 'Documentação da API Eletro Info',
+			},
+			servers: [
+				{
+					url: `http://${config.HOST}:${config.PORT}`,
+					description: 'Servidor de Desenvolvimento',
+				},
+			],
 		},
-		securityDefinitions: {
-		},
+		apis: ['./routes/*.js'], // Caminho onde estão as rotas documentadas
 	};
 	//
+	// Rotas
 	const swaggerSpec = swaggerJsdoc(definitions);
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
