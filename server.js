@@ -171,7 +171,7 @@ try {
 					return fs.remove('./swagger.yaml');
 				}
 			}).then(async () => {
-				const yamlSpec = yaml.dump(swaggerSpec);
+				//const yamlSpec = yaml.dump(swaggerFile);
 				return fs.writeFile('./swagger.yaml', yamlSpec, 'utf8');
 			}).then(async () => {
 				// Chame a função para gerar o código
