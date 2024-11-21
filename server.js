@@ -144,7 +144,12 @@ try {
 	//
 	// Rotas
 	const swaggerSpec = swaggerJsdoc(swaggerFile);
-	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile.definition));
+	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile.definition, {
+		swaggerOptions: {
+			supportedSubmitMethods: ['get', 'post'], // Métodos habilitados
+			tryItOutEnabled: true // Habilitar botão Try it out
+		}
+	}));
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	app.use("/api", eletroinfo);
 	//
