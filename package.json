@@ -1,6 +1,6 @@
 {
 	"name": "connectzap-api-node-validate-tokens",
-	"version": "1.0.1",
+	"version": "1.0.0",
 	"description": "Este projeto usa como base o Venom e/ou WPPConnect, um navegador virtual sem interface gráfica que abre o whatsapp web e executa todos os comandos via código possibilitando assim a automação de todas as funções.",
 	"main": "index.js",
 	"private": true,

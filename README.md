@@ -1,3 +1,14 @@
+<p align="center">
+  <img src="https://eletroinformatica.com/public/imagens/icons/eletro_info_matriz.svg" width="180" alt="Eletro Info">
+</p>
+
+# API - Eletro Info
+
+A API da EletroInfo oferece soluções para cálculos técnicos e consultas voltadas para profissionais das áreas de TI. Com endpoints especializados, a API é projetada para automatizar processos complexos e fornecer resultados precisos, otimizando a tomada de decisões.
+
+![](https://img.shields.io/github/stars/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/tag/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/v/release/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/issues/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/badge/express-v4.21.1-green.svg) ![](https://img.shields.io/badge/node-v20.18.1-green.svg) ![](https://img.shields.io/badge/npm-v10.9.0-green.svg) ![](https://img.shields.io/github/license/AlanMartines/eletroinfo) ![](https://img.shields.io/github/downloads/AlanMartines/eletroinfo/total) ![](https://img.shields.io/github/forks/AlanMartines/eletroinfo)
+
+
 # Índice
 
 1.  [Endpoint - Cálculo de Autonomia de Nobreak](#endpoint---calculo-de-autonomia-de-nobreak)
