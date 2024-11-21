@@ -125,16 +125,71 @@ module.exports = {
 											 "schema":{
 													"type":"object",
 													"example":{
-														 "Status":{
-																"error":false,
-																"status":200,
-																"message":"Sistema iniciado e disponivel para uso"
-														 }
+														"error": false,
+														"status": 200,
+														"result": {
+															"tensaocorte": 19.8,
+															"autonomia": "09:25:04"
+														},
+														"message": "Cálculo realizado com sucesso."
 													}
 											 }
 										}
 								 }
+							},
+
+							"400":{
+								"description":"",
+								"content":{
+									 "application/json":{
+											"schema":{
+												 "type":"object",
+												 "example":{
+													"error": true,
+													"status": 400,
+													"result": null,
+													"message": "Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente."
+												}
+											}
+									 }
+								}
+						 },
+
+							"404":{
+								"description":"",
+								"content":{
+									 "application/json":{
+											"schema":{
+												 "type":"object",
+												 "example":{
+													"Status": {
+														"error": true,
+														"status": 404,
+														"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+													}
+												}
+											}
+									 }
+								}
+						 },
+
+						 "500":{
+							"description":"",
+							"content":{
+								 "application/json":{
+										"schema":{
+											 "type":"object",
+											 "example":{
+												"error": true,
+												"status": 500,
+												"result": null,
+												"message": "Erro ao calcular a autonomia."
+											}
+										}
+								 }
 							}
+					 }
+
 					 }
 				}
 		 }
