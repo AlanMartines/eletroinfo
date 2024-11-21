@@ -64,7 +64,43 @@ module.exports = {
 		],
 		"components": {
 			"schemas": {
-
+				"AutonomiaNobreakRequest": {
+					"type": "object",
+					"properties": {
+						"carga_aplicada": {
+							"type": "integer",
+							"description": "Consumo do equipamento em watts (W).",
+							"example": 100
+						},
+						"tensao_bateria": {
+							"type": "integer",
+							"description": "Tensão nominal da bateria em volts (V).",
+							"example": 12
+						},
+						"capacidade_bateria": {
+							"type": "integer",
+							"description": "Capacidade nominal da bateria em ampere-hora (Ah).",
+							"example": 7
+						},
+						"quantidade_baterias": {
+							"type": "integer",
+							"description": "Quantidade de baterias no sistema.",
+							"example": 2
+						},
+						"tipo_bateria": {
+							"type": "string",
+							"description": "Tipo da bateria.",
+							"example": "chumbo_acido"
+						}
+					},
+					"required": [
+						"carga_aplicada",
+						"tensao_bateria",
+						"capacidade_bateria",
+						"quantidade_baterias",
+						"tipo_bateria"
+					]
+				}
 			}
 		},
 		"paths": {
@@ -83,40 +119,7 @@ module.exports = {
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"carga_aplicada": {
-											"type": "integer",
-											"description": "Consumo do equipamento em watts (W).",
-											"default": 100
-										},
-										"tensao_bateria": {
-											"type": "integer",
-											"description": "Tensão nominal da bateria em volts (V).",
-											"default": 12
-										},
-										"capacidade_bateria": {
-											"type": "integer",
-											"description": "Capacidade nominal da bateria em ampere (A).",
-											"default": 7
-										},
-										"quantidade_baterias": {
-											"type": "integer",
-											"description": "Quantidade de baterias no sistema.",
-											"default": 2
-										},
-										"tipo_bateria": {
-											"type": "string",
-											"description": "Tipo da bateria (veja lista de valores válidos).",
-											"default": "chumbo_acido"
-										},
-									},
-									"required": [
-										"carga_aplicada",
-										"tensao_bateria",
-										"capacidade_bateria",
-										"quantidade_baterias",
-										"tipo_bateria",
-									]
+									"$ref": "#/components/schemas/AutonomiaNobreakRequest"
 								}
 							}
 						}
@@ -131,16 +134,6 @@ module.exports = {
 							"description": "",
 							"content": {
 								"application/json": {
-									"examples": {
-										"cURL": {
-											"summary": "Exemplo cURL",
-											"value": "curl -X POST 'http://localhost:3000/api/AutonomiaNobreak' -H 'Content-Type: application/json' -d '{\"carga_aplicada\":100,\"tensao_bateria\":12,\"capacidade_bateria\":7,\"quantidade_baterias\":2,\"tipo_bateria\":\"chumbo_acido\"}'\n"
-										},
-										"Python": {
-											"summary": "Exemplo Python",
-											"value": "import requests\nurl = \"http://localhost:3000/api/AutonomiaNobreak\"\npayload = {\n  \"carga_aplicada\": 100,\n  \"tensao_bateria\": 12,\n  \"capacidade_bateria\": 7,\n  \"quantidade_baterias\": 2,\n  \"tipo_bateria\": \"chumbo_acido\"\n}\nresponse = requests.post(url, json=payload)\nprint(response.json())\n"
-										}
-									},
 									"schema": {
 										"type": "object",
 										"example": {
