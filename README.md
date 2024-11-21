@@ -44,6 +44,9 @@ npm install --allow-root --unsafe-perm=true
 # Configuração inicial
 cp .env-example .env
 
+# Baixar Swagger Codegen Cli
+wget -c https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.9/swagger-codegen-cli-3.0.9.jar -O swagger-codegen-cli.jar
+
 # Execute a aplicação
 node server.js
 
