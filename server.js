@@ -125,7 +125,6 @@ try {
 		next();
 	});
 	//
-	/*
 	// Verifique se o arquivo swagger.yaml já existe e remova-o antes de criar um novo
 	fs.pathExists('./swagger.yaml').then(async (exists) => {
 		if (exists) {
@@ -137,12 +136,11 @@ try {
 	}).then(async () => {
 		// Chame a função para gerar o código
 		logger.info(`- Arquivo swagger.yaml criado com sucesso`);
-		await generateSwaggerCode();
+		//await generateSwaggerCode();
 		//
 	}).catch(async (err) => {
 		logger.error(`- Erro ao criar o arquivo swagger.yaml: ${err.message}`);
 	});
-	*/
 	//
 	const swaggerOptions = {
 		definition: {
