@@ -142,20 +142,8 @@ try {
 		logger.error(`- Erro ao criar o arquivo swagger.yaml: ${err.message}`);
 	});
 	//
-	const swaggerOptions = {
-		definition: {
-			openapi: '3.0.3',
-			info: {
-				title: 'API Eletro Info',
-				version: '1.0.0',
-				description: 'Documentação da API Eletro Info',
-			}
-		},
-		apis: ['./routes/*.js'], // Caminho onde estão as rotas documentadas
-	};
-	//
 	// Rotas
-	const swaggerSpec = swaggerJsdoc(swaggerOptions);
+	const swaggerSpec = swaggerJsdoc(swaggerFile);
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	app.use("/api", eletroinfo);
