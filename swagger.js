@@ -124,11 +124,6 @@ module.exports = {
 							}
 						}
 					},
-					"security": [
-						{
-
-						}
-					],
 					"responses": {
 						"200": {
 							"description": "",
