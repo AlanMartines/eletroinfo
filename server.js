@@ -145,7 +145,9 @@ try {
 	// Rotas
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile.definition, {
 		swaggerOptions: {
-			supportedSubmitMethods: ['get', 'post']
+			tryItOutEnabled: true, // Habilitar "Try it out"
+			defaultModelsExpandDepth: 1, // Expande os modelos
+			displayRequestDuration: true // Exibe duração das requisições
 		}
 	}));
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
