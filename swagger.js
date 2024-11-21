@@ -1,10 +1,6 @@
 require('dotenv').config();
 const config = require('./config.global');
-if (config.DOMAIN_SSL) {
-	var serverURL = `https://${config.DOMAIN_SSL}`;
-} else {
-	var serverURL = `http://${config.HOST}:${config.PORT}`;
-}
+const serverURL = config.DOMAIN_SSL ? `https://${config.DOMAIN_SSL}` : `http://${config.HOST}:${config.PORT}`;
 //
 module.exports = {
 	"definition": {
@@ -208,6 +204,5 @@ module.exports = {
 				}
 			}
 		}
-	},
-	"apis": ['./routes/*.js'],
+	}
 };

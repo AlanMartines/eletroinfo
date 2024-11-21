@@ -144,7 +144,7 @@ try {
 	//
 	// Rotas
 	const swaggerSpec = swaggerJsdoc(swaggerFile);
-	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile.definition));
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	app.use("/api", eletroinfo);
 	//
