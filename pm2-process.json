@@ -1,6 +1,6 @@
 {
 	"name": "ApiEletroInfo",
-  "watch": ["server", "client"],
+  "watch": true,
   "ignore_watch" : ["node_modules", "swaggerCodegen", "swagger.yaml"],
   "watch_options": {
     "followSymlinks": false
