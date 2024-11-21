@@ -9,6 +9,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const http = require('http').Server(app);
 const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 const yaml = require('js-yaml');
 const config = require('./config.global');
 const { logger } = require('./utils/logger');
@@ -135,7 +136,7 @@ try {
 	}).then(async () => {
 		// Chame a função para gerar o código
 		logger.info(`- Arquivo swagger.yaml criado com sucesso`);
-		await generateSwaggerCode();
+		// await generateSwaggerCode();
 		//
 	}).catch(async (err) => {
 		logger.error(`- Erro ao criar o arquivo swagger.yaml: ${err.message}`);
@@ -145,7 +146,9 @@ try {
 	app.get('/', async (req, res, next) => {
 		res.sendFile(path.join(__dirname, '/view.html'));
 	});
-	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+	const swaggerSpec = swaggerJsdoc(swaggerFile);
+	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 	app.use("/api", eletroinfo);
 	//
 	const sockets = {};
