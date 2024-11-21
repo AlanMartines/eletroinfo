@@ -41,7 +41,7 @@ yo('Eletro Info', {
 // Função para executar o comando swagger-codegen-cli
 async function generateSwaggerCode() {
 	try {
-		const command = 'swagger-codegen-cli generate -i swagger.yaml -l nodejs-server -o swaggerCodegen';
+		const command = 'java -jar swagger-codegen-cli.jar generate -i swagger.yaml -l nodejs-server -o swaggerCodegen';
 
 		exec(command, (error, stdout, stderr) => {
 			if (error) {
