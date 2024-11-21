@@ -145,8 +145,7 @@ try {
 	// Rotas
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile.definition, {
 		swaggerOptions: {
-			supportedSubmitMethods: ['get', 'post'], // Métodos habilitados
-			tryItOutEnabled: true // Habilitar botão Try it out
+			supportedSubmitMethods: ['get', 'post']
 		}
 	}));
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
