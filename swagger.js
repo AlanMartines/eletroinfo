@@ -77,7 +77,7 @@ module.exports = {
 					"Cálculo de Autonomia de Nobreak"
 				],
 				"summary": "Cálculo de Autonomia de Nobreak",
-				"description": "# This is a heading in *italics*\nThis is in the next line\n\nThis is in **bold**",
+				"description": "## Valores Válidos para o Campo `tipo_bateria`\n\n-\n `chumbo_acido` - Chumbo-Ácido (Lead-Acid)-\n `ion_litio` - Íon de Lítio (Li-ion)-\n `niquel_cadmio` - Níquel-Cádmio (NiCd)-\n `niquel_hidreto_metalico` - Níquel-Hidreto Metálico (NiMH)-\n `lithium_ferro_fosfato` - Lítio-Ferro-Fosfato (LiFePO4)-\n `lithium_polimero` - Lítio-Polímero (LiPo)-\n `zinco_ar` - Zinco-Ar (Zn-Air)-\n `niquel_ferro` - Níquel-Ferro (NiFe)-\n `sodio_enxofre` - Sódio-Enxofre (NaS)-\n `zinco_brometo` - Zinco-Brometo (ZnBr)-\n `magnesio` - Magnésio-\n `chumbo_carbono` - Chumbo-Carbono-\n `fluxo_redox` - Fluxo Redox-\n `aluminio_ar` - Alumínio-Ar (Al-Air)-\n `lithium_enxofre` - Lítio-Enxofre (Li-S)-\n `desconhecida` - Tipo de bateria desconhecido",
 				"requestBody": {
 					"required": true,
 					"content": {
