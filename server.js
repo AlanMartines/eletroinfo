@@ -143,7 +143,6 @@ try {
 	});
 	//
 	// Rotas
-	const swaggerSpec = swaggerJsdoc(swaggerFile);
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile.definition, {
 		swaggerOptions: {
 			supportedSubmitMethods: ['get', 'post'], // Métodos habilitados
