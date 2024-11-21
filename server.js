@@ -125,6 +125,7 @@ try {
 		next();
 	});
 	//
+	/*
 	// Verifique se o arquivo swagger.yaml já existe e remova-o antes de criar um novo
 	fs.pathExists('./swagger.yaml').then(async (exists) => {
 		if (exists) {
@@ -136,17 +137,25 @@ try {
 	}).then(async () => {
 		// Chame a função para gerar o código
 		logger.info(`- Arquivo swagger.yaml criado com sucesso`);
-		// await generateSwaggerCode();
+		await generateSwaggerCode();
 		//
 	}).catch(async (err) => {
 		logger.error(`- Erro ao criar o arquivo swagger.yaml: ${err.message}`);
 	});
+	*/
 	//
 	// Rotas
-	app.get('/', async (req, res, next) => {
-		res.sendFile(path.join(__dirname, '/view.html'));
-	});
-	const swaggerSpec = swaggerJsdoc(swaggerFile);
+	const definitions = {
+		info: {
+			// API information (required)
+			title: 'API - Eletro Info', // Title (required)
+			version: '1.0.0', // Version (required)
+		},
+		securityDefinitions: {
+		},
+	};
+	//
+	const swaggerSpec = swaggerJsdoc(definitions);
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 	app.use("/api", eletroinfo);
