@@ -122,7 +122,23 @@ try {
 		next();
 	});
 	//
-
+	// Verifique se o arquivo swagger.yaml já existe e remova-o antes de criar um novo
+	fs.pathExists('./swagger.yaml').then(async (exists) => {
+		if (exists) {
+			return fs.remove('./swagger.yaml');
+		}
+	}).then(async () => {
+		//const yamlSpec = yaml.dump(swaggerFile);
+		return fs.writeFile('./swagger.yaml', yamlSpec, 'utf8');
+	}).then(async () => {
+		// Chame a função para gerar o código
+		logger.info(`- Arquivo swagger.yaml criado com sucesso`);
+		await generateSwaggerCode();
+		//
+	}).catch(async (err) => {
+		logger.error(`- Erro ao criar o arquivo swagger.yaml: ${err.message}`);
+	});
+	//
 	// Rotas
 	app.get('/', async (req, res, next) => {
 		res.sendFile(path.join(__dirname, '/view.html'));
@@ -164,23 +180,6 @@ try {
 				logger?.info(`- To status: http://${config.HOST}:${config.PORT}/`);
 				logger?.info(`- To doc: http://${config.HOST}:${config.PORT}/docs`);
 			}
-			//
-				// Verifique se o arquivo swagger.yaml já existe e remova-o antes de criar um novo
-			fs.pathExists('./swagger.yaml').then(async (exists) => {
-				if (exists) {
-					return fs.remove('./swagger.yaml');
-				}
-			}).then(async () => {
-				//const yamlSpec = yaml.dump(swaggerFile);
-				return fs.writeFile('./swagger.yaml', yamlSpec, 'utf8');
-			}).then(async () => {
-				// Chame a função para gerar o código
-				logger.info(`- Arquivo swagger.yaml criado com sucesso`);
-				await generateSwaggerCode();
-				//
-			}).catch(async (err) => {
-				logger.error(`- Erro ao criar o arquivo swagger.yaml: ${err.message}`);
-			});
 			//
 		}
 		//
