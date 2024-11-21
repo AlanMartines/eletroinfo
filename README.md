@@ -451,3 +451,13 @@ Os seguintes parâmetros devem ser enviados no corpo da requisição:
 
 - **ipAddress**: Representa o endereço IP que será analisado.
 - **subnetMask**: Deve ser informado no formato CIDR (ex.: /64).
+
+
+
+
+---
+
+---
+## Rotas
+
+> As rota se encontra no arquivo [Insomnia.json](https://github.com/AlanMartines/eletroinfo/blob/master/Insomnia.json "Insomnia.json"), importe para seu Insomnia e desfrute da API.
