@@ -149,21 +149,15 @@ try {
 				title: 'API Eletro Info',
 				version: '1.0.0',
 				description: 'Documentação da API Eletro Info',
-			},
-			servers: [
-				{
-					url: `http://${config.HOST}:${config.PORT}`,
-					description: 'Servidor de Desenvolvimento',
-				},
-			],
+			}
 		},
 		apis: ['./routes/*.js'], // Caminho onde estão as rotas documentadas
 	};
 	//
 	// Rotas
-	const swaggerSpec = swaggerJsdoc(definitions);
-	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+	const swaggerSpec = swaggerJsdoc(swaggerOptions);
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	app.use("/api", eletroinfo);
 	//
 	const sockets = {};
