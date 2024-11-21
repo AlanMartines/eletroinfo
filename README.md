@@ -9,6 +9,57 @@ A API da EletroInfo oferece soluções para cálculos técnicos e consultas volt
 ![](https://img.shields.io/github/stars/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/tag/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/v/release/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/issues/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/badge/express-v4.21.1-green.svg) ![](https://img.shields.io/badge/node-v20.18.1-green.svg) ![](https://img.shields.io/badge/npm-v10.9.0-green.svg) ![](https://img.shields.io/github/license/AlanMartines/eletroinfo) ![](https://img.shields.io/github/downloads/AlanMartines/eletroinfo/total) ![](https://img.shields.io/github/forks/AlanMartines/eletroinfo)
 
 
+## Dependências Debian (e.g. Ubuntu) 64bits
+
+```sh
+# Instalar Oracle JDK 21
+cd ~;
+wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb;
+sudo dpkg -i jdk-21_linux-x64_bin.deb;
+java -version;
+```
+
+```sh
+java version "21.0.5" 2024-10-15 LTS
+Java(TM) SE Runtime Environment (build 21.0.5+9-LTS-239)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.5+9-LTS-239, mixed mode, sharing)
+```
+
+## Rodando a aplicação
+
+```bash
+# Ir para seu diretório home
+cd ~
+
+# Clone este repositório
+git clone https://github.com/AlanMartines/eletroinfo.git ApiEletroInfo
+
+# Acesse a pasta do projeto no terminal/cmd
+cd ApiEletroInfo
+
+# Instale as dependências
+env NODE_OPTIONS=" --dns-result-order=ipv4first "
+npm install --allow-root --unsafe-perm=true
+
+# Configuração inicial
+cp .env-example .env
+
+# Execute a aplicação
+node server.js
+
+# Manter os processos ativos a cada reinicialização do servidor
+npm install pm2 -g
+
+pm2 start pm2-process.json
+
+pm2 startup
+
+pm2 save
+
+# Para remover do init script
+pm2 unstartup systemd
+```
+
 # Índice
 
 1.  [Endpoint - Cálculo de Autonomia de Nobreak](#endpoint---calculo-de-autonomia-de-nobreak)
