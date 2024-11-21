@@ -76,8 +76,8 @@ module.exports = {
 				"tags": [
 					"Cálculo de Autonomia de Nobreak"
 				],
-				"summary": "",
-				"description": "Comando que inicia o calculo.",
+				"summary": "Cálculo de Autonomia de Nobreak",
+				"description": "",
 				"requestBody": {
 					"required": true,
 					"content": {
