@@ -7,11 +7,11 @@ if (config.DOMAIN_SSL) {
 }
 //
 module.exports = {
-	"openapi":"3.0.3",
-	"info":{
-		 "description":"EletroInfo :: Eletro Informática - Para assegurar a excelência dos nossos serviços, a Eletroinfo continua a explorar e adotar constantemente inovações tecnológicas, com o objetivo primordial de satisfazer plenamente os nossos clientes.",
-		 "version":"1.0.0",
-		 "title":"API - Eletro Info"
+	"openapi": "3.0.3",
+	"info": {
+		"description": "EletroInfo :: Eletro Informática - Para assegurar a excelência dos nossos serviços, a Eletroinfo continua a explorar e adotar constantemente inovações tecnológicas, com o objetivo primordial de satisfazer plenamente os nossos clientes.",
+		"version": "1.0.0",
+		"title": "API - Eletro Info"
 	},
 	"tags": [
 		{
@@ -59,139 +59,184 @@ module.exports = {
 			"description": "Calcula o metabolismo basal de uma pessoa usando dados como idade, peso, altura e gênero, auxiliando no planejamento de dietas e treinos."
 		}
 	],
-	"servers":[
-		 {
-				"url":`${serverURL}`,
-				"description":""
-		 }
+	"servers": [
+		{
+			"url": `${serverURL}`,
+			"description": ""
+		}
 	],
-	"components":{
-		 "schemas":{
-				
-		 }
+	"components": {
+		"schemas": {
+
+		}
 	},
-	"paths":{
-		 "/api/AutonomiaNobreak":{
-				"post":{
-					 "tags":[
-							"Cálculo de Autonomia de Nobreak"
-					 ],
-					 "summary":"",
-					 "description":"Comando que inicia o calculo.",
-					 "requestBody":{
-							"required":true,
-							"content":{
-								 "multipart/form-data":{
-										"schema":{
-											 "type":"object",
-											 "properties":{
-													"SessionName":{
-														 "description":"Informe o nome da sessão",
-														 "type":"string",
-														 "default":""
-													}
-											 },
-											 "required":[
-													"SessionName"
-											 ]
-										}
-								 },
-								 "application/json":{
-										"schema":{
-											 "type":"object",
-											 "properties":{
-													"SessionName":{
-														 "type":"string",
-														 "default":"Informe o nome da sessão aqui"
-													}
-											 },
-											 "required":[
-													"SessionName"
-											 ]
-										}
-								 }
+	"paths": {
+		"/api/AutonomiaNobreak": {
+			"post": {
+				"tags": [
+					"Cálculo de Autonomia de Nobreak"
+				],
+				"summary": "",
+				"description": "Comando que inicia o calculo.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"carga_aplicada": {
+										"type": "integer",
+										"description": "Consumo do equipamento em watts (W).",
+										"default": ""
+									},
+									"tensao_bateria": {
+										"type": "integer",
+										"description": "Tensão nominal da bateria em volts (V).",
+										"default": ""
+									},
+									"capacidade_bateria": {
+										"type": "integer",
+										"description": "Capacidade nominal da bateria em ampere (A).",
+										"default": ""
+									},
+									"quantidade_baterias": {
+										"type": "integer",
+										"description": "Quantidade de baterias no sistema.",
+										"default": ""
+									},
+									"tipo_bateria": {
+										"type": "string",
+										"description": "Tipo da bateria (veja lista de valores válidos).",
+										"default": ""
+									},
+								},
+								"required": [
+									"SessionName"
+								]
 							}
-					 },
-					 "security":[
-							{
-								 
+						},
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"carga_aplicada": {
+										"type": "integer",
+										"description": "Consumo do equipamento em watts (W).",
+										"default": ""
+									},
+									"tensao_bateria": {
+										"type": "integer",
+										"description": "Tensão nominal da bateria em volts (V).",
+										"default": ""
+									},
+									"capacidade_bateria": {
+										"type": "integer",
+										"description": "Capacidade nominal da bateria em ampere (A).",
+										"default": ""
+									},
+									"quantidade_baterias": {
+										"type": "integer",
+										"description": "Quantidade de baterias no sistema.",
+										"default": ""
+									},
+									"tipo_bateria": {
+										"type": "string",
+										"description": "Tipo da bateria (veja lista de valores válidos).",
+										"default": ""
+									},
+								},
+								"required": [
+									"carga_aplicada",
+									"tensao_bateria",
+									"capacidade_bateria",
+									"quantidade_baterias",
+									"tipo_bateria",
+								]
 							}
-					 ],
-					 "responses":{
-							"200":{
-								 "description":"",
-								 "content":{
-										"application/json":{
-											 "schema":{
-													"type":"object",
-													"example":{
-														"error": false,
-														"status": 200,
-														"result": {
-															"tensaocorte": 19.8,
-															"autonomia": "09:25:04"
-														},
-														"message": "Cálculo realizado com sucesso."
-													}
-											 }
-										}
-								 }
-							},
+						}
+					}
+				},
+				"security": [
+					{
 
-							"400":{
-								"description":"",
-								"content":{
-									 "application/json":{
-											"schema":{
-												 "type":"object",
-												 "example":{
-													"error": true,
-													"status": 400,
-													"result": null,
-													"message": "Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente."
-												}
-											}
-									 }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"example": {
+										"error": false,
+										"status": 200,
+										"result": {
+											"tensaocorte": 19.8,
+											"autonomia": "09:25:04"
+										},
+										"message": "Cálculo realizado com sucesso."
+									}
 								}
-						 },
-
-							"404":{
-								"description":"",
-								"content":{
-									 "application/json":{
-											"schema":{
-												 "type":"object",
-												 "example":{
-													"Status": {
-														"error": true,
-														"status": 404,
-														"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
-													}
-												}
-											}
-									 }
-								}
-						 },
-
-						 "500":{
-							"description":"",
-							"content":{
-								 "application/json":{
-										"schema":{
-											 "type":"object",
-											 "example":{
-												"error": true,
-												"status": 500,
-												"result": null,
-												"message": "Erro ao calcular a autonomia."
-											}
-										}
-								 }
 							}
-					 }
+						}
+					},
 
-					 }
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"example": {
+										"error": true,
+										"status": 400,
+										"result": null,
+										"message": "Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente."
+									}
+								}
+							}
+						}
+					},
+
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"example": {
+										"Status": {
+											"error": true,
+											"status": 404,
+											"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+										}
+									}
+								}
+							}
+						}
+					},
+
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"example": {
+										"error": true,
+										"status": 500,
+										"result": null,
+										"message": "Erro ao calcular a autonomia."
+									}
+								}
+							}
+						}
+					}
+
 				}
-		 }
+			}
+		}
 	}
 };
