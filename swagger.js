@@ -77,7 +77,7 @@ module.exports = {
 					"Cálculo de Autonomia de Nobreak"
 				],
 				"summary": "Cálculo de Autonomia de Nobreak",
-				"description": "",
+				"description": "# This is a heading in *italics*\nThis is in the next line\n\nThis is in **bold**",
 				"requestBody": {
 					"required": true,
 					"content": {
