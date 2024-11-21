@@ -269,8 +269,11 @@ module.exports = {
 											"error": false,
 											"status": 200,
 											"result": {
-												"tensaocorte": 19.8,
-												"autonomia": "09:25:04"
+												"resistencia_metro": "0.010",
+												"resistencia_total": "1.34",
+												"tensao_fornecida": "10.79",
+												"distancia_maxima": "66.67",
+												"viavel": false
 											},
 											"message": "Cálculo realizado com sucesso."
 										}
@@ -325,7 +328,7 @@ module.exports = {
 											"error": true,
 											"status": 500,
 											"result": null,
-											"message": "Erro ao calcular a autonomia."
+											"message": "Erro ao calcular a viabilidade."
 										}
 									}
 								}
