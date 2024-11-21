@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs-extra');
 const http = require('http').Server(app);
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
