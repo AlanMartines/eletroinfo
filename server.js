@@ -103,6 +103,7 @@ try {
 					"Status": {
 						"error": true,
 						"status": 404,
+						"result": null,
 						"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
 					}
 				});

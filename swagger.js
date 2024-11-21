@@ -100,6 +100,43 @@ module.exports = {
 						"quantidade_baterias",
 						"tipo_bateria"
 					]
+				},
+				"ViabilidadeCFTVRequest": {
+					"type": "object",
+					"properties": {
+						"tensao_fonte": {
+							"type": "integer",
+							"description": "Tensão da fonte de alimentação em volts (V).",
+							"example": 12
+						},
+						"bitola_cabo": {
+							"type": "integer",
+							"description": "Bitola do cabo em milímetros quadrados (mm²).",
+							"example": 5
+						},
+						"distancia": {
+							"type": "integer",
+							"description": "Distância entre a fonte e a câmera em metros (m)",
+							"example": 67
+						},
+						"tensao_camera": {
+							"type": "integer",
+							"description": "Tensão mínima necessária para o funcionamento da câmera em volts (V)",
+							"example": 12
+						},
+						"corrente_camera": {
+							"type": "integer",
+							"description": "Corrente consumida pela câmera em amperes (A).",
+							"example": 1
+						}
+					},
+					"required": [
+						"tensao_fonte",
+						"bitola_cabo",
+						"distancia",
+						"tensao_camera",
+						"corrente_camera"
+					]
 				}
 			}
 		},
@@ -172,6 +209,104 @@ module.exports = {
 											"Status": {
 												"error": true,
 												"status": 404,
+												"result": null,
+												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Erro ao calcular a autonomia."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
+			"/api/ViabilidadeCFTV": {
+				"post": {
+					"tags": [
+						"Viabilidade de Instalação de CFTV"
+					],
+					"summary": "Viabilidade de Instalação de CFTV",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n\n- **tensao_fonte:** Tensão da fonte de alimentação em volts (V).\n- **bitola_cabo:** Bitola do cabo em milímetros quadrados (mm²).\n- **distancia:** Distância entre a fonte e a câmera em metros (m).\n- **tensao_camera:** Tensão mínima necessária para o funcionamento da câmera em volts (V).\n- **corrente_camera:** Corrente consumida pela câmera em amperes (A).\n\n## Valores Válidos para o Campo `bitola_cabo`\n\n- `0` - 26AWG (0.14 mm²)\n- `1` - 24AWG (0.20 mm²)\n- `2` - 22AWG (0.33 mm²)\n- `3` - 20AWG (0.50 mm²)\n- `4` - 17AWG (1.00 mm²)\n- `5` - 15AWG (1.50 mm²)\n- `6` - 13AWG (2.50 mm²)\n- `7` - 11AWG (4.00 mm²)\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ViabilidadeCFTVRequest"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"tensaocorte": 19.8,
+												"autonomia": "09:25:04"
+											},
+											"message": "Cálculo realizado com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"400": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "Todos os valores devem ser preenchidos: tensao_fonte, bitola_cabo, distancia, tensao_camera, corrente_camera. Por favor, corrija e tente novamente."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
 												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
 											}
 										}
