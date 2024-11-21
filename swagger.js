@@ -132,6 +132,28 @@ module.exports = {
 							"description": "",
 							"content": {
 								"application/json": {
+									"examples": {
+										"cURL": {
+											"summary": "Exemplo cURL",
+											"value": "curl -X POST 'http://localhost:3000/api/AutonomiaNobreak' -H 'Content-Type: application/json' -d '{\"carga_aplicada\":100,\"tensao_bateria\":12,\"capacidade_bateria\":7,\"quantidade_baterias\":2,\"tipo_bateria\":\"chumbo_acido\"}'"
+										},
+										"Python": {
+											"summary": "Exemplo Python",
+											"value": `
+											import requests
+											url = "http://localhost:3000/api/AutonomiaNobreak"
+											payload = {
+												"carga_aplicada": 100,
+												"tensao_bateria": 12,
+												"capacidade_bateria": 7,
+												"quantidade_baterias": 2,
+												"tipo_bateria": "chumbo_acido"
+											}
+											response = requests.post(url, json=payload)
+											print(response.json())
+											`
+										}
+									},
 									"schema": {
 										"type": "object",
 										"example": {
