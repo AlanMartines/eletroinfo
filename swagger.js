@@ -88,27 +88,27 @@ module.exports = {
 									"carga_aplicada": {
 										"type": "integer",
 										"description": "Consumo do equipamento em watts (W).",
-										"default": ""
+										"default": 100
 									},
 									"tensao_bateria": {
 										"type": "integer",
 										"description": "Tensão nominal da bateria em volts (V).",
-										"default": ""
+										"default": 12
 									},
 									"capacidade_bateria": {
 										"type": "integer",
 										"description": "Capacidade nominal da bateria em ampere (A).",
-										"default": ""
+										"default": 7
 									},
 									"quantidade_baterias": {
 										"type": "integer",
 										"description": "Quantidade de baterias no sistema.",
-										"default": ""
+										"default": 2
 									},
 									"tipo_bateria": {
 										"type": "string",
 										"description": "Tipo da bateria (veja lista de valores válidos).",
-										"default": ""
+										"default": "chumbo_acido"
 									},
 								},
 								"required": [
@@ -123,27 +123,27 @@ module.exports = {
 									"carga_aplicada": {
 										"type": "integer",
 										"description": "Consumo do equipamento em watts (W).",
-										"default": ""
+										"default": 100
 									},
 									"tensao_bateria": {
 										"type": "integer",
 										"description": "Tensão nominal da bateria em volts (V).",
-										"default": ""
+										"default": 12
 									},
 									"capacidade_bateria": {
 										"type": "integer",
 										"description": "Capacidade nominal da bateria em ampere (A).",
-										"default": ""
+										"default": 7
 									},
 									"quantidade_baterias": {
 										"type": "integer",
 										"description": "Quantidade de baterias no sistema.",
-										"default": ""
+										"default": 2
 									},
 									"tipo_bateria": {
 										"type": "string",
 										"description": "Tipo da bateria (veja lista de valores válidos).",
-										"default": ""
+										"default": "chumbo_acido"
 									},
 								},
 								"required": [
