@@ -233,7 +233,7 @@ router.post('/GeolocalizacaoIP', async (req, res, next) => {
 	let ip = requestBody?.ip;
 
 	// Verificando se algum campo obrigatório está ausente
-	if (!ip || !tensao_bateria) {
+	if (!ip) {
 		return res.status(400).json({
 			error: true,
 			status: 400,
