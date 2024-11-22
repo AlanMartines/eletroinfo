@@ -101,6 +101,7 @@ module.exports = {
 						"tipo_bateria"
 					]
 				},
+
 				"ViabilidadeCFTVRequest": {
 					"type": "object",
 					"properties": {
@@ -138,6 +139,7 @@ module.exports = {
 						"corrente_camera"
 					]
 				},
+
 				"ConsultaIPRequest": {
 					"type": "object",
 					"properties": {
@@ -147,9 +149,42 @@ module.exports = {
 							"example": "200.221.11.100"
 						}
 					}
+				},
+
+				"CalculadoraIPv4Request": {
+					"type": "object",
+					"properties": {
+						"ipAddress": {
+							"type": "string",
+							"description": "Representa o endereço IP que será analisado.",
+							"example": "192.168.100.1"
+						},
+						"subnetMask": {
+							"type": "string",
+							"description": "Deve ser informado no formato CIDR (ex.: /22) (ex.: 255.255.252.0).",
+							"example": "/22"
+						}
+					}
+				},
+
+				"CalculadoraIPv6Request": {
+					"type": "object",
+					"properties": {
+						"ipAddress": {
+							"type": "string",
+							"description": "Representa o endereço IP que será analisado.",
+							"example": "2a02:4780:14:5a20::1"
+						},
+						"subnetMask": {
+							"type": "string",
+							"description": "Deve ser informado no formato CIDR (ex.: /64).",
+							"example": "/64"
+						}
+					}
 				}
 			}
 		},
+
 		"paths": {
 			"/api/AutonomiaNobreak": {
 				"post": {
@@ -248,97 +283,7 @@ module.exports = {
 					}
 				}
 			},
-			"/api/ConsultaIP": {
-				"post": {
-					"tags": [
-						"Consulta de IP"
-					],
-					"summary": "Consulta de IP",
-					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
-					"parameters": [
 
-					],
-					"requestBody": {
-						"required": true,
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ConsultaIPRequest"
-								}
-							}
-						}
-					},
-					"responses": {
-						"200": {
-							"description": "",
-							"content": {
-								"application/json": {
-									"schema": {
-										"type": "object",
-										"example": {
-											"error": false,
-											"status": 200,
-											"result": {
-												"timezone": "America/Sao_Paulo",
-												"organization": "AS7162 Universo Online S.A.",
-												"ip": "200.221.11.100",
-												"asn": 7162,
-												"area_code": "0",
-												"organization_name": "Universo Online S.A.",
-												"country_code": "BR",
-												"country_code3": "BRA",
-												"continent_code": "SA",
-												"country": "Brazil",
-												"latitude": "-22.8305",
-												"longitude": "-43.2192",
-												"accuracy": 1000
-											},
-											"message": "Consulta realizada com sucesso."
-										}
-									}
-								}
-							}
-						},
-
-						"404": {
-							"description": "",
-							"content": {
-								"application/json": {
-									"schema": {
-										"type": "object",
-										"example": {
-											"Status": {
-												"error": true,
-												"status": 404,
-												"result": null,
-												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
-											}
-										}
-									}
-								}
-							}
-						},
-
-						"500": {
-							"description": "",
-							"content": {
-								"application/json": {
-									"schema": {
-										"type": "object",
-										"example": {
-											"error": true,
-											"status": 500,
-											"result": null,
-											"message": "Endereço IP inválido ou não encontrado."
-										}
-									}
-								}
-							}
-						}
-
-					}
-				}
-			},
 			"/api/ViabilidadeCFTV": {
 				"post": {
 					"tags": [
@@ -438,7 +383,193 @@ module.exports = {
 
 					}
 				}
-			}
+			},
+
+			"/api/ConsultaIP": {
+				"post": {
+					"tags": [
+						"Consulta de IP"
+					],
+					"summary": "Consulta de IP",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsultaIPRequest"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"timezone": "America/Sao_Paulo",
+												"organization": "AS7162 Universo Online S.A.",
+												"ip": "200.221.11.100",
+												"asn": 7162,
+												"area_code": "0",
+												"organization_name": "Universo Online S.A.",
+												"country_code": "BR",
+												"country_code3": "BRA",
+												"continent_code": "SA",
+												"country": "Brazil",
+												"latitude": "-22.8305",
+												"longitude": "-43.2192",
+												"accuracy": 1000
+											},
+											"message": "Consulta realizada com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
+												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Endereço IP inválido ou não encontrado."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
+
+			"/api/CalculadoraIPv4": {
+				"post": {
+					"tags": [
+						"Calculadora de IP (IPv4)"
+					],
+					"summary": "Calculadora de IP (IPv4)",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ipAddress**: Representa o endereço IP que será analisado.\n- **subnetMask**: Deve ser informado no formato CIDR (ex.: /22) (ex.: 255.255.252.0).\n\n# Valores Válidos para o Campo `subnetMask`\n\nOs valores de prefixo CIDR (`/n`) e suas correspondentes máscaras de rede (Network Mask) são os seguintes:\n\n- `/1` - 128.0.0.0\n- `/2` - 192.0.0.0\n- `/3` - 224.0.0.0\n- `/4` - 240.0.0.0\n- `/5` - 248.0.0.0\n- `/6` - 252.0.0.0\n- `/7` - 254.0.0.0\n\n### Classe A\n\n- `/8` - 255.0.0.0\n- `/9` - 255.128.0.0\n- `/10` - 255.192.0.0\n- `/11` - 255.224.0.0\n- `/12` - 255.240.0.0\n- `/13` - 255.248.0.0\n- `/14` - 255.252.0.0\n- `/15` - 255.254.0.0\n\n### Classe B\n\n- `/16` - 255.255.0.0\n- `/17` - 255.255.128.0\n- `/18` - 255.255.192.0\n- `/19` - 255.255.224.0\n- `/20` - 255.255.240.0\n- `/21` - 255.255.248.0\n- `/22` - 255.255.252.0\n- `/23` - 255.255.254.0\n\n### Classe C\n\n- `/24` - 255.255.255.0\n- `/25` - 255.255.255.128\n- `/26` - 255.255.255.192\n- `/27` - 255.255.255.224\n- `/28` - 255.255.255.240\n- `/29` - 255.255.255.248\n- `/30` - 255.255.255.252\n- `/31` - 255.255.255.254\n- `/32` - 255.255.255.255\n\nCertifique-se de usar o prefixo CIDR correto conforme a necessidade de cálculo de rede.\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CalculadoraIPv4Request"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"timezone": "America/Sao_Paulo",
+												"organization": "AS7162 Universo Online S.A.",
+												"ip": "200.221.11.100",
+												"asn": 7162,
+												"area_code": "0",
+												"organization_name": "Universo Online S.A.",
+												"country_code": "BR",
+												"country_code3": "BRA",
+												"continent_code": "SA",
+												"country": "Brazil",
+												"latitude": "-22.8305",
+												"longitude": "-43.2192",
+												"accuracy": 1000
+											},
+											"message": "Consulta realizada com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
+												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Endereço IP inválido ou não encontrado."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
+			
+
 		}
 	}
 };
