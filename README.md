@@ -452,8 +452,46 @@ Os seguintes parâmetros devem ser enviados no corpo da requisição:
 - **ipAddress**: Representa o endereço IP que será analisado.
 - **subnetMask**: Deve ser informado no formato CIDR (ex.: /64).
 
+# Valores Válidos para o Campo `subnetMask`
 
+Os valores de prefixo CIDR (`/n`) e suas correspondentes máscaras de rede (Network Mask) são de `/1` ... `/128`.
 
+Certifique-se de usar o prefixo CIDR correto conforme a necessidade de cálculo de rede.
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "ipAddress": "2a02:4780:14:5a20::1",
+  "subnetMask": "/64"
+}
+```
+
+## Exemplo de Resposta
+
+A resposta será um JSON com os resultados do cálculo e a viabilidade da instalação:
+
+```json
+{
+	"error": false,
+	"status": 200,
+	"result": {
+		"ipAddress": "2a02:4780:14:5a20::1",
+		"ipAddressFull": "2a02:4780:0014:5a20:0000:0000:0000:0001",
+		"networkAddress": "2a02:4780:14:5a20::",
+		"usableIPRange": "2a02:4780:0014:5a20:0000:0000:0000:0000 - 2a02:4780:0014:5a20:ffff:ffff:ffff:ffff",
+		"totalHosts": "18.446.744.073.709.552.000",
+		"cidrNotation": "/64",
+		"shortIp": "2a02:4780:14:5a20::1/64"
+	},
+	"message": "Cálculo realizado com sucesso."
+}
+```
+
+## Notas
+
+- Os parâmetros **ipAddress** e **subnetMask** são obrigatórios.
+- Certifique-se de enviar os dados no formato JSON correto.
 
 ---
 
