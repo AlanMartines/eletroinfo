@@ -55,7 +55,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			ipAddressFull: network.toDottedNotation(network.toInteger()),
 			networkAddress: network.toCompressed(network.getNetwork(), network.version),
 			usableIPRange: `${network.toDottedNotation(network.networkToInteger())} - ${network.toDottedNotation(network.broadcastToLong())}`,
-			totalHosts: network.networkSize(),
+			totalHosts: parseInt(network.networkSize().toString()),
 			cidrNotation: subnetMask,
 			shortIp: `${ipAddress}${subnetMask}`
 	};
