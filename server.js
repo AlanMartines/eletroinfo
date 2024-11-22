@@ -104,7 +104,7 @@ try {
 						"error": true,
 						"status": 404,
 						"result": null,
-						"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+						"message": "JSON enviado está incorreto. Por favor, revise o formato e tente novamente."
 					}
 				});
 			}
