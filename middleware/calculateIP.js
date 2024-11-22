@@ -35,7 +35,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 		const wildcardMask = IPv4Wildcard(network.getMask());
 		let ipType = calculateIPType(network.address);
 		return {
-			ipAddress: network.address,
+			ipAddress: ipAddress,
 			networkAddress: network.getNetwork(),
 			usableIPRange: `${network.hostFirst()} - ${network.hostLast()}`,
 			broadcastAddress: network.getBroadcast(),
@@ -52,7 +52,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 	} else {
 		let ipType = calculateIPType(network.address);
 		return {
-			ipAddress: network.address,
+			ipAddress: ipAddress,
 			ipAddressFull: network.toDottedNotation(network.toInteger()),
 			networkAddress: network.getNetwork(),
 			usableIPRange: `${network.hostFirst()} - ${network.hostLast()}`,
