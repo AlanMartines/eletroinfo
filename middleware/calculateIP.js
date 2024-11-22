@@ -40,7 +40,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			usableIPRange: `${network.hostFirst()} - ${network.hostLast()}`,
 			broadcastAddress: network.getBroadcast(),
 			totalHosts: parseInt(network.networkSize().toString()).toLocaleString(),
-			usableHosts: parseInt(network.networkSize().toString()) - 2,
+			usableHosts: (parseInt(network.networkSize().toString()) - 2).toLocaleString(),
 			subnetMask: network.getMask(),
 			wildcardMask: wildcardMask,
 			binarySubnetMask: subnetMaskToBinary(network.getMask()),
