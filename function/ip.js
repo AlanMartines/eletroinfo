@@ -173,7 +173,7 @@ class IP {
             if ( reNum.test(addr) ) {
                 addr = BigInt(addr);
                 if (addr > IPv6MAX || addr <= 0) {
-                    throw new Error('Um endereço IP não pode ser maior que 2 elevado à potência de 128, nem ser um número negativo.');
+                    throw new Error("Um endereço IP não pode ser maior que 2 elevado à potência de 128, nem ser um número negativo.");
                 } else if (addr <= IPv4MAX) {
                     return 4;
                 } else if (addr > IPv4MAX) {
@@ -184,7 +184,7 @@ class IP {
                 return 6;
             }
         }
-        throw new Error('Por favor, insira um endereço IP válido (como "127.1.0.0", número inteiro longo, IPv6 curto ou longo).');
+        throw new Error("Por favor, insira um endereço IP válido (como '127.1.0.0', número inteiro longo, IPv6 curto ou longo).");
     }
 
     /**
@@ -208,7 +208,7 @@ class IP {
         if (v === 6 && splittedAddr.length < 8) {
             let dbColon = (addr.match(/::/g)||[]).length;
             if (dbColon !== 1) {
-                throw new Error('Por favor, insira um endereço IP válido (como "127.1.0.0", número inteiro longo, IPv6 curto ou longo).');
+                throw new Error("Por favor, insira um endereço IP válido (como '127.1.0.0', número inteiro longo, IPv6 curto ou longo).");
             }
         }
 
@@ -219,7 +219,7 @@ class IP {
                 return this._toRepresentation(splittedAddr);
             }
         } else {
-            throw new Error('Por favor, insira um endereço IP válido (como "127.1.0.0", número inteiro longo, IPv6 curto ou longo).');
+            throw new Error("Por favor, insira um endereço IP válido (como '127.1.0.0', número inteiro longo, IPv6 curto ou longo).");
         }
     }
 
@@ -242,7 +242,7 @@ class IP {
             if (checked && isShort) { this.short = splittedAddr.join(':');}
             return checked;
         } else {
-            throw new Error('O IPv6 não pode conter mais de 8 bytes.');
+            throw new Error("O IPv6 não pode conter mais de 8 bytes.");
         }
     }
 
@@ -259,7 +259,7 @@ class IP {
             };
             return splittedAddr.every(isValid);
         } else {
-            throw new Error('O IPv4 não pode conter mais de 4 bytes.');
+            throw new Error("O IPv4 não pode conter mais de 4 bytes.");
         }
     }
 

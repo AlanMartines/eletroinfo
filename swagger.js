@@ -437,6 +437,23 @@ module.exports = {
 							}
 						},
 
+						"400": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "Todos os valores devem ser preenchidos: ipAddress, subnetMask. Por favor, corrija e tente novamente."
+										}
+									}
+								}
+							}
+						},
+
 						"404": {
 							"description": "",
 							"content": {
@@ -508,21 +525,21 @@ module.exports = {
 											"error": false,
 											"status": 200,
 											"result": {
-												"timezone": "America/Sao_Paulo",
-												"organization": "AS7162 Universo Online S.A.",
-												"ip": "200.221.11.100",
-												"asn": 7162,
-												"area_code": "0",
-												"organization_name": "Universo Online S.A.",
-												"country_code": "BR",
-												"country_code3": "BRA",
-												"continent_code": "SA",
-												"country": "Brazil",
-												"latitude": "-22.8305",
-												"longitude": "-43.2192",
-												"accuracy": 1000
+												"ipAddress": "192.168.100.1",
+												"networkAddress": "192.168.100.0",
+												"usableIPRange": "192.168.100.1 - 192.168.103.254",
+												"broadcastAddress": "192.168.103.255",
+												"totalHosts": "1.022",
+												"usableHosts": "1.020",
+												"subnetMask": "255.255.252.0",
+												"wildcardMask": "0.0.3.255",
+												"binarySubnetMask": "11111111.11111111.11111100.00000000",
+												"ipClass": "C",
+												"cidrNotation": "/22",
+												"ipType": "Private Use",
+												"shortIp": "192.168.100.1/22"
 											},
-											"message": "Consulta realizada com sucesso."
+											"message": "Cálculo realizado com sucesso."
 										}
 									}
 								}
@@ -558,7 +575,7 @@ module.exports = {
 											"error": true,
 											"status": 500,
 											"result": null,
-											"message": "Endereço IP inválido ou não encontrado."
+											"message": "Prefixo inválido | Por favor, insira um endereço IP válido | Um endereço IP não pode ser maior que 2 elevado à potência de 128, nem ser um número negativo."
 										}
 									}
 								}
