@@ -104,17 +104,18 @@ class Network extends IP {
     * printInfo - Shows IANA allocation information for the current IP address.
     * @return {string} ->LOOPBACK
     */
-    printInfo () {
-      let registry = {4: _ipv4Registry, 6: _ipv6Registry};
-      let results = [];
-      for (let [addr, info] of registry[this.version].entries()) {
-          let found = this.contains(this.address, addr, info[0]);
-          if (found) {
-              results.unshift(info[1]);
-          }
-      }
-      return results.length === 0 ? 'Unknown' : results[0];
-    }
+		printInfo() {
+			let registry = {4: _ipv4Registry, 6: _ipv6Registry};
+			let results = [];
+			for (let [addr, info] of registry[this.version].entries()) {
+					let found = this.contains(this.address, addr, info[0]);
+					if (found) {
+							results.unshift(info[1]); // Adiciona a descrição ao resultado
+					}
+			}
+			// Se nenhum resultado for encontrado, assume que é "Public" para IPv4
+			return results.length === 0 ? (this.version === 4 ? 'Public' : 'Unknown') : results[0];
+	}
 
     /**
     * maskToInteger - Returns network mask as bigInt
