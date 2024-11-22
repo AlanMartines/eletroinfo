@@ -8,11 +8,11 @@ const IPv6MAX = (BigInt(2) ** BigInt(128)) - BigInt(1);
 // http://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml
 let _ipv4Registry = new Map([
     ['0.0.0.0', [8, 'This host on this network']],
-    ['10.0.0.0', [8, 'Private-Use']],
+    ['10.0.0.0', [8, 'Private Use']],
     ['100.64.0.0', [10, 'Shared Address Space']],
     ['127.0.0.0', [8, 'Loopback']],
     ['169.254.0.0', [16, 'Link Local']],
-    ['172.16.0.0', [12, 'Private-Use']],
+    ['172.16.0.0', [12, 'Private Use']],
     ['192.0.0.0', [24, 'IETF Protocol Assignments']],
     ['192.0.0.0', [29, 'IPv4 Service Continuity Prefix']],
     ['192.0.0.8', [32, 'IPv4 dummy address']],
@@ -113,8 +113,8 @@ class Network extends IP {
 							results.unshift(info[1]); // Adiciona a descrição ao resultado
 					}
 			}
-			// Se nenhum resultado for encontrado, assume que é "Public" para IPv4
-			return results.length === 0 ? (this.version === 4 ? 'Public' : 'Unknown') : results[0];
+			// Se nenhum resultado for encontrado, assume que é "Public Use" para IPv4
+			return results.length === 0 ? (this.version === 4 ? 'Public Use' : 'Unknown') : results[0];
 	}
 
     /**
