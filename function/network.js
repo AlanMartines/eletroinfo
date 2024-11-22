@@ -129,7 +129,6 @@ class Network extends IP {
 	* printInfo - Shows IANA allocation information for the current IP address.
 	* @return {string} ->LOOPBACK
 	*/
-	/*
 	printInfo() {
 		let registry = { 4: _ipv4Registry, 6: _ipv6Registry };
 		let results = [];
@@ -141,28 +140,6 @@ class Network extends IP {
 		}
 		// Se nenhum resultado for encontrado, assume que é "Public Use" para IPv4
 		return results.length === 0 ? (this.version === 4 ? 'Public Use' : 'Unknown') : results[0];
-	}
-*/
-	printInfo() {
-		let registry = { 4: _ipv4Registry, 6: _ipv6Registry };
-		let results = [];
-
-		// Itera sobre o registro (IPv4 ou IPv6)
-		for (let [addr, info] of registry[this.version].entries()) {
-			let found = this.contains(this.address, addr, info[0]);
-			if (found) {
-				results.unshift(info[1]); // Adiciona a descrição correspondente
-			}
-		}
-
-		// Retorna "Public" se for um IP público válido e não estiver listado no registro
-		if (results.length === 0) {
-			if (this.version === 6 && this.isValidIPv6Public()) {
-				return 'Public';
-			}
-			return 'Unknown'; // Caso não seja um IP público conhecido
-		}
-		return results[0]; // Retorna a primeira descrição encontrada
 	}
 
 	/**
