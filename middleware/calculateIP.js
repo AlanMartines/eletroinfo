@@ -13,6 +13,25 @@ function calculateIPInfo(ipAddress, subnetMask) {
 	const prefix = parseInt(subnetMask.replace('/', ''), 10); // Remove '/' da máscara
 	const network = new Network(ipAddress, prefix);
 
+	// Determina se o IP é público ou privado
+	function calculateIPType(ipParts) {
+		const privateRanges = [
+			['10.0.0.0', '10.255.255.255'],
+			['172.16.0.0', '172.31.255.255'],
+			['192.168.0.0', '192.168.255.255']
+		];
+
+		for (const [start, end] of privateRanges) {
+			const startIP = start.split('.').map(part => parseInt(part));
+			const endIP = end.split('.').map(part => parseInt(part));
+			const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
+			if (inRange) {
+				return 'Private';
+			}
+		}
+		return 'Public';
+	}
+
 	if (network.version === 4) {
 		const wildcardMask = IPv4Wildcard(network.getMask());
 		return {
@@ -26,7 +45,9 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			wildcardMask: wildcardMask,
 			binarySubnetMask: subnetMaskToBinary(network.getMask()),
 			ipClass: getIPv4Class(network.address),
-			cidrNotation: subnetMask
+			cidrNotation: subnetMask,
+			ipType: calculateIPType(ipAddress),
+			shortIp: `${ipAddress}/${subnetMask}`
 		};
 	} else {
 		return {
