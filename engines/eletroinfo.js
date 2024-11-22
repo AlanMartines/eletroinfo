@@ -12,8 +12,6 @@ const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
 const { calculateIPInfo } = require('../middleware/calculateIP');
-const { calculateSubnetIPv4 } = require('../middleware/CalculadoraIPv4');
-const { calculateSubnetIPv6 } = require('../middleware/CalculadoraIPv6');
 //
 //
 /*
@@ -54,6 +52,7 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 		});
 	} catch (error) {
 		// Capturando e retornando erro interno
+		logger.error(`- Erro: ${error?.message}`);
 		return res.status(500).json({
 			error: true,
 			status: 500,
@@ -97,6 +96,7 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 		});
 	} catch (error) {
 		// Capturando e retornando erro interno
+		logger.error(`- Erro: ${error?.message}`);
 		return res.status(500).json({
 			error: true,
 			status: 500,
@@ -127,7 +127,7 @@ router.post('/ConsultaIP', async (req, res, next) => {
 		}
 	} catch (error) {
 		// Capturando e retornando erro interno
-		console.log(error);
+		logger.error(`- Erro: ${error?.message}`);
 		return res.status(500).json({
 			error: true,
 			status: 500,
@@ -171,7 +171,7 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 		});
 	} catch (error) {
 		// Capturando e retornando erro interno
-		console.log(error);
+		logger.error(`- Erro: ${error?.message}`);
 		return res.status(500).json({
 			error: true,
 			status: 500,
@@ -204,7 +204,7 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 
 	try {
 		// Calculando a autonomia
-		const resultado = calculateSubnetIPv6(requestBody?.ipAddress, requestBody?.subnetMask);
+		const resultado = calculateIPInfo(requestBody?.ipAddress, requestBody?.subnetMask);
 
 		// Retornando sucesso com o formato esperado
 		return res.status(200).json({
@@ -215,7 +215,7 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 		});
 	} catch (error) {
 		// Capturando e retornando erro interno
-		console.log(error);
+		logger.error(`- Erro: ${error?.message}`);
 		return res.status(500).json({
 			error: true,
 			status: 500,
