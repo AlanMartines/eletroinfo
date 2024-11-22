@@ -33,7 +33,7 @@ module.exports = {
 			},
 			{
 				"name": "Geolocalização de IP",
-				"description": "Localiza geograficamente um endereço IP, , como tipo (IPv4/IPv6), fornecendo informações como país, cidade e provedor associado ao endereço."
+				"description": "Localiza geograficamente um endereço IP, como tipo (IPv4/IPv6), fornecendo informações como país, cidade e provedor associado ao endereço."
 			},
 			{
 				"name": "Teste de Portas de Rede",
