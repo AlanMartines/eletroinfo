@@ -11,7 +11,7 @@ const IPv6MAX = (BigInt(2) ** BigInt(128)) - BigInt(1);
 * @return {object} -> IP{address:"184.170.96.196", version: 4, integer: 0, short: 0}
 */
 
-export default class IP {
+class IP {
     /**
     * @constructor
     */
@@ -378,3 +378,5 @@ const _longestZerosGroup = (splittedAddr) => {
     }
     return hasZeros ? [startOfLongest, currLongest] : ['N/A', 'N/A'];
 };
+
+module.exports = IP;
