@@ -303,26 +303,39 @@ router.post('/TestePortasRede', async (req, res, next) => {
 router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	let mac = requestBody?.mac?.replace(/\s+/g, '');
+
+	// Verificando se algum campo obrigatório está ausente
+	if (!ip) {
+		return res.status(400).json({
+			error: true,
+			status: 400,
+			result: null,
+			message: 'O mac deve ser preenchido. Por favor, corrija e tente novamente.'
 		});
-		//
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
+
+	try {
+		const resip = await fetch(`https://www.macvendorlookup.com/api/v2/${mac}/json`);
+		if (resip.ok) {
+			const data = await resip.json();
+			return res.status(200).json({
+				error: false,
+				status: 200,
+				result: data,
+				message: "Consulta realizada com sucesso."
+			});
+		}
+	} catch (error) {
+		// Capturando e retornando erro interno
+		logger.error(`- Erro: ${error?.message}`);
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Endereço MAC inválido ou não encontrado.'
+		});
+	}
 	//
 });
 //
