@@ -23,10 +23,10 @@ const { calculateIPInfo } = require('../middleware/CalculadoraIP');
 router.post('/AutonomiaNobreak', async (req, res, next) => {
 
 	let requestBody = req?.body;
-	let carga_aplicada = requestBody?.carga_aplicada;
-	let tensao_bateria = requestBody?.tensao_bateria;
-	let capacidade_bateria = requestBody?.capacidade_bateria;
-	let quantidade_baterias = requestBody?.quantidade_baterias;
+	let carga_aplicada = requestBody?.carga_aplicada?.replace(/\s+/g, '');
+	let tensao_bateria = requestBody?.tensao_bateria?.replace(/\s+/g, '');
+	let capacidade_bateria = requestBody?.capacidade_bateria?.replace(/\s+/g, '');
+	let quantidade_baterias = requestBody?.quantidade_baterias?.replace(/\s+/g, '');
 	let tipo_bateria = requestBody?.tipo_bateria;
 
 	// Verificando se algum campo obrigatório está ausente
@@ -67,11 +67,11 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 router.post('/ViabilidadeCFTV', async (req, res, next) => {
 
 	let requestBody = req?.body;
-	let tensao_fonte = requestBody?.tensao_fonte;
-	let bitola_cabo = requestBody?.bitola_cabo;
-	let distancia = requestBody?.distancia;
-	let tensao_camera = requestBody?.tensao_camera;
-	let corrente_camera = requestBody?.corrente_camera;
+	let tensao_fonte = requestBody?.tensao_fonte?.replace(/\s+/g, '');
+	let bitola_cabo = requestBody?.bitola_cabo?.replace(/\s+/g, '');
+	let distancia = requestBody?.distancia?.replace(/\s+/g, '');
+	let tensao_camera = requestBody?.tensao_camera?.replace(/\s+/g, '');
+	let corrente_camera = requestBody?.corrente_camera?.replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!tensao_fonte || !bitola_cabo || !distancia || !tensao_camera || !corrente_camera) {
@@ -111,8 +111,10 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 router.post('/CalculadoraIPv4', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
+	let ipAddress = requestBody?.ipAddress?.replace(/\s+/g, '');
+	let subnetMask = requestBody?.subnetMask?.replace(/\s+/g, '');
 	//
-	if (!requestBody?.ipAddress || !requestBody?.subnetMask) {
+	if (!ipAddress || !subnetMask) {
 		var resultRes = {
 			error: true,
 			status: 400,
@@ -155,8 +157,10 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 router.post('/CalculadoraIPv6', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
+	let ipAddress = requestBody?.ipAddress?.replace(/\s+/g, '');
+	let subnetMask = requestBody?.subnetMask?.replace(/\s+/g, '');
 	//
-	if (!requestBody?.ipAddress || !requestBody?.subnetMask) {
+	if (!ipAddress || !subnetMask) {
 		var resultRes = {
 			error: true,
 			status: 400,
@@ -173,7 +177,7 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 
 	try {
 		// Calculando a autonomia
-		const resultado = calculateIPInfo(requestBody?.ipAddress, requestBody?.subnetMask);
+		const resultado = calculateIPInfo(ipAddress, subnetMask);
 
 		// Retornando sucesso com o formato esperado
 		return res.status(200).json({
@@ -199,8 +203,10 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 router.post('/ConsultaIP', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
+	let ip = requestBody?.ip?.replace(/\s+/g, '');
+	//
 	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
-	let clientIp = requestBody?.ip ? requestBody?.ip : requestIp?.getClientIp(req);
+	let clientIp = ip ? ip : requestIp?.getClientIp(req);
 	//
 	try {
 		const resip = await fetch(`https://get.geojs.io/v1/ip/geo/${clientIp}.json`);
@@ -230,7 +236,7 @@ router.post('/ConsultaIP', async (req, res, next) => {
 router.post('/GeolocalizacaoIP', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
-	let ip = requestBody?.ip;
+	let ip = requestBody?.ip?.str.replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!ip) {
