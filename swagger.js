@@ -437,23 +437,6 @@ module.exports = {
 							}
 						},
 
-						"400": {
-							"description": "",
-							"content": {
-								"application/json": {
-									"schema": {
-										"type": "object",
-										"example": {
-											"error": true,
-											"status": 400,
-											"result": null,
-											"message": "Todos os valores devem ser preenchidos: ipAddress, subnetMask. Por favor, corrija e tente novamente."
-										}
-									}
-								}
-							}
-						},
-
 						"404": {
 							"description": "",
 							"content": {
@@ -546,6 +529,23 @@ module.exports = {
 							}
 						},
 
+						"400": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "Todos os valores devem ser preenchidos: ipAddress, subnetMask. Por favor, corrija e tente novamente."
+										}
+									}
+								}
+							}
+						},
+
 						"404": {
 							"description": "",
 							"content": {
@@ -586,6 +586,108 @@ module.exports = {
 				}
 			},
 			
+			"/api/CalculadoraIPv6": {
+				"post": {
+					"tags": [
+						"Calculadora de IP (IPv6)"
+					],
+					"summary": "Calculadora de IP (IPv6)",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ipAddress**: Representa o endereço IP que será analisado.\n- **subnetMask**: Deve ser informado no formato CIDR (ex.: /64).\n\n# Valores Válidos para o Campo `subnetMask`\n\nOs valores de prefixo CIDR (`/n`) e suas correspondentes máscaras de rede (Network Mask) são de `/1` ... `/128`.\n\nCertifique-se de usar o prefixo CIDR correto conforme a necessidade de cálculo de rede.\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CalculadoraIPv6Request"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"ipAddress": "2a02:4780:14:5a20::1",
+												"ipAddressFull": "2a02:4780:0014:5a20:0000:0000:0000:0001",
+												"networkAddress": "2a02:4780:14:5a20::",
+												"usableIPRange": "2a02:4780:0014:5a20:0000:0000:0000:0000 - 2a02:4780:0014:5a20:ffff:ffff:ffff:ffff",
+												"totalHosts": "18.446.744.073.709.552.000",
+												"cidrNotation": "/64",
+												"shortIp": "2a02:4780:14:5a20::1/64"
+											},
+											"message": "Cálculo realizado com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"400": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "Todos os valores devem ser preenchidos: ipAddress, subnetMask. Por favor, corrija e tente novamente."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
+												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Prefixo inválido | Por favor, insira um endereço IP válido | Um endereço IP não pode ser maior que 2 elevado à potência de 128, nem ser um número negativo."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
 
 		}
 	}
