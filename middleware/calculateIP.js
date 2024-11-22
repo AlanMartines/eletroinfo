@@ -54,11 +54,11 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			ipAddress: ipAddress,
 			ipAddressFull: network.toDottedNotation(network.toInteger()),
 			networkAddress: network.getNetwork(),
-			usableIPRange: `${network.hostFirst()} - ${network.hostLast()}`,
+			usableIPRange: `${network.toDottedNotation(network.networkToInteger())} - ${network.toDottedNotation(network.broadcastToLong())}`,
 			totalHosts: network.networkSize().toString(),
 			cidrNotation: subnetMask,
 			shortIp: `${ipAddress}${subnetMask}`
-		};
+	};
 	}
 }
 
