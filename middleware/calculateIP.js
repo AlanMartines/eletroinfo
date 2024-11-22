@@ -21,10 +21,14 @@ function calculateIPType(ipParts) {
 	return 'Public';
 }
 
+/*
+ * Calcula informações detalhadas sobre um IP e sua rede a partir de uma entrada de dados.
+ */
 function calculateIPInfo(ipAddress, subnetMask) {
 
 	const prefix = parseInt(subnetMask.replace('/', ''), 10); // Remove '/' da máscara
 	const network = new Network(ipAddress, prefix);
+
 
 	if (network.version === 4) {
 		const wildcardMask = IPv4Wildcard(network.getMask());
@@ -56,11 +60,8 @@ function calculateIPInfo(ipAddress, subnetMask) {
 	}
 }
 
-/**
+/*
  * Converte uma máscara de sub-rede em formato decimal para binário.
- *
- * @param {string} subnetMask - A máscara de sub-rede em formato decimal (ex.: "255.255.255.0").
- * @returns {string} A máscara de sub-rede em formato binário (ex.: "11111111.11111111.11111111.00000000").
  */
 function subnetMaskToBinary(subnetMask) {
 	return subnetMask
@@ -69,11 +70,8 @@ function subnetMaskToBinary(subnetMask) {
 		.join('.');
 }
 
-/**
+/*
  * Determina a máscara curinga (wildcard) a partir da máscara de sub-rede.
- *
- * @param {string} subnetMask - A máscara de sub-rede em formato decimal.
- * @returns {string} A máscara curinga em formato decimal.
  */
 function IPv4Wildcard(subnetMask) {
 	return subnetMask
@@ -82,11 +80,8 @@ function IPv4Wildcard(subnetMask) {
 		.join('.');
 }
 
-/**
- * Determina a classe de um endereço IPv4.
- *
- * @param {string} ipAddress - O endereço IPv4.
- * @returns {string} A classe do IP ("A", "B", "C", "D" ou "E").
+/*
+ * Determina a classe de um endereço IPv4. A classe do IP ("A", "B", "C", "D" ou "E")
  */
 function getIPv4Class(ipAddress) {
 	const firstOctet = parseInt(ipAddress.split('.')[0], 10);
