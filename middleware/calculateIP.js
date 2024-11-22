@@ -50,7 +50,6 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			shortIp: `${ipAddress}${subnetMask}`
 		};
 	} else {
-		let ipType = calculateIPType(network.address);
 		return {
 			ipAddress: ipAddress,
 			ipAddressFull: network.toDottedNotation(network.toInteger()),
