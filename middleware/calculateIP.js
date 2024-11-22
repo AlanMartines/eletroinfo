@@ -3,20 +3,21 @@ const Network = require('../function/network.js');
 
 
 // Determina se o IP é público ou privado
-function calculateIPType(ipParts) {
+function calculateIPType(ipAddress) {
+	const ipParts = ipAddress.split('.').map(part => parseInt(part, 10)); // Converte para array de inteiros
 	const privateRanges = [
-		['10.0.0.0', '10.255.255.255'],
-		['172.16.0.0', '172.31.255.255'],
-		['192.168.0.0', '192.168.255.255']
+			['10.0.0.0', '10.255.255.255'],
+			['172.16.0.0', '172.31.255.255'],
+			['192.168.0.0', '192.168.255.255']
 	];
 
 	for (const [start, end] of privateRanges) {
-		const startIP = start.split('.').map(part => parseInt(part));
-		const endIP = end.split('.').map(part => parseInt(part));
-		const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
-		if (inRange) {
-			return 'Private';
-		}
+			const startIP = start.split('.').map(part => parseInt(part, 10));
+			const endIP = end.split('.').map(part => parseInt(part, 10));
+			const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
+			if (inRange) {
+					return 'Private';
+			}
 	}
 	return 'Public';
 }
@@ -32,7 +33,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 
 	if (network.version === 4) {
 		const wildcardMask = IPv4Wildcard(network.getMask());
-		const ipType = calculateIPType(network.address);
+		let ipType = calculateIPType(network.address);
 		return {
 			ipAddress: network.address,
 			networkAddress: network.getNetwork(),
@@ -45,9 +46,11 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			binarySubnetMask: subnetMaskToBinary(network.getMask()),
 			ipClass: getIPv4Class(network.address),
 			cidrNotation: subnetMask,
+			ipType: ipType,
 			shortIp: `${ipAddress}${subnetMask}`
 		};
 	} else {
+		let ipType = calculateIPType(network.address);
 		return {
 			ipAddress: network.address,
 			ipAddressFull: network.toDottedNotation(network.toInteger()),
