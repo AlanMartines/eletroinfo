@@ -8,7 +8,6 @@ A API da EletroInfo oferece soluções para cálculos técnicos e consultas volt
 
 ![](https://img.shields.io/github/stars/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/tag/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/v/release/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/issues/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/badge/express-v4.21.1-green.svg) ![](https://img.shields.io/badge/node-v20.18.1-green.svg) ![](https://img.shields.io/badge/npm-v10.9.0-green.svg) ![](https://img.shields.io/github/license/AlanMartines/eletroinfo) ![](https://img.shields.io/github/downloads/AlanMartines/eletroinfo/total) ![](https://img.shields.io/github/forks/AlanMartines/eletroinfo)
 
-
 ## Dependências Debian (e.g. Ubuntu) 64bits
 
 ```sh
@@ -70,6 +69,7 @@ pm2 unstartup systemd
 3.  [Endpoint - Consulta de IP](#endpoint---consulta-de-ip)
 4.  [Endpoint - Calculadora de IP (IPv4)](#endpoint---calculadora-de-ip-ipv4)
 5.  [Endpoint - Calculadora de IP (IPv6)](#endpoint---calculadora-de-ip-ipv6)
+5.  [Endpoint - Geolocalização de IP](#endpoint---geolocalização-de-ip)
 
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
@@ -139,6 +139,7 @@ O corpo da requisição deve ser enviado no formato JSON, contendo os seguintes 
   "mensagem": "Cálculo realizado com sucesso."
 }
 ```
+
 ```
 Tempo estimado de autonomia (HH:MM:SS)
 Tensão mínima de corte da bateria em volts (V)
@@ -396,7 +397,7 @@ Certifique-se de usar o prefixo CIDR correto conforme a necessidade de cálculo 
 
 ## Exemplo de Resposta
 
-A resposta será um JSON com os resultados do cálculo e a viabilidade da instalação:
+A resposta será um JSON com os resultados do cálculo:
 
 ```json
 {
@@ -429,6 +430,7 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 ---
 
 ---
+
 ## Endpoint - Calculadora de IP (IPv6)
 
 ## Detalhes do Endpoint
@@ -469,22 +471,22 @@ Certifique-se de usar o prefixo CIDR correto conforme a necessidade de cálculo 
 
 ## Exemplo de Resposta
 
-A resposta será um JSON com os resultados do cálculo e a viabilidade da instalação:
+A resposta será um JSON com os resultados do cálculo:
 
 ```json
 {
-	"error": false,
-	"status": 200,
-	"result": {
-		"ipAddress": "2a02:4780:14:5a20::1",
-		"ipAddressFull": "2a02:4780:0014:5a20:0000:0000:0000:0001",
-		"networkAddress": "2a02:4780:14:5a20::",
-		"usableIPRange": "2a02:4780:0014:5a20:0000:0000:0000:0000 - 2a02:4780:0014:5a20:ffff:ffff:ffff:ffff",
-		"totalHosts": "18.446.744.073.709.552.000",
-		"cidrNotation": "/64",
-		"shortIp": "2a02:4780:14:5a20::1/64"
-	},
-	"message": "Cálculo realizado com sucesso."
+  "error": false,
+  "status": 200,
+  "result": {
+    "ipAddress": "2a02:4780:14:5a20::1",
+    "ipAddressFull": "2a02:4780:0014:5a20:0000:0000:0000:0001",
+    "networkAddress": "2a02:4780:14:5a20::",
+    "usableIPRange": "2a02:4780:0014:5a20:0000:0000:0000:0000 - 2a02:4780:0014:5a20:ffff:ffff:ffff:ffff",
+    "totalHosts": "18.446.744.073.709.552.000",
+    "cidrNotation": "/64",
+    "shortIp": "2a02:4780:14:5a20::1/64"
+  },
+  "message": "Cálculo realizado com sucesso."
 }
 ```
 
@@ -496,6 +498,85 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 ---
 
 ---
+
+## Endpoint - Geolocalização de IP
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/GeolocalizacaoIP`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+Os seguintes parâmetros devem ser enviados no corpo da requisição:
+
+- **ip:** Endereço IP que se deseja consultar.
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "ip": "200.221.11.100"
+}
+```
+
+## Exemplo de Resposta
+
+A resposta será um JSON com o resultado da consulta:
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": {
+    "status": "success",
+    "continent": "South America",
+    "continentCode": "SA",
+    "country": "Brazil",
+    "countryCode": "BR",
+    "region": "SP",
+    "regionName": "São Paulo",
+    "city": "São Paulo",
+    "district": "",
+    "zip": "01000-000",
+    "lat": -23.5558,
+    "lon": -46.6396,
+    "timezone": "America/Sao_Paulo",
+    "offset": -10800,
+    "currency": "BRL",
+    "isp": "Universo Online S.A.",
+    "org": "Universo Online S.A",
+    "as": "AS7162 Universo Online S.A.",
+    "asname": "Universo Online S.A.",
+    "reverse": "brahms.uol.com.br",
+    "mobile": false,
+    "proxy": false,
+    "hosting": false,
+    "query": "200.221.11.100"
+  },
+  "message": "Consulta realizada com sucesso."
+}
+```
+
+## Notas
+
+- O parâmetro `ip` é obrigatório.
+- A precisão dos dados retornados pode variar dependendo da base de dados utilizada.
+- Certifique-se de enviar os dados no formato JSON correto.
+
+---
+
+---
+
 ## Rotas
 
 > As rota se encontra no arquivo [Insomnia.json](https://github.com/AlanMartines/eletroinfo/blob/master/Insomnia.json "Insomnia.json"), importe para seu Insomnia e desfrute da API.

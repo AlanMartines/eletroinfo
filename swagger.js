@@ -706,7 +706,7 @@ module.exports = {
 						"Geolocalização de IP"
 					],
 					"summary": "Geolocalização de IP",
-					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar.\n",
 					"parameters": [
 
 					],
