@@ -230,9 +230,20 @@ router.post('/ConsultaIP', async (req, res, next) => {
 router.post('/GeolocalizacaoIP', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
-	//
+	let ip = requestBody?.ip;
+
+	// Verificando se algum campo obrigatório está ausente
+	if (!ip || !tensao_bateria) {
+		return res.status(400).json({
+			error: true,
+			status: 400,
+			result: null,
+			message: 'O valore do ip deve ser preenchido. Por favor, corrija e tente novamente.'
+		});
+	}
+
 	try {
-		const resip = await fetch(`http://ip-api.com/json/${requestBody.ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
+		const resip = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
 		if (resip.ok) {
 			const data = await resip.json();
 			return res.status(200).json({

@@ -731,21 +731,49 @@ module.exports = {
 											"error": false,
 											"status": 200,
 											"result": {
+												"query": "2a02:4780:14:5a20::1",
+												"status": "success",
+												"continent": "América do Sul",
+												"continentCode": "SA",
+												"country": "Brasil",
+												"countryCode": "BR",
+												"region": "SP",
+												"regionName": "São Paulo",
+												"city": "São Paulo",
+												"district": "",
+												"zip": "01323",
+												"lat": -23.5335,
+												"lon": -46.6359,
 												"timezone": "America/Sao_Paulo",
-												"organization": "AS7162 Universo Online S.A.",
-												"ip": "200.221.11.100",
-												"asn": 7162,
-												"area_code": "0",
-												"organization_name": "Universo Online S.A.",
-												"country_code": "BR",
-												"country_code3": "BRA",
-												"continent_code": "SA",
-												"country": "Brazil",
-												"latitude": "-22.8305",
-												"longitude": "-43.2192",
-												"accuracy": 1000
+												"offset": -10800,
+												"currency": "BRL",
+												"isp": "HOSTINGER BR",
+												"org": "Hostinger International Ltd.",
+												"as": "AS47583 Hostinger International Limited",
+												"asname": "AS-HOSTINGER",
+												"reverse": "",
+												"mobile": false,
+												"proxy": false,
+												"hosting": true
 											},
 											"message": "Consulta realizada com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"400": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "O valore do ip deve ser preenchido. Por favor, corrija e tente novamente."
 										}
 									}
 								}
