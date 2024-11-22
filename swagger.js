@@ -20,16 +20,16 @@ module.exports = {
 				"description": "Analisa a viabilidade de instalação de sistemas de CFTV considerando fatores como área coberta, quantidade de câmeras e infraestrutura disponível."
 			},
 			{
-				"name": "Consulta de IP",
-				"description": "Fornece informações detalhadas sobre um endereço IP, como tipo (IPv4/IPv6), localização aproximada e provedor de internet."
-			},
-			{
 				"name": "Calculadora de IP (IPv4)",
 				"description": "Realiza cálculos de sub-redes IPv4, exibindo detalhes como máscara de rede, IP inicial e final, além da quantidade de hosts disponíveis."
 			},
 			{
 				"name": "Calculadora de IP (IPv6)",
 				"description": "Calcula sub-redes IPv6, gerando informações como prefixo de rede, IP inicial e final, e o total de endereços disponíveis na sub-rede."
+			},
+			{
+				"name": "Consulta de IP",
+				"description": "Fornece informações detalhadas sobre um endereço IP, como tipo (IPv4/IPv6), localização aproximada e provedor de internet."
 			},
 			{
 				"name": "Geolocalização de IP",
@@ -140,17 +140,6 @@ module.exports = {
 					]
 				},
 
-				"ConsultaIPRequest": {
-					"type": "object",
-					"properties": {
-						"ip": {
-							"type": "string",
-							"description": "Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual",
-							"example": "200.221.11.100"
-						}
-					}
-				},
-
 				"CalculadoraIPv4Request": {
 					"type": "object",
 					"properties": {
@@ -181,7 +170,29 @@ module.exports = {
 							"example": "/64"
 						}
 					}
-				}
+				},
+
+				"ConsultaIPRequest": {
+					"type": "object",
+					"properties": {
+						"ip": {
+							"type": "string",
+							"description": "Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual",
+							"example": "200.221.11.100"
+						}
+					}
+				},
+
+				"GeolocalizacaoIPRequest": {
+					"type": "object",
+					"properties": {
+						"ip": {
+							"type": "string",
+							"description": "Endereço IP que se deseja consultar.",
+							"example": "200.221.11.100"
+						}
+					}
+				},
 			}
 		},
 
@@ -375,98 +386,6 @@ module.exports = {
 											"status": 500,
 											"result": null,
 											"message": "Erro ao calcular a viabilidade."
-										}
-									}
-								}
-							}
-						}
-
-					}
-				}
-			},
-
-			"/api/ConsultaIP": {
-				"post": {
-					"tags": [
-						"Consulta de IP"
-					],
-					"summary": "Consulta de IP",
-					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
-					"parameters": [
-
-					],
-					"requestBody": {
-						"required": true,
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ConsultaIPRequest"
-								}
-							}
-						}
-					},
-					"responses": {
-						"200": {
-							"description": "",
-							"content": {
-								"application/json": {
-									"schema": {
-										"type": "object",
-										"example": {
-											"error": false,
-											"status": 200,
-											"result": {
-												"timezone": "America/Sao_Paulo",
-												"organization": "AS7162 Universo Online S.A.",
-												"ip": "200.221.11.100",
-												"asn": 7162,
-												"area_code": "0",
-												"organization_name": "Universo Online S.A.",
-												"country_code": "BR",
-												"country_code3": "BRA",
-												"continent_code": "SA",
-												"country": "Brazil",
-												"latitude": "-22.8305",
-												"longitude": "-43.2192",
-												"accuracy": 1000
-											},
-											"message": "Consulta realizada com sucesso."
-										}
-									}
-								}
-							}
-						},
-
-						"404": {
-							"description": "",
-							"content": {
-								"application/json": {
-									"schema": {
-										"type": "object",
-										"example": {
-											"Status": {
-												"error": true,
-												"status": 404,
-												"result": null,
-												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
-											}
-										}
-									}
-								}
-							}
-						},
-
-						"500": {
-							"description": "",
-							"content": {
-								"application/json": {
-									"schema": {
-										"type": "object",
-										"example": {
-											"error": true,
-											"status": 500,
-											"result": null,
-											"message": "Endereço IP inválido ou não encontrado."
 										}
 									}
 								}
@@ -689,6 +608,189 @@ module.exports = {
 				}
 			},
 
+			"/api/ConsultaIP": {
+				"post": {
+					"tags": [
+						"Consulta de IP"
+					],
+					"summary": "Consulta de IP",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsultaIPRequest"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"timezone": "America/Sao_Paulo",
+												"organization": "AS7162 Universo Online S.A.",
+												"ip": "200.221.11.100",
+												"asn": 7162,
+												"area_code": "0",
+												"organization_name": "Universo Online S.A.",
+												"country_code": "BR",
+												"country_code3": "BRA",
+												"continent_code": "SA",
+												"country": "Brazil",
+												"latitude": "-22.8305",
+												"longitude": "-43.2192",
+												"accuracy": 1000
+											},
+											"message": "Consulta realizada com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
+												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Endereço IP inválido ou não encontrado."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
+
+			"/api/GeolocalizacaoIP": {
+				"post": {
+					"tags": [
+						"Geolocalização de IP"
+					],
+					"summary": "Geolocalização de IP",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeolocalizacaoIPRequest"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"timezone": "America/Sao_Paulo",
+												"organization": "AS7162 Universo Online S.A.",
+												"ip": "200.221.11.100",
+												"asn": 7162,
+												"area_code": "0",
+												"organization_name": "Universo Online S.A.",
+												"country_code": "BR",
+												"country_code3": "BRA",
+												"continent_code": "SA",
+												"country": "Brazil",
+												"latitude": "-22.8305",
+												"longitude": "-43.2192",
+												"accuracy": 1000
+											},
+											"message": "Consulta realizada com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
+												"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Endereço IP inválido ou não encontrado."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
 		}
 	}
 };

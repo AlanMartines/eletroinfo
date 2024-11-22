@@ -108,37 +108,6 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 });
 //
 //
-router.post('/ConsultaIP', async (req, res, next) => {
-	//
-	let requestBody = req?.body;
-	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
-	let clientIp = requestBody?.ip ? requestBody?.ip : requestIp?.getClientIp(req);
-	//
-	try {
-		const resip = await fetch(`https://get.geojs.io/v1/ip/geo/${clientIp}.json`);
-		if (resip.ok) {
-			const data = await resip.json();
-			return res.status(200).json({
-				error: false,
-				status: 200,
-				result: data,
-				message: "Consulta realizada com sucesso."
-			});
-		}
-	} catch (error) {
-		// Capturando e retornando erro interno
-		logger.error(`- Erro: ${error?.message}`);
-		return res.status(500).json({
-			error: true,
-			status: 500,
-			result: null,
-			message: 'Endereço IP inválido ou não encontrado.'
-		});
-	}
-	//
-});
-//
-//
 router.post('/CalculadoraIPv4', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
@@ -227,31 +196,62 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 });
 //
 //
-router.post('/GeolocalizacaoIP', async (req, res, next) => {
+router.post('/ConsultaIP', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
 	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
 	let clientIp = requestBody?.ip ? requestBody?.ip : requestIp?.getClientIp(req);
 	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	try {
+		const resip = await fetch(`https://get.geojs.io/v1/ip/geo/${clientIp}.json`);
+		if (resip.ok) {
+			const data = await resip.json();
+			return res.status(200).json({
+				error: false,
+				status: 200,
+				result: data,
+				message: "Consulta realizada com sucesso."
+			});
+		}
+	} catch (error) {
+		// Capturando e retornando erro interno
+		logger.error(`- Erro: ${error?.message}`);
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Endereço IP inválido ou não encontrado.'
 		});
-		//
 	}
 	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
+});
+//
+//
+router.post('/GeolocalizacaoIP', async (req, res, next) => {
+	//
+	let requestBody = req?.body;
+	//
+	try {
+		const resip = await fetch(`http://ip-api.com/json/${requestBody.ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
+		if (resip.ok) {
+			const data = await resip.json();
+			return res.status(200).json({
+				error: false,
+				status: 200,
+				result: data,
+				message: "Consulta realizada com sucesso."
+			});
+		}
+	} catch (error) {
+		// Capturando e retornando erro interno
+		logger.error(`- Erro: ${error?.message}`);
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Endereço IP inválido ou não encontrado.'
+		});
+	}
 	//
 });
 //
