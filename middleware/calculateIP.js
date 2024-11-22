@@ -46,7 +46,6 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			binarySubnetMask: subnetMaskToBinary(network.getMask()),
 			ipClass: getIPv4Class(network.address),
 			cidrNotation: subnetMask,
-			ipType: calculateIPType(ipAddress),
 			shortIp: `${ipAddress}/${subnetMask}`
 		};
 	} else {
