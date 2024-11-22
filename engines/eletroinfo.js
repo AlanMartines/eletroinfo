@@ -236,7 +236,7 @@ router.post('/ConsultaIP', async (req, res, next) => {
 router.post('/GeolocalizacaoIP', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
-	let ip = requestBody?.ip?.str.replace(/\s+/g, '');
+	let ip = requestBody?.ip?.replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!ip) {
