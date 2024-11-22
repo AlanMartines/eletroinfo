@@ -1,5 +1,5 @@
 /* global BigInt */
-import IP from './ip.js';
+const IP = require('./ip.js');
 
 const IPv4MAX = (BigInt(2) ** BigInt(32)) - BigInt(1);
 const IPv6MAX = (BigInt(2) ** BigInt(128)) - BigInt(1);
@@ -68,7 +68,7 @@ let _ipv6Registry = new Map([
 * @return {object} -> IP{address:"127.128.99.3", prefix: 8}
 */
 
-export default class Network extends IP {
+class Network extends IP {
     /**
     * Extends IP class. Calls the parent class IP with the parameters passed to Network.
     * @constructor
@@ -261,3 +261,5 @@ export default class Network extends IP {
     }
 
 }
+
+module.exports = Network;
