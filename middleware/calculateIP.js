@@ -39,7 +39,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			networkAddress: network.getNetwork(),
 			usableIPRange: `${network.hostFirst()} - ${network.hostLast()}`,
 			broadcastAddress: network.getBroadcast(),
-			totalHosts: parseInt(network.networkSize().toString()),
+			totalHosts: parseInt(network.networkSize().toString()).toLocaleString(),
 			usableHosts: parseInt(network.networkSize().toString()) - 2,
 			subnetMask: network.getMask(),
 			wildcardMask: wildcardMask,
@@ -55,7 +55,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			ipAddressFull: network.toDottedNotation(network.toInteger()),
 			networkAddress: network.toCompressed(network.getNetwork(), network.version),
 			usableIPRange: `${network.toDottedNotation(network.networkToInteger())} - ${network.toDottedNotation(network.broadcastToLong())}`,
-			totalHosts: parseInt(network.networkSize().toString()),
+			totalHosts: parseInt(network.networkSize().toString()).toLocaleString(),
 			cidrNotation: subnetMask,
 			shortIp: `${ipAddress}${subnetMask}`
 	};
