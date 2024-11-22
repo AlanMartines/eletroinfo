@@ -1,36 +1,30 @@
 const IP = require('../function/ip.js');
 const Network = require('../function/network.js');
 
-/**
- * Calcula informações detalhadas sobre um IP e sua rede a partir de uma entrada de dados.
- * 
- * @param {string} ipAddress - Endereço IP (ex.: "192.168.100.1").
- * @param {string} subnetMask - Máscara de sub-rede no formato CIDR (ex.: "/24").
- * @returns {object} Informações detalhadas sobre o IP e a rede.
- */
+
+// Determina se o IP é público ou privado
+function calculateIPType(ipParts) {
+	const privateRanges = [
+		['10.0.0.0', '10.255.255.255'],
+		['172.16.0.0', '172.31.255.255'],
+		['192.168.0.0', '192.168.255.255']
+	];
+
+	for (const [start, end] of privateRanges) {
+		const startIP = start.split('.').map(part => parseInt(part));
+		const endIP = end.split('.').map(part => parseInt(part));
+		const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
+		if (inRange) {
+			return 'Private';
+		}
+	}
+	return 'Public';
+}
+
 function calculateIPInfo(ipAddress, subnetMask) {
 
 	const prefix = parseInt(subnetMask.replace('/', ''), 10); // Remove '/' da máscara
 	const network = new Network(ipAddress, prefix);
-
-	// Determina se o IP é público ou privado
-	function calculateIPType(ipParts) {
-		const privateRanges = [
-			['10.0.0.0', '10.255.255.255'],
-			['172.16.0.0', '172.31.255.255'],
-			['192.168.0.0', '192.168.255.255']
-		];
-
-		for (const [start, end] of privateRanges) {
-			const startIP = start.split('.').map(part => parseInt(part));
-			const endIP = end.split('.').map(part => parseInt(part));
-			const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
-			if (inRange) {
-				return 'Private';
-			}
-		}
-		return 'Public';
-	}
 
 	if (network.version === 4) {
 		const wildcardMask = IPv4Wildcard(network.getMask());
