@@ -10,6 +10,7 @@ module.exports = {
 			"version": "1.0.0",
 			"title": "API - Eletro Info"
 		},
+		/*
 		"tags": [
 			{
 				"name": "Cálculo de Autonomia de Nobreak",
@@ -56,6 +57,7 @@ module.exports = {
 				"description": "Calcula o metabolismo basal de uma pessoa usando dados como idade, peso, altura e gênero, auxiliando no planejamento de dietas e treinos."
 			}
 		],
+		*/
 		"servers": [
 			{
 				"url": `${serverURL}`,
@@ -820,7 +822,7 @@ module.exports = {
 				}
 			},
 
-			
+
 		}
 	}
 };
