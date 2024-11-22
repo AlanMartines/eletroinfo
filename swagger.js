@@ -251,9 +251,9 @@ module.exports = {
 			"/api/ConsultaIP": {
 				"post": {
 					"tags": [
-						"Viabilidade de Instalação de CFTV"
+						"Consulta de IP"
 					],
-					"summary": "Viabilidade de Instalação de CFTV",
+					"summary": "Consulta de IP",
 					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
 					"parameters": [
 
