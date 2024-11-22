@@ -53,7 +53,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 		return {
 			ipAddress: ipAddress,
 			ipAddressFull: network.toDottedNotation(network.toInteger()),
-			networkAddress: network.getNetwork(),
+			networkAddress: network.toCompressed(network.getNetwork(), network.version),
 			usableIPRange: `${network.toDottedNotation(network.networkToInteger())} - ${network.toDottedNotation(network.broadcastToLong())}`,
 			totalHosts: network.networkSize().toString(),
 			cidrNotation: subnetMask,
