@@ -66,197 +66,248 @@ let _ipv6Registry = new Map([
 */
 
 class Network extends IP {
-    /**
-    * Extends IP class. Calls the parent class IP with the parameters passed to Network.
-    * @constructor
-    */
-    constructor (address, prefix) {
-        super(address);
-        this.prefix = this._checkPrefix(prefix);
-    }
-
-    // Private methods
-
-    /**
-    * _checkPrefix - Returns this IP prefix and validates it
-    * @private
-    * @return {integer} -> prefix: 25n
-    */
-    _checkPrefix (prefix) {
-        if (this.version === 4) {
-            if (prefix > 0 && prefix <= 32) {
-                return BigInt(prefix);
-            }
-        } else {
-            if (prefix > 0 && prefix <= 128) {
-                return BigInt(prefix);
-            }
-        }
-        throw new Error('Tips: Invalid prefix');
-    }
-
-      // Public methods
-
-    /**
-    * printInfo - Shows IANA allocation information for the current IP address.
-    * @return {string} ->LOOPBACK
-    */
-		printInfo() {
-			let registry = {4: _ipv4Registry, 6: _ipv6Registry};
-			let results = [];
-			for (let [addr, info] of registry[this.version].entries()) {
-					let found = this.contains(this.address, addr, info[0]);
-					if (found) {
-							results.unshift(info[1]); // Adiciona a descrição ao resultado
-					}
-			}
-			// Se nenhum resultado for encontrado, assume que é "Public Use" para IPv4
-			return results.length === 0 ? (this.version === 4 ? 'Public Use' : 'Unknown') : results[0];
+	/**
+	* Extends IP class. Calls the parent class IP with the parameters passed to Network.
+	* @constructor
+	*/
+	constructor(address, prefix) {
+		super(address);
+		this.prefix = this._checkPrefix(prefix);
 	}
 
-    /**
-    * maskToInteger - Returns network mask as bigInt
-    * @return {BigInt} -> 4278190080n
-    */
-    maskToInteger () {
-        if (this.version == 4) {
-            return (IPv4MAX >> (BigInt(32) - this.prefix)) << (BigInt(32) - this.prefix);
-        }
-        else {
-            return (IPv6MAX >> (BigInt(128) - this.prefix)) << (BigInt(128) - this.prefix);
-        }
-    }
+	// Private methods
 
-    /**
-    * getMask - Returns mask from the prefix
-    * @return {string} -> 255.255.0.0
-    */
-    getMask () {
-        return this.toDottedNotation(this.maskToInteger());
-    }
+	/**
+	* _checkPrefix - Returns this IP prefix and validates it
+	* @private
+	* @return {integer} -> prefix: 25n
+	*/
+	_checkPrefix(prefix) {
+		if (this.version === 4) {
+			if (prefix > 0 && prefix <= 32) {
+				return BigInt(prefix);
+			}
+		} else {
+			if (prefix > 0 && prefix <= 128) {
+				return BigInt(prefix);
+			}
+		}
+		throw new Error('Tips: Invalid prefix');
+	}
 
-    /**
-    * networkToInteger - Returns network as bigInt.
-    * @return {BigInt} -> 21307064320
-    */
-    networkToInteger () {
-        return this.toInteger() & this.maskToInteger();
-    }
+	// Public methods
 
-    /**
-    * getNetwork - Returns network part of the address
-    * @return {string} -> 127
-    */
-    getNetwork () {
-        return this.toDottedNotation(this.networkToInteger());
-    }
+	/**
+	 * Verifica se o IP é um IPv6 público válido.
+	 * Retorna true se o IP não for reservado ou especial.
+	 */
+	isValidIPv6Public() {
+		const reservedPrefixes = [
+			'fc00::/7',   // Unique Local Addresses
+			'fe80::/10',  // Link-Local Addresses
+			'ff00::/8',   // Multicast Addresses
+			'::1/128',    // Loopback Address
+			'::/128',     // Unspecified Address
+			'2001:db8::/32' // Documentation
+		];
 
-    /**
-    * getBroadcast - Calculates broadcast.IPv6 doesn't have a broadcast
-    * address, but it's used for other calculations such as Network.hostLast.
-    * @return {string} -> 127.255.255.255
-    */
-    getBroadcast () {
-        return this.version === 4 ?
-        this.toDottedNotation(this.broadcastToLong()) :
-        'IPv6 doesnt have broadcast address';
-    }
+		const ipBigInt = this.toInteger();
+		for (const prefix of reservedPrefixes) {
+			const [prefixAddr, prefixLength] = prefix.split('/');
+			const prefixBigInt = new Network(prefixAddr, parseInt(prefixLength, 10)).toInteger();
+			const maskBigInt = IPv6MAX >> (BigInt(128) - BigInt(prefixLength));
 
-    /**
-    * broadcastToLong - Returns broadcast as long.
-    * @return {BigInt} ->2147483647
-    */
-    broadcastToLong () {
-        if (this.version === 4) {
-            return this.networkToInteger() | (IPv4MAX - this.maskToInteger());
-        } else {
-            return this.networkToInteger() | (IPv6MAX - this.maskToInteger());
-        }
-    }
+			if ((ipBigInt & maskBigInt) === prefixBigInt) {
+				return false; // Está em uma faixa reservada ou especial
+			}
+		}
 
-    /**
-    * hostFirst - Calculates first available host in this subnet.
-    * @return {string} ->127.0.0.1
-    */
-    hostFirst () {
-        let isSmall4 = this.version === 4 && this.prefix > BigInt(30);
-        let first;
+		return true; // É um IPv6 público válido
+	}
 
-        if (this.version === 6) {
-            first = this.getNetwork();
-        } else if (isSmall4) {
-            return 'N/A';
-        } else {
-            first = this.toDottedNotation(this.networkToInteger() + BigInt(1));
-        }
-        return this.toCompressed( first, this.version );
-    }
+	/**
+	* printInfo - Shows IANA allocation information for the current IP address.
+	* @return {string} ->LOOPBACK
+	*/
+	/*
+	printInfo() {
+		let registry = { 4: _ipv4Registry, 6: _ipv6Registry };
+		let results = [];
+		for (let [addr, info] of registry[this.version].entries()) {
+			let found = this.contains(this.address, addr, info[0]);
+			if (found) {
+				results.unshift(info[1]); // Adiciona a descrição ao resultado
+			}
+		}
+		// Se nenhum resultado for encontrado, assume que é "Public Use" para IPv4
+		return results.length === 0 ? (this.version === 4 ? 'Public Use' : 'Unknown') : results[0];
+	}
+*/
+	printInfo() {
+		let registry = { 4: _ipv4Registry, 6: _ipv6Registry };
+		let results = [];
 
-    /**
-    * hostLast - Calculates last available host in this subnet.
-    * @return {string} ->127.255.255.255
-    */
-    hostLast () {
-        let isLast4 = this.version === 4 && this.prefix === BigInt(32);
-        let isLast6 = this.version === 6 && this.prefix === BigInt(128);
-        let isPrev4 = this.version === 4 && this.prefix === BigInt(31);
-        let isPrev6 = this.version === 6 && this.prefix === BigInt(127);
-        let last;
+		// Itera sobre o registro (IPv4 ou IPv6)
+		for (let [addr, info] of registry[this.version].entries()) {
+			let found = this.contains(this.address, addr, info[0]);
+			if (found) {
+				results.unshift(info[1]); // Adiciona a descrição correspondente
+			}
+		}
 
-        if (isLast4 || isLast6 || isPrev4) {
-            return 'N/A';
-        } else if (isPrev6) {
-            last = this.address;
-        } else if (this.version === 4) {
-            last = this.toDottedNotation(this.broadcastToLong() - BigInt(1));
-        } else {
-            last = this.toDottedNotation(this.broadcastToLong());
-        }
-        return this.toCompressed( last, this.version );
-    }
+		// Retorna "Public" se for um IP público válido e não estiver listado no registro
+		if (results.length === 0) {
+			if (this.version === 6 && this.isValidIPv6Public()) {
+				return 'Public';
+			}
+			return 'Unknown'; // Caso não seja um IP público conhecido
+		}
+		return results[0]; // Retorna a primeira descrição encontrada
+	}
 
-    /**
-    * contains - Check if thisIP is part of the network
-    * @param {string} thisIP
-    * @param {string} otherIP
-    * @param {number} prefix
-    * @return {boolean}
-    */
-    contains (thisIP, otherIP, prefix) {
-        let other = new Network(otherIP, prefix);
-        let thisNetwork = this.networkToInteger();
-        let otherNetwork = other.networkToInteger();
-        let smaller = (thisNetwork <= otherNetwork) &&
-            (otherNetwork <= this.broadcastToLong());
-        let bigger = (otherNetwork <= thisNetwork) &&
-            (thisNetwork <= other.broadcastToLong());
-        return  smaller || bigger;
-    }
+	/**
+	* maskToInteger - Returns network mask as bigInt
+	* @return {BigInt} -> 4278190080n
+	*/
+	maskToInteger() {
+		if (this.version == 4) {
+			return (IPv4MAX >> (BigInt(32) - this.prefix)) << (BigInt(32) - this.prefix);
+		}
+		else {
+			return (IPv6MAX >> (BigInt(128) - this.prefix)) << (BigInt(128) - this.prefix);
+		}
+	}
 
-    /**
-    * hostRange - Generates a range of usable host IP addresses within the network.
-    * @return {array} -> ['127.0.0.1','127.255.255.255']
-    */
-    hostRange () {
-        let range = [];
-        range.push(this.hostFirst());
-        range.push(this.hostLast());
-        return range;
-    }
+	/**
+	* getMask - Returns mask from the prefix
+	* @return {string} -> 255.255.0.0
+	*/
+	getMask() {
+		return this.toDottedNotation(this.maskToInteger());
+	}
 
-    /**
-    * networkSize - Returns number of ips within the network.
-    * @return {number} -> 16777214
-    */
-    networkSize () {
-        let marks = {4: BigInt(32), 6: BigInt(128)};
-        let size = BigInt(2) ** (marks[this.version] - this.prefix);
+	/**
+	* networkToInteger - Returns network as bigInt.
+	* @return {BigInt} -> 21307064320
+	*/
+	networkToInteger() {
+		return this.toInteger() & this.maskToInteger();
+	}
 
-        if (this.version === 4 && this.prefix < BigInt(30)) {
-            return size - BigInt(2);
-        }
-        return size;
-    }
+	/**
+	* getNetwork - Returns network part of the address
+	* @return {string} -> 127
+	*/
+	getNetwork() {
+		return this.toDottedNotation(this.networkToInteger());
+	}
+
+	/**
+	* getBroadcast - Calculates broadcast.IPv6 doesn't have a broadcast
+	* address, but it's used for other calculations such as Network.hostLast.
+	* @return {string} -> 127.255.255.255
+	*/
+	getBroadcast() {
+		return this.version === 4 ?
+			this.toDottedNotation(this.broadcastToLong()) :
+			'IPv6 doesnt have broadcast address';
+	}
+
+	/**
+	* broadcastToLong - Returns broadcast as long.
+	* @return {BigInt} ->2147483647
+	*/
+	broadcastToLong() {
+		if (this.version === 4) {
+			return this.networkToInteger() | (IPv4MAX - this.maskToInteger());
+		} else {
+			return this.networkToInteger() | (IPv6MAX - this.maskToInteger());
+		}
+	}
+
+	/**
+	* hostFirst - Calculates first available host in this subnet.
+	* @return {string} ->127.0.0.1
+	*/
+	hostFirst() {
+		let isSmall4 = this.version === 4 && this.prefix > BigInt(30);
+		let first;
+
+		if (this.version === 6) {
+			first = this.getNetwork();
+		} else if (isSmall4) {
+			return 'N/A';
+		} else {
+			first = this.toDottedNotation(this.networkToInteger() + BigInt(1));
+		}
+		return this.toCompressed(first, this.version);
+	}
+
+	/**
+	* hostLast - Calculates last available host in this subnet.
+	* @return {string} ->127.255.255.255
+	*/
+	hostLast() {
+		let isLast4 = this.version === 4 && this.prefix === BigInt(32);
+		let isLast6 = this.version === 6 && this.prefix === BigInt(128);
+		let isPrev4 = this.version === 4 && this.prefix === BigInt(31);
+		let isPrev6 = this.version === 6 && this.prefix === BigInt(127);
+		let last;
+
+		if (isLast4 || isLast6 || isPrev4) {
+			return 'N/A';
+		} else if (isPrev6) {
+			last = this.address;
+		} else if (this.version === 4) {
+			last = this.toDottedNotation(this.broadcastToLong() - BigInt(1));
+		} else {
+			last = this.toDottedNotation(this.broadcastToLong());
+		}
+		return this.toCompressed(last, this.version);
+	}
+
+	/**
+	* contains - Check if thisIP is part of the network
+	* @param {string} thisIP
+	* @param {string} otherIP
+	* @param {number} prefix
+	* @return {boolean}
+	*/
+	contains(thisIP, otherIP, prefix) {
+		let other = new Network(otherIP, prefix);
+		let thisNetwork = this.networkToInteger();
+		let otherNetwork = other.networkToInteger();
+		let smaller = (thisNetwork <= otherNetwork) &&
+			(otherNetwork <= this.broadcastToLong());
+		let bigger = (otherNetwork <= thisNetwork) &&
+			(thisNetwork <= other.broadcastToLong());
+		return smaller || bigger;
+	}
+
+	/**
+	* hostRange - Generates a range of usable host IP addresses within the network.
+	* @return {array} -> ['127.0.0.1','127.255.255.255']
+	*/
+	hostRange() {
+		let range = [];
+		range.push(this.hostFirst());
+		range.push(this.hostLast());
+		return range;
+	}
+
+	/**
+	* networkSize - Returns number of ips within the network.
+	* @return {number} -> 16777214
+	*/
+	networkSize() {
+		let marks = { 4: BigInt(32), 6: BigInt(128) };
+		let size = BigInt(2) ** (marks[this.version] - this.prefix);
+
+		if (this.version === 4 && this.prefix < BigInt(30)) {
+			return size - BigInt(2);
+		}
+		return size;
+	}
 
 }
 
