@@ -238,7 +238,7 @@ router.post('/GeolocalizacaoIP', async (req, res, next) => {
 			error: true,
 			status: 400,
 			result: null,
-			message: 'O valore do ip deve ser preenchido. Por favor, corrija e tente novamente.'
+			message: 'O ip deve ser preenchido. Por favor, corrija e tente novamente.'
 		});
 	}
 
