@@ -11,7 +11,7 @@ const requestIp = require('request-ip')
 const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
-const { calculateIPInfo } = require('../middleware/calculateIP');
+const { calculateIPInfo } = require('../middleware/CalculadoraIP');
 //
 //
 /*
