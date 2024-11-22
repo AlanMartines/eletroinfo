@@ -92,7 +92,7 @@ class Network extends IP {
 				return BigInt(prefix);
 			}
 		}
-		throw new Error('Tips: Invalid prefix');
+		throw new Error('Prefixo inválido');
 	}
 
 	// Public methods
@@ -187,7 +187,7 @@ class Network extends IP {
 	getBroadcast() {
 		return this.version === 4 ?
 			this.toDottedNotation(this.broadcastToLong()) :
-			'IPv6 doesnt have broadcast address';
+			'O IPv6 não possui endereço de broadcast';
 	}
 
 	/**

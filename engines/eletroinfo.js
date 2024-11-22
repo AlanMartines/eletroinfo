@@ -176,7 +176,7 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 			error: true,
 			status: 500,
 			result: null,
-			message: 'Erro durante o cálculo.'
+			message: error?.message
 		});
 	}
 
@@ -220,7 +220,7 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 			error: true,
 			status: 500,
 			result: null,
-			message: 'Erro durante o cálculo.'
+			message: error?.message
 		});
 	}
 
