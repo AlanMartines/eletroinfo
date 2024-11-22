@@ -150,6 +150,7 @@ Tensão mínima de corte da bateria em volts (V)
 - Certifique-se de enviar os valores no formato correto, utilizando ponto (" . ") como separador decimal.
 - O campo `tipo_bateria` deve conter um dos valores válidos listados acima.
 - A autonomia calculada pode variar devido a condições externas, como temperatura ambiente e idade das baterias.
+- Certifique-se de enviar os dados no formato JSON correto.
 
 ---
 
@@ -231,6 +232,7 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 - Os cálculos assumem que o material do cabo é cobre (resistividade de 1.68e-8 Ω·m).
 - A distância é considerada como ida e volta no cálculo da resistência.
 - Os resultados são estimativas baseadas nos parâmetros fornecidos.
+- Certifique-se de enviar os dados no formato JSON correto.
 
 ---
 
