@@ -34,6 +34,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 
 	if (network.version === 4) {
 		const wildcardMask = IPv4Wildcard(network.getMask());
+		const ipType = calculateIPType(network.address);
 		return {
 			ipAddress: network.address,
 			networkAddress: network.getNetwork(),
@@ -46,7 +47,7 @@ function calculateIPInfo(ipAddress, subnetMask) {
 			binarySubnetMask: subnetMaskToBinary(network.getMask()),
 			ipClass: getIPv4Class(network.address),
 			cidrNotation: subnetMask,
-			shortIp: `${ipAddress}/${subnetMask}`
+			shortIp: `${ipAddress}${subnetMask}`
 		};
 	} else {
 		return {
