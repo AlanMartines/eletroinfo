@@ -300,14 +300,45 @@ router.post('/TestePortasRede', async (req, res, next) => {
 	let port = requestBody?.port || '';
 	let timeout = String(requestBody?.timeout || '').replace(/\s+/g, '');
 
-	// Verificando se algum campo obrigatório está ausente
-	if (!host || !port || timeout) {
-		return res.status(400).json({
+	// Verificando se os campos obrigatórios estão ausentes
+	if (!host || !port || !timeout) {
+		return {
 			error: true,
 			status: 400,
 			result: null,
 			message: 'Todos os valores devem ser preenchidos: host, port, timeout. Por favor, corrija e tente novamente.'
-		});
+		};
+	}
+
+	// Verificar se o host é uma string válida
+	if (typeof host !== 'string' || host.trim() === '') {
+		return {
+			error: true,
+			status: 400,
+			result: null,
+			message: 'O campo "host" deve ser uma string válida.'
+		};
+	}
+
+	// Verificar se o port é um array de números válidos
+	if (!Array.isArray(port) || port.some((p) => typeof p !== 'number' || p <= 0)) {
+		return {
+			error: true,
+			status: 400,
+			result: null,
+			message: 'O campo "port" deve ser um array de números válidos maiores que 0.'
+		};
+	}
+
+	// Garantir que o timeout seja um número positivo
+	timeout = Number(timeout);
+	if (isNaN(timeout) || timeout <= 0) {
+		return {
+			error: true,
+			status: 400,
+			result: null,
+			message: 'O campo "timeout" deve ser um número positivo.'
+		};
 	}
 
 	try {
