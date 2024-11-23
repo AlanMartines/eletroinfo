@@ -193,6 +193,27 @@ module.exports = {
 						}
 					}
 				},
+
+				"TestePortasRedeRequest": {
+					"type": "object",
+					"properties": {
+						"host": {
+							"type": "string",
+							"description": "O endereço IP ou hostname do servidor.",
+							"example": "200.221.11.100"
+						},
+						"port": {
+							"type": "array",
+							"description": "A porta a ser testada.",
+							"example": [80, 443, 53]
+						},
+						"timeout": {
+							"type": "integer",
+							"description": "Tempo limite em milissegundos para a conexão.",
+							"example": 2000
+						}
+					}
+				},
 			}
 		},
 
@@ -820,7 +841,127 @@ module.exports = {
 				}
 			},
 
-			
+			"/api/TestePortasRede": {
+				"post": {
+					"tags": [
+						"Teste de Portas de Rede"
+					],
+					"summary": "Teste de Portas de Rede",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **host:** Endereço IP ou hostname que se deseja consultar.\n- **port:** Lista de portas a serem testadas.\n- **timeout:** Timeout em milissegundos.\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestePortasRedeRequest"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"host": "google.com.br",
+												"ip": "142.250.184.195",
+												"testedPorts": 3,
+												"results": [
+													{
+														"host": "google.com.br",
+														"ip": "142.250.184.195",
+														"port": 80,
+														"status": "aberta",
+														"responseTime": "18ms"
+													},
+													{
+														"host": "google.com.br",
+														"ip": "142.250.184.195",
+														"port": 443,
+														"status": "aberta",
+														"responseTime": "27ms"
+													},
+													{
+														"host": "google.com.br",
+														"ip": "142.250.184.195",
+														"port": 53,
+														"status": "filtrada",
+														"responseTime": "2239ms"
+													}
+												]
+											},
+											"message": "Teste realizado com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"400": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "Todos os valores devem ser preenchidos: host, port, timeout. Por favor, corrija e tente novamente."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
+												"message": "JSON enviado está incorreto. Por favor, revise o formato e tente novamente."
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Erro ao realizar o teste"
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
 		}
 	}
 };
