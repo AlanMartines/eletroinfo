@@ -1,20 +1,29 @@
 const net = require('net');
+const dns = require('dns/promises');
 
-function testPort(host, port) {
+/**
+ * Testa se uma porta está aberta, fechada ou filtrada.
+ * @param {string} host - O endereço IP ou hostname do servidor.
+ * @param {number} port - A porta a ser testada.
+ * @param {number} timeout - Tempo limite em milissegundos para a conexão (default: 2000ms).
+ * @returns {Promise<object>} - Objeto com os detalhes do teste.
+ */
+async function testPort(host, port, timeout = 2000) {
+    const start = Date.now(); // Marca o início do teste.
+    const socket = new net.Socket();
+
+    let status = 'fechada'; // Valor padrão.
     return new Promise((resolve) => {
-        const socket = new net.Socket();
-        let status = 'fechada'; // Valor padrão, caso nenhum evento seja emitido.
+        // Define o tempo limite da conexão.
+        socket.setTimeout(timeout);
 
-        // Define timeout para evitar travamento em caso de portas filtradas.
-        socket.setTimeout(2000);
-
-        // Evento quando a conexão for bem-sucedida.
+        // Evento quando a conexão é bem-sucedida.
         socket.on('connect', () => {
             status = 'aberta';
-            socket.destroy(); // Fecha o socket.
+            socket.destroy(); // Fecha o socket após o sucesso.
         });
 
-        // Evento para erro na conexão (porta fechada ou bloqueada).
+        // Evento para erros de conexão.
         socket.on('error', (err) => {
             if (err.code === 'ECONNREFUSED') {
                 status = 'fechada';
@@ -23,33 +32,85 @@ function testPort(host, port) {
             }
         });
 
-        // Timeout para portas filtradas ou sem resposta.
+        // Evento para timeout (porta filtrada ou sem resposta).
         socket.on('timeout', () => {
             status = 'filtrada';
-            socket.destroy(); // Fecha o socket.
+            socket.destroy();
         });
 
-        // Evento quando o socket é fechado.
-        socket.on('close', () => {
-            resolve(status);
+        // Evento ao fechar o socket, resolvendo o status.
+        socket.on('close', async () => {
+            const end = Date.now(); // Marca o fim do teste.
+            resolve({
+                host,
+                ip: await resolveIp(host),
+                port,
+                status,
+                responseTime: `${end - start}ms`,
+            });
         });
 
-        // Tenta se conectar ao host e porta especificados.
+        // Tenta conectar à porta e host.
         socket.connect(port, host);
     });
+}
+
+/**
+ * Resolve o endereço IP de um hostname.
+ * @param {string} host - O hostname a ser resolvido.
+ * @returns {Promise<string>} - O endereço IP ou 'desconhecido' em caso de falha.
+ */
+async function resolveIp(host) {
+    try {
+        const addresses = await dns.lookup(host);
+        return addresses.address;
+    } catch (err) {
+        return 'desconhecido';
+    }
+}
+
+/**
+ * Testa múltiplas portas em um host e retorna os resultados em JSON.
+ * @param {string} host - O endereço IP ou hostname do servidor.
+ * @param {number[]} ports - Lista de portas a serem testadas.
+ * @param {number} timeout - Tempo limite em milissegundos para cada teste.
+ * @returns {Promise<object>} - JSON com os resultados dos testes.
+ */
+async function testMultiplePorts(host, ports, timeout = 2000) {
+    const results = [];
+    for (const port of ports) {
+        try {
+            const result = await testPort(host, port, timeout);
+            results.push(result);
+        } catch (error) {
+            results.push({
+                host,
+                ip: 'desconhecido',
+                port,
+                status: 'erro',
+                errorMessage: error.message,
+            });
+        }
+    }
+    return {
+        host,
+        ip: await resolveIp(host),
+        testedPorts: ports.length,
+        results,
+    };
 }
 /*
 // Exemplo de uso:
 (async () => {
-    const host = 'google.com'; // Alterar para o IP ou hostname desejado.
-    const port = 80;          // Alterar para a porta desejada.
-    
-    console.log(`Testando ${host}:${port}...`);
-    const result = await testPort(host, port);
-    console.log(`Porta ${port} está ${result}.`);
+    const host = 'google.com'; // Substitua pelo IP ou hostname desejado.
+    const ports = [80, 443, 22, 8080]; // Lista de portas a serem testadas.
+    const timeout = 3000; // Timeout em milissegundos.
+
+    const testResults = await testMultiplePorts(host, ports, timeout);
+    console.log(JSON.stringify(testResults, null, 2));
 })();
 */
 // Exportando as funções
 module.exports = {
-	testPort
+	testMultiplePorts
 };

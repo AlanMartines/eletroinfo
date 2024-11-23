@@ -12,7 +12,7 @@ const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
 const { calculateIPInfo } = require('../middleware/CalculadoraIP');
-const { testPort } = require('../middleware/TestePortasRede');
+const { testMultiplePorts } = require('../middleware/TestePortasRede');
 //
 //
 /*
@@ -298,6 +298,7 @@ router.post('/TestePortasRede', async (req, res, next) => {
 	// Garantir que o valor seja tratado como string antes de usar .replace()
 	let host = String(requestBody?.host || '').replace(/\s+/g, '');
 	let port = String(requestBody?.port || '').replace(/\s+/g, '');
+	let timeout = String(requestBody?.timeout || '').replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!host || !port) {
@@ -305,23 +306,19 @@ router.post('/TestePortasRede', async (req, res, next) => {
 			error: true,
 			status: 400,
 			result: null,
-			message: 'Todos os valores devem ser preenchidos: host, port. Por favor, corrija e tente novamente.'
+			message: 'Todos os valores devem ser preenchidos: host, port, timeout. Por favor, corrija e tente novamente.'
 		});
 	}
 
 	try {
 		//
-		const result = await testPort(host, port);
+		const result = await testMultiplePorts(host, port, timeout);
 
 		// Retornando sucesso com o formato esperado
 		return res.status(200).json({
 			error: false,
 			status: 200,
-			result: {
-				host: host,
-				port: port,
-				portIS: result
-			},
+			result: result,
 			message: "Teste realizado com sucesso."
 		});
 	} catch (error) {
