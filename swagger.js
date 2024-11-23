@@ -200,7 +200,7 @@ module.exports = {
 						"host": {
 							"type": "string",
 							"description": "O endereço IP ou hostname do servidor.",
-							"example": "200.221.11.100"
+							"example": "google.com.br"
 						},
 						"port": {
 							"type": "array",
