@@ -291,29 +291,49 @@ router.post('/GeolocalizacaoIP', async (req, res, next) => {
 //
 //
 router.post('/TestePortasRede', async (req, res, next) => {
-	//
+
 	let requestBody = req?.body;
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+
+	// Garantir que o valor seja tratado como string antes de usar .replace()
+	let host = String(requestBody?.host || '').replace(/\s+/g, '');
+	let port = String(requestBody?.port || '').replace(/\s+/g, '');
+
+	// Verificando se algum campo obrigatório está ausente
+	if (!host || !port) {
+		return res.status(400).json({
+			error: true,
+			status: 400,
+			result: null,
+			message: 'Todos os valores devem ser preenchidos: host, port. Por favor, corrija e tente novamente.'
 		});
-		//
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
+
+	try {
+		//
+		const result = await testPort(host, port);
+
+		// Retornando sucesso com o formato esperado
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: {
+				host: host,
+				port: port,
+				portIS: result
+			},
+			message: "Teste realizado com sucesso."
+		});
+	} catch (error) {
+		// Capturando e retornando erro interno
+		logger.error(`- Erro: ${error?.message}`);
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Erro ao realizar o teste'
+		});
+	}
+
 });
 //
 //
