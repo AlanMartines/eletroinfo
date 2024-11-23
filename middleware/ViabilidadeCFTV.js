@@ -1,7 +1,7 @@
 function ViabilidadeCFTV(bitola_cabo,	tensao_fonte, tensao_camera,	corrente_camera,	distancia) {
 	// Determinando a resistência com base no valor de Rcabo
 	let resistencia;
-	switch (bitola_cabo) {
+	switch (parseInt(bitola_cabo)) {
 		case 0:
 			resistencia = 0.130584;
 			break;
