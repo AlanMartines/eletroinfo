@@ -23,11 +23,13 @@ const { calculateIPInfo } = require('../middleware/CalculadoraIP');
 router.post('/AutonomiaNobreak', async (req, res, next) => {
 
 	let requestBody = req?.body;
-	let carga_aplicada = requestBody?.carga_aplicada?.replace(/\s+/g, '');
-	let tensao_bateria = requestBody?.tensao_bateria?.replace(/\s+/g, '');
-	let capacidade_bateria = requestBody?.capacidade_bateria?.replace(/\s+/g, '');
-	let quantidade_baterias = requestBody?.quantidade_baterias?.replace(/\s+/g, '');
-	let tipo_bateria = requestBody?.tipo_bateria;
+
+	// Garantir que o valor seja tratado como string antes de usar .replace()
+	let carga_aplicada = String(requestBody?.carga_aplicada || '').replace(/\s+/g, '');
+	let tensao_bateria = String(requestBody?.tensao_bateria || '').replace(/\s+/g, '');
+	let capacidade_bateria = String(requestBody?.capacidade_bateria || '').replace(/\s+/g, '');
+	let quantidade_baterias = String(requestBody?.quantidade_baterias || '').replace(/\s+/g, '');
+	let tipo_bateria = requestBody?.tipo_bateria.replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!carga_aplicada || !tensao_bateria || !capacidade_bateria || !quantidade_baterias || !tipo_bateria) {
@@ -67,11 +69,14 @@ router.post('/AutonomiaNobreak', async (req, res, next) => {
 router.post('/ViabilidadeCFTV', async (req, res, next) => {
 
 	let requestBody = req?.body;
-	let tensao_fonte = requestBody?.tensao_fonte?.replace(/\s+/g, '');
-	let bitola_cabo = requestBody?.bitola_cabo?.replace(/\s+/g, '');
-	let distancia = requestBody?.distancia?.replace(/\s+/g, '');
-	let tensao_camera = requestBody?.tensao_camera?.replace(/\s+/g, '');
-	let corrente_camera = requestBody?.corrente_camera?.replace(/\s+/g, '');
+
+	// Garantir que o valor seja tratado como string antes de usar .replace()
+	let tensao_fonte = String(requestBody?.tensao_fonte || '').replace(/\s+/g, '');
+	let bitola_cabo = String(requestBody?.bitola_cabo || '').replace(/\s+/g, '');
+	let distancia = String(requestBody?.distancia || '').replace(/\s+/g, '');
+	let tensao_camera = String(requestBody?.tensao_camera || '').replace(/\s+/g, '');
+	let corrente_camera = String(requestBody?.corrente_camera || '').replace(/\s+/g, '');
+
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!tensao_fonte || !bitola_cabo || !distancia || !tensao_camera || !corrente_camera) {
@@ -109,11 +114,14 @@ router.post('/ViabilidadeCFTV', async (req, res, next) => {
 //
 //
 router.post('/CalculadoraIPv4', async (req, res, next) => {
-	//
+
+	// Capturar e sanitizar os valores do corpo da requisição
 	let requestBody = req?.body;
-	let ipAddress = requestBody?.ipAddress?.replace(/\s+/g, '');
-	let subnetMask = requestBody?.subnetMask?.replace(/\s+/g, '');
-	//
+
+	// Garantir que os valores sejam strings antes de usar o .replace()
+	let ipAddress = String(requestBody?.ipAddress || '').replace(/\s+/g, '');
+	let subnetMask = String(requestBody?.subnetMask || '').replace(/\s+/g, '');
+
 	if (!ipAddress || !subnetMask) {
 		var resultRes = {
 			error: true,
@@ -155,11 +163,14 @@ router.post('/CalculadoraIPv4', async (req, res, next) => {
 //
 //
 router.post('/CalculadoraIPv6', async (req, res, next) => {
-	//
+
+	// Capturar e sanitizar os valores do corpo da requisição
 	let requestBody = req?.body;
-	let ipAddress = requestBody?.ipAddress?.replace(/\s+/g, '');
-	let subnetMask = requestBody?.subnetMask?.replace(/\s+/g, '');
-	//
+
+	// Garantir que os valores sejam strings antes de usar o .replace()
+	let ipAddress = String(requestBody?.ipAddress || '').replace(/\s+/g, '');
+	let subnetMask = String(requestBody?.subnetMask || '').replace(/\s+/g, '');
+
 	if (!ipAddress || !subnetMask) {
 		var resultRes = {
 			error: true,
@@ -201,10 +212,13 @@ router.post('/CalculadoraIPv6', async (req, res, next) => {
 //
 //
 router.post('/ConsultaIP', async (req, res, next) => {
-	//
+
+	// Capturar e sanitizar o valor do campo 'ip' do corpo da requisição
 	let requestBody = req?.body;
-	let ip = requestBody?.ip?.replace(/\s+/g, '');
-	//
+
+	// Garantir que o valor seja tratado como string antes de usar o .replace()
+	let ip = String(requestBody?.ip || '').replace(/\s+/g, '');
+
 	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
 	let clientIp = ip ? ip : requestIp?.getClientIp(req);
 	//
@@ -234,9 +248,12 @@ router.post('/ConsultaIP', async (req, res, next) => {
 //
 //
 router.post('/GeolocalizacaoIP', async (req, res, next) => {
-	//
+
+	// Capturar e sanitizar o valor do campo 'ip' do corpo da requisição
 	let requestBody = req?.body;
-	let ip = requestBody?.ip?.replace(/\s+/g, '');
+
+	// Garantir que o valor seja tratado como string antes de usar o .replace()
+	let ip = String(requestBody?.ip || '').replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!ip) {
