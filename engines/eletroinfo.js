@@ -301,7 +301,7 @@ router.post('/TestePortasRede', async (req, res, next) => {
 	let timeout = String(requestBody?.timeout || '').replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
-	if (!host || !port) {
+	if (!host || !port || timeout) {
 		return res.status(400).json({
 			error: true,
 			status: 400,
