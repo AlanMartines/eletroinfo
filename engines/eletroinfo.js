@@ -297,7 +297,7 @@ router.post('/TestePortasRede', async (req, res, next) => {
 
 	// Garantir que o valor seja tratado como string antes de usar .replace()
 	let host = String(requestBody?.host || '').replace(/\s+/g, '');
-	let port = String(requestBody?.port || '').replace(/\s+/g, '');
+	let port = requestBody?.port || '';
 	let timeout = String(requestBody?.timeout || '').replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
