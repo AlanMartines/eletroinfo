@@ -12,6 +12,7 @@ const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
 const { calculateIPInfo } = require('../middleware/CalculadoraIP');
+const { testPort } = require('../middleware/TestePortasRede');
 //
 //
 /*
