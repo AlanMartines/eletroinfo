@@ -70,6 +70,7 @@ pm2 unstartup systemd
 4.  [Endpoint - Calculadora de IP (IPv4)](#endpoint---calculadora-de-ip-ipv4)
 5.  [Endpoint - Calculadora de IP (IPv6)](#endpoint---calculadora-de-ip-ipv6)
 6.  [Endpoint - Geolocalização de IP](#endpoint---geolocalização-de-ip)
+7.  [Endpoint - Teste de Portas de Rede](#endpoint---teste-de-portas-de-rede)
 
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
