@@ -69,7 +69,7 @@ pm2 unstartup systemd
 3.  [Endpoint - Consulta de IP](#endpoint---consulta-de-ip)
 4.  [Endpoint - Calculadora de IP (IPv4)](#endpoint---calculadora-de-ip-ipv4)
 5.  [Endpoint - Calculadora de IP (IPv6)](#endpoint---calculadora-de-ip-ipv6)
-5.  [Endpoint - Geolocalização de IP](#endpoint---geolocalização-de-ip)
+6.  [Endpoint - Geolocalização de IP](#endpoint---geolocalização-de-ip)
 
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
@@ -573,6 +573,89 @@ A resposta será um JSON com o resultado da consulta:
 
 - O parâmetro `ip` é obrigatório.
 - A precisão dos dados retornados pode variar dependendo da base de dados utilizada.
+- Certifique-se de enviar os dados no formato JSON correto.
+
+---
+
+---
+
+## Endpoint - Teste de Portas de Rede
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/TestePortasRede`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+Os seguintes parâmetros devem ser enviados no corpo da requisição:
+
+- **host:** Endereço IP ou hostname que se deseja consultar.
+- **port:** Lista de portas a serem testadas.
+- **timeout:** Timeout em milissegundos.
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "host": "google.com",
+  "port": [80, 443, 53],
+  "timeout": 2000
+}
+```
+
+## Exemplo de Resposta
+
+A resposta será um JSON com os resultados do cálculo e a viabilidade da instalação:
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": {
+    "host": "google.com",
+    "ip": "142.250.185.110",
+    "testedPorts": 3,
+    "results": [
+      {
+        "host": "google.com",
+        "ip": "142.250.185.110",
+        "port": 80,
+        "status": "aberta",
+        "responseTime": "46ms"
+      },
+      {
+        "host": "google.com",
+        "ip": "142.250.185.110",
+        "port": 443,
+        "status": "aberta",
+        "responseTime": "42ms"
+      },
+      {
+        "host": "google.com",
+        "ip": "142.250.185.110",
+        "port": 53,
+        "status": "filtrada",
+        "responseTime": "2044ms"
+      }
+    ]
+  },
+  "message": "Teste realizado com sucesso."
+}
+```
+
+## Notas
+
+- O parâmetro `host`, `port` e `timeout` é obrigatório.
 - Certifique-se de enviar os dados no formato JSON correto.
 
 ---
