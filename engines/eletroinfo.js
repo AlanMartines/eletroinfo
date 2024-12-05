@@ -406,14 +406,59 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	}
 
 	try {
-		const resip = await fetch(`https://www.macvendorlookup.com/api/v2/${macadress}/json`);
-		if (resip.ok) {
-			const data = await resip.json();
-			return res.status(200).json({
-				error: false,
-				status: 200,
-				result: data[0],
-				message: "Consulta realizada com sucesso."
+		const resMAC = await fetch(`https://www.macvendorlookup.com/api/v2/${macadress}/json`);
+		if (resMAC.ok) {
+			const data = await resMAC.json();
+
+			// Validação da estrutura do JSON retornado
+			const isArray = Array.isArray(data);
+			const isValidFormat = (item) =>
+				item &&
+				typeof item.startHex === 'string' &&
+				typeof item.endHex === 'string' &&
+				typeof item.startDec === 'string' &&
+				typeof item.endDec === 'string' &&
+				typeof item.company === 'string' &&
+				typeof item.addressL1 === 'string' &&
+				typeof item.addressL2 === 'string' &&
+				typeof item.addressL3 === 'string' &&
+				typeof item.country === 'string' &&
+				typeof item.type === 'string';
+
+			if (isArray) {
+				// Validar se todos os elementos do array têm o formato esperado
+				if (data.every(isValidFormat)) {
+					return res.status(200).json({
+						error: false,
+						status: 200,
+						result: data,
+						message: "Consulta realizada com sucesso."
+					});
+				}
+			} else if (isValidFormat(data)) {
+				// Resposta é um único objeto válido
+				return res.status(200).json({
+					error: false,
+					status: 200,
+					result: data,
+					message: "Consulta realizada com sucesso."
+				});
+			}
+
+			// Caso não esteja em um formato válido
+			return res.status(400).json({
+				error: true,
+				status: 401,
+				result: null,
+				message: "Resposta com formato inválido."
+			});
+		} else {
+			// Caso a API retorne erro HTTP
+			return res.status(resMAC.status).json({
+				error: true,
+				status: resMAC.status,
+				result: null,
+				message: "Erro ao efetuar consulta."
 			});
 		}
 	} catch (error) {
@@ -426,6 +471,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 			message: 'Endereço MAC inválido ou não encontrado.'
 		});
 	}
+
 	//
 });
 //
