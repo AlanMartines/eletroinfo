@@ -273,7 +273,7 @@ router.post('/GeolocalizacaoIP', async (req, res, next) => {
 
 	try {
 		const resGeoIP = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
-		if (resip.ok) {
+		if (resGeoIP.ok) {
 			const data = await resGeoIP.json();
 			return res.status(200).json({
 				error: false,
