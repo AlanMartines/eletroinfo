@@ -458,7 +458,6 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	} catch (error) {
 		// Capturando e retornando erro interno
 		logger.error(`- Erro: ${error?.message}`);
-		console.log(`- Erro:\n ${error}`);
 		return res.status(500).json({
 			error: true,
 			status: 500,
