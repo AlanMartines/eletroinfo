@@ -369,10 +369,10 @@ router.post('/TestePortasRede', async (req, res, next) => {
 router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	//
 	let requestBody = req?.body;
-	let mac = requestBody?.mac?.replace(/\s+/g, '');
+	let macadress = String(requestBody?.macadress || '').replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
-	if (!ip) {
+	if (!macadress) {
 		return res.status(400).json({
 			error: true,
 			status: 400,
@@ -382,7 +382,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	}
 
 	try {
-		const resip = await fetch(`https://www.macvendorlookup.com/api/v2/${mac}/json`);
+		const resip = await fetch(`https://www.macvendorlookup.com/api/v2/${macadress}/json`);
 		if (resip.ok) {
 			const data = await resip.json();
 			return res.status(200).json({

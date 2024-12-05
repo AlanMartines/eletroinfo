@@ -40,7 +40,7 @@ module.exports = {
 				"description": "Verifica a disponibilidade ou bloqueio de portas específicas em uma rede, auxiliando no diagnóstico de problemas de conectividade."
 			},
 			{
-				"name": "Consulta de Fabricante de MAC",
+				"name": "Consulta Fabricante pelo Endereço MAC",
 				"description": "Identifica o fabricante de dispositivos a partir de endereços MAC, útil para diagnósticos e organização de redes."
 			},
 			{
@@ -214,6 +214,18 @@ module.exports = {
 						}
 					}
 				},
+
+				"ConsultaFabricanteMACRequest": {
+					"type": "object",
+					"properties": {
+						"ip": {
+							"type": "string",
+							"description": "Endereço MAC que se deseja consultar, retorna informações sobre endereço MAC informado",
+							"example": "200.221.11.100"
+						}
+					}
+				},
+
 			}
 		},
 
@@ -962,6 +974,99 @@ module.exports = {
 					}
 				}
 			},
+
+			"/api/ConsultaFabricanteMAC": {
+				"post": {
+					"tags": [
+						"Consulta Fabricante pelo Endereço MAC"
+					],
+					"summary": "Consulta Fabricante pelo Endereço MAC",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConsultaIPRequest"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"timezone": "America/Sao_Paulo",
+												"organization": "AS7162 Universo Online S.A.",
+												"ip": "200.221.11.100",
+												"asn": 7162,
+												"area_code": "0",
+												"organization_name": "Universo Online S.A.",
+												"country_code": "BR",
+												"country_code3": "BRA",
+												"continent_code": "SA",
+												"country": "Brazil",
+												"latitude": "-22.8305",
+												"longitude": "-43.2192",
+												"accuracy": 1000
+											},
+											"message": "Consulta realizada com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"404": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"Status": {
+												"error": true,
+												"status": 404,
+												"result": null,
+												"message": "JSON enviado está incorreto. Por favor, revise o formato e tente novamente."
+											}
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "Endereço IP inválido ou não encontrado."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
+
 		}
 	}
 };
