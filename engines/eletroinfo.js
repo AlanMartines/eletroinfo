@@ -429,6 +429,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 					message: "Consulta realizada com sucesso."
 				});
 			}
+			
 		} else {
 			// Caso a API retorne erro HTTP
 			return res.status(resMAC.status).json({
