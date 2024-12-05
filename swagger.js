@@ -218,10 +218,10 @@ module.exports = {
 				"ConsultaFabricanteMACRequest": {
 					"type": "object",
 					"properties": {
-						"ip": {
+						"macadress": {
 							"type": "string",
 							"description": "Endereço MAC que se deseja consultar, retorna informações sobre endereço MAC informado",
-							"example": "200.221.11.100"
+							"example": "00-1A-2B-3C-4D-5E"
 						}
 					}
 				},
@@ -981,7 +981,7 @@ module.exports = {
 						"Consulta Fabricante pelo Endereço MAC"
 					],
 					"summary": "Consulta Fabricante pelo Endereço MAC",
-					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
+					"description": "## Entradas Necessárias\n\nOs seguinte parâmetro deve ser enviado no corpo da requisição:\n\n- **macadress:** Endereço MAC que se deseja consultar.\n",
 					"parameters": [
 
 					],
