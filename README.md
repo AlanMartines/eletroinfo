@@ -663,6 +663,76 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 
 ---
 
+## Endpoint - Consulta Fabricante pelo Endereço MAC
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/ConsultaFabricanteMAC`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+Os seguintes parâmetros devem ser enviados no corpo da requisição:
+
+- **macadress:** Endereço MAC que se deseja consultar.
+
+## Exemplo de Requisição (Body)
+
+```
+- XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX
+- XXXX.XXXX.XXXX (Cisco format)
+```
+
+```json
+{
+  "macadress": "00-1A-2B-3C-4D-5E"
+}
+```
+
+## Exemplo de Resposta
+
+A resposta será um JSON com os resultados do cálculo e a viabilidade da instalação:
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": [
+    {
+      "startHex": "001A2B000000",
+      "endHex": "001A2BFFFFFF",
+      "startDec": "112390569984",
+      "endDec": "112407347199",
+      "company": "Ayecom Technology Co., Ltd.",
+      "addressL1": "No. 25, R&D Road 2, Science-Based Industrial Park",
+      "addressL2": "Hsinchu    300",
+      "addressL3": "",
+      "country": "TW",
+      "type": "MA-L"
+    }
+  ],
+  "message": "Consulta realizada com sucesso."
+}
+```
+
+## Notas
+
+- O parâmetro `macadress` deve conter um dos valores válidos.
+- Certifique-se de enviar os dados no formato JSON correto.
+
+---
+
+---
+
 ## Rotas
 
 > As rota se encontra no arquivo [Insomnia.json](https://github.com/AlanMartines/eletroinfo/blob/master/Insomnia.json "Insomnia.json"), importe para seu Insomnia e desfrute da API.
