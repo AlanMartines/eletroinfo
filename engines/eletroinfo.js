@@ -272,9 +272,9 @@ router.post('/GeolocalizacaoIP', async (req, res, next) => {
 	}
 
 	try {
-		const resip = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
+		const resGeoIP = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
 		if (resip.ok) {
-			const data = await resip.json();
+			const data = await resGeoIP.json();
 			return res.status(200).json({
 				error: false,
 				status: 200,
@@ -283,9 +283,9 @@ router.post('/GeolocalizacaoIP', async (req, res, next) => {
 			});
 		} else {
 			// Caso a API retorne erro HTTP
-			return res.status(resip.status).json({
+			return res.status(resGeoIP.status).json({
 				error: true,
-				status: resip.status,
+				status: resGeoIP.status,
 				result: null,
 				message: "Erro ao efetuar consulta."
 			});
