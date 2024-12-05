@@ -412,30 +412,15 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 
 			// Validação da estrutura do JSON retornado
 			const isArray = Array.isArray(data);
-			const isValidFormat = (item) =>
-				item &&
-				typeof item.startHex === 'string' &&
-				typeof item.endHex === 'string' &&
-				typeof item.startDec === 'string' &&
-				typeof item.endDec === 'string' &&
-				typeof item.company === 'string' &&
-				typeof item.addressL1 === 'string' &&
-				typeof item.addressL2 === 'string' &&
-				typeof item.addressL3 === 'string' &&
-				typeof item.country === 'string' &&
-				typeof item.type === 'string';
-
 			if (isArray) {
 				// Validar se todos os elementos do array têm o formato esperado
-				if (data.every(isValidFormat)) {
 					return res.status(200).json({
 						error: false,
 						status: 200,
-						result: data,
+						result: data[0],
 						message: "Consulta realizada com sucesso."
 					});
-				}
-			} else if (isValidFormat(data)) {
+			} else{
 				// Resposta é um único objeto válido
 				return res.status(200).json({
 					error: false,
