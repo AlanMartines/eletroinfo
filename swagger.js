@@ -1006,19 +1006,16 @@ module.exports = {
 											"error": false,
 											"status": 200,
 											"result": {
-												"timezone": "America/Sao_Paulo",
-												"organization": "AS7162 Universo Online S.A.",
-												"ip": "200.221.11.100",
-												"asn": 7162,
-												"area_code": "0",
-												"organization_name": "Universo Online S.A.",
-												"country_code": "BR",
-												"country_code3": "BRA",
-												"continent_code": "SA",
-												"country": "Brazil",
-												"latitude": "-22.8305",
-												"longitude": "-43.2192",
-												"accuracy": 1000
+												"startHex": "001A2B000000",
+												"endHex": "001A2BFFFFFF",
+												"startDec": "112390569984",
+												"endDec": "112407347199",
+												"company": "Ayecom Technology Co., Ltd.",
+												"addressL1": "No. 25, R&D Road 2, Science-Based Industrial Park",
+												"addressL2": "Hsinchu    300",
+												"addressL3": "",
+												"country": "TW",
+												"type": "MA-L"
 											},
 											"message": "Consulta realizada com sucesso."
 										}
@@ -1027,19 +1024,17 @@ module.exports = {
 							}
 						},
 
-						"404": {
+						"400": {
 							"description": "",
 							"content": {
 								"application/json": {
 									"schema": {
 										"type": "object",
 										"example": {
-											"Status": {
-												"error": true,
-												"status": 404,
-												"result": null,
-												"message": "JSON enviado está incorreto. Por favor, revise o formato e tente novamente."
-											}
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "O valor 'macadress' deve ser preenchido. Por favor, corrija e tente novamente."
 										}
 									}
 								}
@@ -1056,7 +1051,7 @@ module.exports = {
 											"error": true,
 											"status": 500,
 											"result": null,
-											"message": "Endereço IP inválido ou não encontrado."
+											"message": "Endereço MAC inválido ou não encontrado."
 										}
 									}
 								}
