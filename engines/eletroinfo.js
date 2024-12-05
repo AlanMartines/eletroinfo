@@ -1,9 +1,6 @@
 //
 const express = require("express");
 const router = express.Router();
-const https = require('https');
-const axios = require('axios');
-const mime = require('mime-types');
 const moment = require('moment');
 moment()?.format('YYYY-MM-DD HH:mm:ss');
 moment?.locale('pt-br');
@@ -368,6 +365,23 @@ router.post('/TestePortasRede', async (req, res, next) => {
 //
 router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	//
+	// Function to validate the
+	// MAC_Address  
+	function isValidMACAddress(str) {
+		// Regex to check valid MAC Address in two common formats:
+		// - XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX
+		// - XXXX.XXXX.XXXX (Cisco format)
+		const regex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^([0-9a-fA-F]{4}\.[0-9a-fA-F]{4}\.[0-9a-fA-F]{4})$/;
+
+		// Ensure the input is a string and not null or undefined
+		if (typeof str !== 'string' || !str.trim()) {
+			return false;
+		}
+
+		// Test the input string against the regex and return the result
+		return regex.test(str);
+	}
+	//
 	let requestBody = req?.body;
 	let macadress = String(requestBody?.macadress || '').replace(/\s+/g, '');
 
@@ -378,6 +392,16 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 			status: 400,
 			result: null,
 			message: 'O mac deve ser preenchido. Por favor, corrija e tente novamente.'
+		});
+	}
+
+	// Verificando se é um mac valido
+	if (!isValidMACAddress(macadress)) {
+		return res.status(400).json({
+			error: true,
+			status: 400,
+			result: null,
+			message: 'O mac invalido. Por favor, corrija e tente novamente.'
 		});
 	}
 
