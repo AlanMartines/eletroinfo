@@ -230,6 +230,14 @@ router.post('/ConsultaIP', async (req, res, next) => {
 				result: data,
 				message: "Consulta realizada com sucesso."
 			});
+		} else {
+			// Caso a API retorne erro HTTP
+			return res.status(resip.status).json({
+				error: true,
+				status: resip.status,
+				result: null,
+				message: "Erro ao efetuar consulta."
+			});
 		}
 	} catch (error) {
 		// Capturando e retornando erro interno
@@ -272,6 +280,14 @@ router.post('/GeolocalizacaoIP', async (req, res, next) => {
 				status: 200,
 				result: data,
 				message: "Consulta realizada com sucesso."
+			});
+		} else {
+			// Caso a API retorne erro HTTP
+			return res.status(resip.status).json({
+				error: true,
+				status: resip.status,
+				result: null,
+				message: "Erro ao efetuar consulta."
 			});
 		}
 	} catch (error) {
@@ -429,7 +445,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 					message: "Consulta realizada com sucesso."
 				});
 			}
-			
+
 		} else {
 			// Caso a API retorne erro HTTP
 			return res.status(resMAC.status).json({
@@ -442,6 +458,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	} catch (error) {
 		// Capturando e retornando erro interno
 		logger.error(`- Erro: ${error?.message}`);
+		console.log(`- Erro:\n ${error}`);
 		return res.status(500).json({
 			error: true,
 			status: 500,
