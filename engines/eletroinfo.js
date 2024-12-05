@@ -429,14 +429,6 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 					message: "Consulta realizada com sucesso."
 				});
 			}
-
-			// Caso não esteja em um formato válido
-			return res.status(400).json({
-				error: true,
-				status: 401,
-				result: null,
-				message: "Resposta com formato inválido."
-			});
 		} else {
 			// Caso a API retorne erro HTTP
 			return res.status(resMAC.status).json({
