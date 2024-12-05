@@ -683,7 +683,7 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 
 Os seguintes parâmetros devem ser enviados no corpo da requisição:
 
-- **macadress:** Endereço MAC que se deseja consultar.
+- **macaddress:** Endereço MAC que se deseja consultar.
 
 ## Exemplo de Requisição (Body)
 
@@ -694,7 +694,7 @@ Os seguintes parâmetros devem ser enviados no corpo da requisição:
 
 ```json
 {
-  "macadress": "00-1A-2B-3C-4D-5E"
+  "macaddress": "00-1A-2B-3C-4D-5E"
 }
 ```
 

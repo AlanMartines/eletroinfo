@@ -399,10 +399,10 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	}
 	//
 	let requestBody = req?.body;
-	let macadress = String(requestBody?.macadress || '').replace(/\s+/g, '');
+	let macaddress = String(requestBody?.macaddress || '').replace(/\s+/g, '');
 
 	// Verificando se algum campo obrigatório está ausente
-	if (!macadress) {
+	if (!macaddress) {
 		return res.status(400).json({
 			error: true,
 			status: 400,
@@ -412,7 +412,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	}
 
 	// Verificando se é um mac valido
-	if (!isValidMACAddress(macadress)) {
+	if (!isValidMACAddress(macaddress)) {
 		return res.status(400).json({
 			error: true,
 			status: 400,
@@ -422,7 +422,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	}
 
 	try {
-		const resMAC = await fetch(`https://www.macvendorlookup.com/api/v2/${macadress}/json`);
+		const resMAC = await fetch(`https://www.macvendorlookup.com/api/v2/${macaddress}/json`);
 		if (resMAC.ok) {
 			const data = await resMAC.json();
 
