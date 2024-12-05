@@ -412,7 +412,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 			return res.status(200).json({
 				error: false,
 				status: 200,
-				result: data,
+				result: data[0],
 				message: "Consulta realizada com sucesso."
 			});
 		}
