@@ -990,7 +990,7 @@ module.exports = {
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ConsultaIPRequest"
+									"$ref": "#/components/schemas/ConsultaFabricanteMACRequest"
 								}
 							}
 						}
