@@ -144,11 +144,16 @@ try {
 	});
 	//
 	// Rotas
+	app.get('/', function (req, res) {
+		res.sendFile(path.join(__dirname, '/view.html'));
+	});
+	//
 	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile.definition, {
 		swaggerOptions: {
 			supportedSubmitMethods: ['get', 'post']
 		}
 	}));
+	//
 	//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 	app.use("/api", eletroinfo);
 	//
@@ -181,10 +186,12 @@ try {
 				logger?.info(`- HTTP Server running on`);
 				logger?.info(`- To status: https://${config.DOMAIN_SSL}/`);
 				logger?.info(`- To doc: https://${config.DOMAIN_SSL}/docs`);
+				logger?.info(`- To API: https://${config.DOMAIN_SSL}/api`);
 			} else {
 				logger?.info(`- HTTP Server running on`);
 				logger?.info(`- To status: http://${config.HOST}:${config.PORT}/`);
 				logger?.info(`- To doc: http://${config.HOST}:${config.PORT}/docs`);
+				logger?.info(`- To API: http://${config.HOST}:${config.PORT}/api`);
 			}
 			//
 		}

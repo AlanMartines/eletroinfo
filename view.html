@@ -1,29 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
-	<meta charset="UTF-8">
-	<title>API - Eletro Info (Rotas)</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-	<style>
-		body {
-			padding-top: 50px;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API - Eletro Info</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: #f8f9fa;
+        }
+
+        .status-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-logo {
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        .status-header {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-description {
+            color: #6c757d;
+        }
+    </style>
 </head>
 
 <body>
 
-	<div class="container">
-		<p align="center">
-			<img src="https://eletroinfo.site/public/imagens/icons/eletro_info_matriz.svg" width="150" alt="My Whatsapp">
-		</p>
-		<p align="center">
-		<div class="jumbotron text-center">
-			<h1>Server is running.</h1>
-		</div>
-		</p>
-	</div>
+    <div class="container text-center">
+        <div class="status-container">
+            <img src="https://eletroinfo.site/public/imagens/icons/eletro_info_matriz.svg" class="status-logo" width="150" alt="EletroInfo">
+            <h1 class="status-header">Servidor em Funcionamento</h1>
+            <p class="status-description">Tudo está funcionando como esperado. Você pode usar a API Eletro Info normalmente.</p>
+        </div>
+    </div>
 
 </body>
 
