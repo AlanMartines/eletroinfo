@@ -52,6 +52,10 @@ module.exports = {
 				"description": "Avalia a performance da memória RAM calculando a latência e a largura de banda, fornecendo métricas detalhadas para otimização do sistema."
 			},
 			{
+				"name": "Calculadora de RAID",
+				"description": "A Calculadora de Capacidade RAID faz uma estimativa da utilização de armazenamento de várias configurações de unidades e níveis RAID."
+			},
+			{
 				"name": "Calculadora de Metabolismo Basal (TMB)",
 				"description": "Calcula o metabolismo basal de uma pessoa usando dados como idade, peso, altura e gênero, auxiliando no planejamento de dietas e treinos."
 			}
@@ -1034,7 +1038,7 @@ module.exports = {
 											"error": true,
 											"status": 400,
 											"result": null,
-											"message": "O valor 'macadress' deve ser preenchido. Por favor, corrija e tente novamente."
+											"message": "O MAC Address deve ser preenchido. Por favor, corrija e tente novamente."
 										}
 									}
 								}
@@ -1051,7 +1055,7 @@ module.exports = {
 											"error": true,
 											"status": 500,
 											"result": null,
-											"message": "Endereço MAC inválido ou não encontrado."
+											"message": "MAC Address inválido ou não encontrado."
 										}
 									}
 								}

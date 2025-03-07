@@ -462,7 +462,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 			error: true,
 			status: 500,
 			result: null,
-			message: 'Endereço MAC inválido ou não encontrado.'
+			message: 'MAC Address inválido ou não encontrado.'
 		});
 	}
 
@@ -523,6 +523,32 @@ router.post('/LatenciaLarguraBandaRAM', async (req, res, next) => {
 	//
 });
 //
+//
+router.post('/CalculadoraRAID', async (req, res, next) => {
+	//
+	let requestBody = req?.body;
+	//
+	logger?.info('=====================================================================================================');
+	logger?.info('=====================================================================================================');
+	//
+	if (req?.body == undefined || req?.body?.SessionName == undefined) {
+		var resultRes = {
+			"error": true,
+			"status": 404,
+			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		return res.status(resultRes.status).json({
+			"Status": resultRes
+		});
+		//
+	}
+	//
+	logger?.info('=====================================================================================================');
+	logger?.info('=====================================================================================================');
+	//
+});
 //
 router.post('/CalculadoraTMB', async (req, res, next) => {
 	//
