@@ -407,7 +407,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 			error: true,
 			status: 400,
 			result: null,
-			message: 'O mac deve ser preenchido. Por favor, corrija e tente novamente.'
+			message: 'O MAC Address deve ser preenchido. Por favor, corrija e tente novamente.'
 		});
 	}
 
@@ -417,7 +417,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 			error: true,
 			status: 400,
 			result: null,
-			message: 'O mac invalido. Por favor, corrija e tente novamente.'
+			message: 'O MAC Address invalido. Por favor, corrija e tente novamente.'
 		});
 	}
 
