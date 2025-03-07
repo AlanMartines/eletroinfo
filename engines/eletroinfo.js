@@ -399,7 +399,7 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	}
 	//
 	let requestBody = req?.body;
-	let macaddress = String(requestBody?.macaddress || '').replace(/\s+/g, '');
+	let macaddress = requestBody?.macaddress;
 
 	// Verificando se algum campo obrigatório está ausente
 	if (!macaddress) {
