@@ -8,7 +8,7 @@ A API da EletroInfo oferece soluções para cálculos técnicos e consultas volt
 
 ![](https://img.shields.io/github/stars/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/tag/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/v/release/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/issues/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/badge/express-v4.21.1-green.svg) ![](https://img.shields.io/badge/node-v20.18.1-green.svg) ![](https://img.shields.io/badge/npm-v10.9.0-green.svg) ![](https://img.shields.io/github/license/AlanMartines/eletroinfo) ![](https://img.shields.io/github/downloads/AlanMartines/eletroinfo/total) ![](https://img.shields.io/github/forks/AlanMartines/eletroinfo)
 
-## Dependências Debian (e.g. Ubuntu) 64bits
+## Dependências Ubuntu/Debian (e.g. Debian) 64bits
 
 ```sh
 # Instalar Oracle JDK 21

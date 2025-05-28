@@ -230,6 +230,38 @@ module.exports = {
 					}
 				},
 
+				"CalculadoraDataTransferRequest": {
+						"type": "object",
+						"properties": {
+							"tamanho": {
+								"type": "integer",
+								"description": "Informe o tamanho total do arquivo que será transferido.",
+								"example": 500
+							},
+							"unidadeTamanho": {
+								"type": "string",
+								"description": "Selecione a unidade de medida correspondente ao tamanho do arquivo (por exemplo, MB, GB, TB).",
+								"example": "GB"
+							},
+							"velocidade": {
+								"type": "integer",
+								"description": "Digite a velocidade disponível para a transferência dos dados.",
+								"example": 67
+							},
+							"unidadeVelocidade": {
+								"type": "string",
+								"description": "Selecione a unidade de medida da velocidade de transferência (por exemplo, Mbps, MB/s, Gbps).",
+								"example": "MB"
+							}
+						},
+						"required": [
+							"tamanho",
+							"unidadeTamanho",
+							"velocidade",
+							"unidadeVelocidade"
+						]
+					},
+
 			}
 		},
 
@@ -240,7 +272,7 @@ module.exports = {
 						"Cálculo de Autonomia de Nobreak"
 					],
 					"summary": "Cálculo de Autonomia de Nobreak",
-					"description": "Os seguintes parâmetros devem ser fornecidos no corpo da requisição:\n\n- **carga_aplicada:** Consumo do equipamento em watts (W).\n- **tensao_bateria:** Tensão nominal da bateria em volts (V).\n- **capacidade_bateria:** Capacidade nominal da bateria em ampere-hora (Ah).\n- **quantidade_baterias:** Quantidade de baterias no sistema.\n- **tipo_bateria:** Tipo da bateria (veja lista de valores válidos).\n\n## Valores Válidos para o Campo `tipo_bateria`\n\n- `chumbo_acido` - Chumbo-Ácido (Lead-Acid)\n- `ion_litio` - Íon de Lítio (Li-ion)\n- `niquel_cadmio` - Níquel-Cádmio (NiCd)\n- `niquel_hidreto_metalico` - Níquel-Hidreto Metálico (NiMH)\n- `lithium_ferro_fosfato` - Lítio-Ferro-Fosfato (LiFePO4)\n- `lithium_polimero` - Lítio-Polímero (LiPo)\n- `zinco_ar` - Zinco-Ar (Zn-Air)\n- `niquel_ferro` - Níquel-Ferro (NiFe)\n- `sodio_enxofre` - Sódio-Enxofre (NaS)\n- `zinco_brometo` - Zinco-Brometo (ZnBr)\n- `magnesio` - Magnésio\n- `chumbo_carbono` - Chumbo-Carbono\n- `fluxo_redox` - Fluxo Redox\n- `aluminio_ar` - Alumínio-Ar (Al-Air)\n- `lithium_enxofre` - Lítio-Enxofre (Li-S)\n- `desconhecida` - Tipo de bateria desconhecido\n",
+					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n\n- **carga_aplicada:** Consumo do equipamento em watts (W).\n- **tensao_bateria:** Tensão nominal da bateria em volts (V).\n- **capacidade_bateria:** Capacidade nominal da bateria em ampere-hora (Ah).\n- **quantidade_baterias:** Quantidade de baterias no sistema.\n- **tipo_bateria:** Tipo da bateria (veja lista de valores válidos).\n\n## Valores Válidos para o Campo `tipo_bateria`\n\n- `chumbo_acido` - Chumbo-Ácido (Lead-Acid)\n- `ion_litio` - Íon de Lítio (Li-ion)\n- `niquel_cadmio` - Níquel-Cádmio (NiCd)\n- `niquel_hidreto_metalico` - Níquel-Hidreto Metálico (NiMH)\n- `lithium_ferro_fosfato` - Lítio-Ferro-Fosfato (LiFePO4)\n- `lithium_polimero` - Lítio-Polímero (LiPo)\n- `zinco_ar` - Zinco-Ar (Zn-Air)\n- `niquel_ferro` - Níquel-Ferro (NiFe)\n- `sodio_enxofre` - Sódio-Enxofre (NaS)\n- `zinco_brometo` - Zinco-Brometo (ZnBr)\n- `magnesio` - Magnésio\n- `chumbo_carbono` - Chumbo-Carbono\n- `fluxo_redox` - Fluxo Redox\n- `aluminio_ar` - Alumínio-Ar (Al-Air)\n- `lithium_enxofre` - Lítio-Enxofre (Li-S)\n- `desconhecida` - Tipo de bateria desconhecido\n",
 					"parameters": [
 
 					],
@@ -1022,6 +1054,84 @@ module.exports = {
 												"type": "MA-L"
 											},
 											"message": "Consulta realizada com sucesso."
+										}
+									}
+								}
+							}
+						},
+
+						"400": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 400,
+											"result": null,
+											"message": "O MAC Address deve ser preenchido. Por favor, corrija e tente novamente."
+										}
+									}
+								}
+							}
+						},
+
+						"500": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": true,
+											"status": 500,
+											"result": null,
+											"message": "MAC Address inválido ou não encontrado."
+										}
+									}
+								}
+							}
+						}
+
+					}
+				}
+			},
+
+			"/api/CalculadoraDataTransfer": {
+				"post": {
+					"tags": [
+						"Calculadora de Transferência de Dados"
+					],
+					"summary": "Calculadora de Transferência de Dados",
+					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n* **tamanho:** Informe o tamanho total do arquivo que será transferido. * **unidadeTamanho:** Selecione a unidade de medida correspondente ao tamanho do arquivo (por exemplo, MB, GB, TB). * **velocidade:** Digite a velocidade disponível para a transferência dos dados. * **unidadeVelocidade:** Selecione a unidade de medida da velocidade de transferência (por exemplo, Mbps, MB/s, Gbps).\n## Valores Válidos para o Campo `unidadeTamanho`\n- `B` – Bytes (B)\n- `kB` – Kilobytes (kB)\n- `MB` – Megabytes (MB)\n- `GB` – Gigabytes (GB)\n- `TB` – Terabytes (TB)\n- `PB` – Petabytes (PB)\n- `bit` – Bits (bit)\n- `kbit` – Kilobits (kbit)\n- `Mbit` – Megabits (Mbit)\n- `Gbit` – Gigabits (Gbit)\n- `Tbit` – Terabits (Tbit)\n- `Pbit` – Petabits (Pbit)\n- `KiB` – Kibibytes (KiB)\n- `MiB` – Mebibytes (MiB)\n- `GiB` – Gibibytes (GiB)\n- `TiB` – Tebibytes (TiB)\n- `PiB` – Pebibytes (PiB)\n- `kibit` – Kibibits (kibit)\n- `Mibit` – Mebibits (Mibit)\n- `Gibit` – Gibibits (Gibit)\n- `Tibit` – Tebibits (Tibit)\n- `Pibit` – Pebibits (Pibit)\n## Valores Válidos para o Campo `unidadeVelocidade`\n- `B` – Bytes por segundo (B/s)\n- `kB` – Kilobytes por segundo (kB/s)\n- `MB` – Megabytes por segundo (MB/s)\n- `GB` – Gigabytes por segundo (GB/s)\n- `TB` – Terabytes por segundo (TB/s)\n- `PB` – Petabytes por segundo (PB/s)\n- `bit` – Bits por segundo (b/s)\n- `kbit` – Kilobits por segundo (kb/s)\n- `Mbit` – Megabits por segundo (Mb/s)\n- `Gbit` – Gigabits por segundo (Gb/s)\n- `Tbit` – Terabits por segundo (Tb/s)\n- `Pbit` – Petabits por segundo (Pb/s)\n- `KiB` – Kibibytes por segundo (KiB/s)\n- `MiB` – Mebibytes por segundo (MiB/s)\n- `GiB` – Gibibytes por segundo (GiB/s)\n- `TiB` – Tebibytes por segundo (TiB/s)\n- `PiB` – Pebibytes por segundo (PiB/s)\n- `kibit` – Kibibits por segundo (kib/s)\n- `Mibit` – Mebibits por segundo (Mib/s)\n- `Gibit` – Gibibits por segundo (Gib/s)\n- `Tibit` – Tebibits por segundo (Tib/s)\n- `Pibit` – Pebibits por segundo (Pib/s)\n",
+					"parameters": [
+
+					],
+					"requestBody": {
+						"required": true,
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CalculadoraDataTransferRequest"
+								}
+							}
+						}
+					},
+					"responses": {
+						"200": {
+							"description": "",
+							"content": {
+								"application/json": {
+									"schema": {
+										"type": "object",
+										"example": {
+											"error": false,
+											"status": 200,
+											"result": {
+												"tempo_estimado": "01:25:20"
+											},
+											"message": "Calculo realizado com sucesso."
 										}
 									}
 								}

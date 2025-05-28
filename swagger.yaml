@@ -192,6 +192,34 @@ definition:
               Endereço MAC que se deseja consultar, retorna informações sobre
               endereço MAC informado
             example: 00-1A-2B-3C-4D-5E
+      CalculadoraDataTransferRequest:
+        type: object
+        properties:
+          tamanho:
+            type: integer
+            description: Informe o tamanho total do arquivo que será transferido.
+            example: 500
+          unidadeTamanho:
+            type: string
+            description: >-
+              Selecione a unidade de medida correspondente ao tamanho do arquivo
+              (por exemplo, MB, GB, TB).
+            example: GB
+          velocidade:
+            type: integer
+            description: Digite a velocidade disponível para a transferência dos dados.
+            example: 67
+          unidadeVelocidade:
+            type: string
+            description: >-
+              Selecione a unidade de medida da velocidade de transferência (por
+              exemplo, Mbps, MB/s, Gbps).
+            example: MB
+        required:
+          - tamanho
+          - unidadeTamanho
+          - velocidade
+          - unidadeVelocidade
   paths:
     /api/AutonomiaNobreak:
       post:
@@ -199,6 +227,8 @@ definition:
           - Cálculo de Autonomia de Nobreak
         summary: Cálculo de Autonomia de Nobreak
         description: >
+          ## Entradas Necessárias
+
           Os seguintes parâmetros devem ser fornecidos no corpo da requisição:
 
 
@@ -977,6 +1007,158 @@ definition:
                       country: TW
                       type: MA-L
                     message: Consulta realizada com sucesso.
+          '400':
+            description: ''
+            content:
+              application/json:
+                schema:
+                  type: object
+                  example:
+                    error: true
+                    status: 400
+                    result: null
+                    message: >-
+                      O MAC Address deve ser preenchido. Por favor, corrija e
+                      tente novamente.
+          '500':
+            description: ''
+            content:
+              application/json:
+                schema:
+                  type: object
+                  example:
+                    error: true
+                    status: 500
+                    result: null
+                    message: MAC Address inválido ou não encontrado.
+    /api/CalculadoraDataTransfer:
+      post:
+        tags:
+          - Calculadora de Transferência de Dados
+        summary: Calculadora de Transferência de Dados
+        description: >
+          ## Entradas Necessárias
+
+          Os seguintes parâmetros devem ser fornecidos no corpo da requisição:
+
+          * **tamanho:** Informe o tamanho total do arquivo que será
+          transferido. * **unidadeTamanho:** Selecione a unidade de medida
+          correspondente ao tamanho do arquivo (por exemplo, MB, GB, TB). *
+          **velocidade:** Digite a velocidade disponível para a transferência
+          dos dados. * **unidadeVelocidade:** Selecione a unidade de medida da
+          velocidade de transferência (por exemplo, Mbps, MB/s, Gbps).
+
+          ## Valores Válidos para o Campo `unidadeTamanho`
+
+          - `B` – Bytes (B)
+
+          - `kB` – Kilobytes (kB)
+
+          - `MB` – Megabytes (MB)
+
+          - `GB` – Gigabytes (GB)
+
+          - `TB` – Terabytes (TB)
+
+          - `PB` – Petabytes (PB)
+
+          - `bit` – Bits (bit)
+
+          - `kbit` – Kilobits (kbit)
+
+          - `Mbit` – Megabits (Mbit)
+
+          - `Gbit` – Gigabits (Gbit)
+
+          - `Tbit` – Terabits (Tbit)
+
+          - `Pbit` – Petabits (Pbit)
+
+          - `KiB` – Kibibytes (KiB)
+
+          - `MiB` – Mebibytes (MiB)
+
+          - `GiB` – Gibibytes (GiB)
+
+          - `TiB` – Tebibytes (TiB)
+
+          - `PiB` – Pebibytes (PiB)
+
+          - `kibit` – Kibibits (kibit)
+
+          - `Mibit` – Mebibits (Mibit)
+
+          - `Gibit` – Gibibits (Gibit)
+
+          - `Tibit` – Tebibits (Tibit)
+
+          - `Pibit` – Pebibits (Pibit)
+
+          ## Valores Válidos para o Campo `unidadeVelocidade`
+
+          - `B` – Bytes por segundo (B/s)
+
+          - `kB` – Kilobytes por segundo (kB/s)
+
+          - `MB` – Megabytes por segundo (MB/s)
+
+          - `GB` – Gigabytes por segundo (GB/s)
+
+          - `TB` – Terabytes por segundo (TB/s)
+
+          - `PB` – Petabytes por segundo (PB/s)
+
+          - `bit` – Bits por segundo (b/s)
+
+          - `kbit` – Kilobits por segundo (kb/s)
+
+          - `Mbit` – Megabits por segundo (Mb/s)
+
+          - `Gbit` – Gigabits por segundo (Gb/s)
+
+          - `Tbit` – Terabits por segundo (Tb/s)
+
+          - `Pbit` – Petabits por segundo (Pb/s)
+
+          - `KiB` – Kibibytes por segundo (KiB/s)
+
+          - `MiB` – Mebibytes por segundo (MiB/s)
+
+          - `GiB` – Gibibytes por segundo (GiB/s)
+
+          - `TiB` – Tebibytes por segundo (TiB/s)
+
+          - `PiB` – Pebibytes por segundo (PiB/s)
+
+          - `kibit` – Kibibits por segundo (kib/s)
+
+          - `Mibit` – Mebibits por segundo (Mib/s)
+
+          - `Gibit` – Gibibits por segundo (Gib/s)
+
+          - `Tibit` – Tebibits por segundo (Tib/s)
+
+          - `Pibit` – Pebibits por segundo (Pib/s)
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculadoraDataTransferRequest'
+        responses:
+          '200':
+            description: ''
+            content:
+              application/json:
+                schema:
+                  type: object
+                  example:
+                    error: false
+                    status: 200
+                    result:
+                      tempo_estimado: '01:25:20'
+                    message: Calculo realizado com sucesso.
           '400':
             description: ''
             content:
