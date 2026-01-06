@@ -11,6 +11,13 @@ const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
 const { calculateIPInfo } = require('../middleware/CalculadoraIP');
 const { testMultiplePorts } = require('../middleware/TestePortasRede');
 //
+// Helper para limpar e converter números (aceita "10,5" ou "10.5")
+function parseNumber(value) {
+	if (!value) return null;
+	const str = String(value).replace(/\s+/g, '').replace(',', '.');
+	const num = parseFloat(str);
+	return isNaN(num) || num <= 0 ? null : num;
+}
 //
 /*
 ╔═╗┌─┐┌┬┐┌┬┐┬┌┐┌┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐
@@ -18,96 +25,125 @@ const { testMultiplePorts } = require('../middleware/TestePortasRede');
 ╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 */
 //
-router.post('/AutonomiaNobreak', async (req, res, next) => {
-
-	let requestBody = req?.body;
-
-	// Garantir que o valor seja tratado como string antes de usar .replace()
-	let carga_aplicada = String(requestBody?.carga_aplicada || '').replace(/\s+/g, '');
-	let tensao_bateria = String(requestBody?.tensao_bateria || '').replace(/\s+/g, '');
-	let capacidade_bateria = String(requestBody?.capacidade_bateria || '').replace(/\s+/g, '');
-	let quantidade_baterias = String(requestBody?.quantidade_baterias || '').replace(/\s+/g, '');
-	let tipo_bateria = requestBody?.tipo_bateria.replace(/\s+/g, '');
-
-	// Verificando se algum campo obrigatório está ausente
-	if (!carga_aplicada || !tensao_bateria || !capacidade_bateria || !quantidade_baterias || !tipo_bateria) {
-		return res.status(400).json({
-			error: true,
-			status: 400,
-			result: null,
-			message: 'Todos os valores devem ser preenchidos: carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria. Por favor, corrija e tente novamente.'
-		});
-	}
-
+router.post('/AutonomiaNobreak', async (req, res) => {
 	try {
-		// Calculando a autonomia
-		const resultado = calcularAutonomia(carga_aplicada, tensao_bateria, capacidade_bateria, quantidade_baterias, tipo_bateria);
+			const body = req.body || {};
 
-		// Retornando sucesso com o formato esperado
-		return res.status(200).json({
-			error: false,
-			status: 200,
-			result: resultado,
-			message: "Cálculo realizado com sucesso."
-		});
+			// 1. Sanitização e Conversão de Tipos
+			// Remove espaços apenas do tipo, converte números e troca vírgula por ponto
+			const inputs = {
+					carga_aplicada: parseNumber(body.carga_aplicada),
+					tensao_bateria: parseNumber(body.tensao_bateria),
+					capacidade_bateria: parseNumber(body.capacidade_bateria),
+					quantidade_baterias: parseNumber(body.quantidade_baterias),
+					tipo_bateria: String(body.tipo_bateria || '').trim() // Mantém underscores se existirem
+			};
+
+			// 2. Validação de Campos Obrigatórios e Valores Numéricos
+			const camposInvalidos = [];
+			if (!inputs.carga_aplicada) camposInvalidos.push('carga_aplicada');
+			if (!inputs.tensao_bateria) camposInvalidos.push('tensao_bateria');
+			if (!inputs.capacidade_bateria) camposInvalidos.push('capacidade_bateria');
+			if (!inputs.quantidade_baterias) camposInvalidos.push('quantidade_baterias');
+			if (!inputs.tipo_bateria) camposInvalidos.push('tipo_bateria');
+
+			if (camposInvalidos.length > 0) {
+					return res.status(400).json({
+							error: true,
+							status: 400,
+							result: null,
+							message: `Valores inválidos ou ausentes: ${camposInvalidos.join(', ')}. Certifique-se de enviar números maiores que zero.`
+					});
+			}
+
+			// 3. Execução do Cálculo
+			const resultado = calcularAutonomia(
+					inputs.carga_aplicada,
+					inputs.tensao_bateria,
+					inputs.capacidade_bateria,
+					inputs.quantidade_baterias,
+					inputs.tipo_bateria
+			);
+
+			return res.status(200).json({
+					error: false,
+					status: 200,
+					result: resultado,
+					message: "Cálculo realizado com sucesso."
+			});
+
 	} catch (error) {
-		// Capturando e retornando erro interno
-		logger.error(`- Erro: ${error?.message}`);
-		return res.status(500).json({
-			error: true,
-			status: 500,
-			result: null,
-			message: 'Erro ao calcular a autonomia'
-		});
+			logger.error(`- Erro na rota /AutonomiaNobreak: ${error.message}`);
+			return res.status(500).json({
+					error: true,
+					status: 500,
+					result: null,
+					message: 'Erro interno ao calcular a autonomia.'
+			});
 	}
-
 });
 //
 //
-router.post('/ViabilidadeCFTV', async (req, res, next) => {
-
-	let requestBody = req?.body;
-
-	// Garantir que o valor seja tratado como string antes de usar .replace()
-	let tensao_fonte = String(requestBody?.tensao_fonte || '').replace(/\s+/g, '');
-	let bitola_cabo = String(requestBody?.bitola_cabo || '').replace(/\s+/g, '');
-	let distancia = String(requestBody?.distancia || '').replace(/\s+/g, '');
-	let tensao_camera = String(requestBody?.tensao_camera || '').replace(/\s+/g, '');
-	let corrente_camera = String(requestBody?.corrente_camera || '').replace(/\s+/g, '');
-
-
-	// Verificando se algum campo obrigatório está ausente
-	if (!tensao_fonte || !bitola_cabo || !distancia || !tensao_camera || !corrente_camera) {
-		return res.status(400).json({
-			error: true,
-			status: 400,
-			result: null,
-			message: 'Todos os valores devem ser preenchidos: tensao_fonte, bitola_cabo, distancia, tensao_camera, corrente_camera. Por favor, corrija e tente novamente.'
-		});
-	}
-
+router.post('/ViabilidadeCFTV', async (req, res) => {
 	try {
-		// Calculando a autonomia
-		const resultado = ViabilidadeCFTV(bitola_cabo, tensao_fonte, tensao_camera, corrente_camera, distancia);
+			const body = req.body || {};
 
-		// Retornando sucesso com o formato esperado
-		return res.status(200).json({
-			error: false,
-			status: 200,
-			result: resultado,
-			message: "Cálculo realizado com sucesso."
-		});
+			// 1. Sanitização e Conversão
+			// Aceita "12,8" ou "12.8"
+			const inputs = {
+					tensao_fonte: parseNumber(body.tensao_fonte),
+					bitola_cabo: parseInt(body.bitola_cabo), // Mantém int para o índice 0-7
+					distancia: parseNumber(body.distancia),
+					tensao_camera: parseNumber(body.tensao_camera),
+					corrente_camera: parseNumber(body.corrente_camera)
+			};
+
+			// 2. Validação
+			const camposInvalidos = [];
+			if (!inputs.tensao_fonte) camposInvalidos.push('tensao_fonte');
+			// Verifica se bitola é um número e não é NaN (aceita 0)
+			if (inputs.bitola_cabo === null || isNaN(inputs.bitola_cabo)) camposInvalidos.push('bitola_cabo');
+			if (!inputs.distancia) camposInvalidos.push('distancia');
+			if (!inputs.tensao_camera) camposInvalidos.push('tensao_camera');
+			if (!inputs.corrente_camera) camposInvalidos.push('corrente_camera');
+
+			if (camposInvalidos.length > 0) {
+					return res.status(400).json({
+							error: true,
+							status: 400,
+							result: null,
+							message: `Valores inválidos ou ausentes: ${camposInvalidos.join(', ')}.`
+					});
+			}
+
+			// 3. Cálculo
+			const resultado = ViabilidadeCFTV(
+					inputs.bitola_cabo,
+					inputs.tensao_fonte,
+					inputs.tensao_camera,
+					inputs.corrente_camera,
+					inputs.distancia
+			);
+
+			return res.status(200).json({
+					error: false,
+					status: 200,
+					result: resultado,
+					message: "Cálculo de viabilidade realizado com sucesso."
+			});
+
 	} catch (error) {
-		// Capturando e retornando erro interno
-		logger.error(`- Erro: ${error?.message}`);
-		return res.status(500).json({
-			error: true,
-			status: 500,
-			result: null,
-			message: 'Erro ao calcular a viabilidade'
-		});
+			logger.error(`- Erro CFTV: ${error.message}`);
+			// Retorna erro amigável se a bitola não existir
+			const status = error.message.includes("Bitola") ? 400 : 500;
+			
+			return res.status(status).json({
+					error: true,
+					status: status,
+					result: null,
+					message: error.message || 'Erro interno ao calcular viabilidade.'
+			});
 	}
-
 });
 //
 //
@@ -430,13 +466,13 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 			const isArray = Array.isArray(data);
 			if (isArray) {
 				// Validar se todos os elementos do array têm o formato esperado
-					return res.status(200).json({
-						error: false,
-						status: 200,
-						result: data[0],
-						message: "Consulta realizada com sucesso."
-					});
-			} else{
+				return res.status(200).json({
+					error: false,
+					status: 200,
+					result: data[0],
+					message: "Consulta realizada com sucesso."
+				});
+			} else {
 				// Resposta é um único objeto válido
 				return res.status(200).json({
 					error: false,

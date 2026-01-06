@@ -61,7 +61,7 @@ definition:
         Calcula o metabolismo basal de uma pessoa usando dados como idade, peso,
         altura e gênero, auxiliando no planejamento de dietas e treinos.
   servers:
-    - url: https://tools.eletroinfo.site
+    - url: https://tools.eletroinfotecnologia.com.br
       description: ''
   components:
     schemas:
