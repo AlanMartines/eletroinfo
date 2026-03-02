@@ -559,9 +559,9 @@ router.post('/CalculadoraDataTransfer', async (req, res, next) => {
 
 		const resultado = calcularTransferencia(
 			Number(tamanho),
-			String(unidadeTamanho),
+			String(unidadeTamanho).trim(),
 			Number(velocidade),
-			String(unidadeVelocidade)
+			String(unidadeVelocidade).trim()
 		);
 
 		return res.status(200).json({
