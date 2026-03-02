@@ -262,6 +262,37 @@ module.exports = {
 						]
 					},
 
+				"CalculadoraRAMRequest": {
+					"type": "object",
+					"properties": {
+						"cas": { "type": "integer", "example": 16, "description": "Latência CAS (CL)" },
+						"frequencia": { "type": "integer", "example": 3200, "description": "Frequência em MHz" }
+					},
+					"required": ["cas", "frequencia"]
+				},
+
+				"CalculadoraRAIDRequest": {
+					"type": "object",
+					"properties": {
+						"capacidadeDisco": { "type": "integer", "example": 4000, "description": "Capacidade de um disco (GB)" },
+						"qtdDiscos": { "type": "integer", "example": 4, "description": "Quantidade de discos" },
+						"nivelRaid": { "type": "string", "example": "5", "description": "Nível RAID (0, 1, 5, 6, 10)" }
+					},
+					"required": ["capacidadeDisco", "qtdDiscos", "nivelRaid"]
+				},
+
+				"CalculadoraTMBRequest": {
+					"type": "object",
+					"properties": {
+						"genero": { "type": "string", "example": "masculino", "description": "masculino ou feminino" },
+						"peso": { "type": "number", "example": 80, "description": "Peso em kg" },
+						"altura": { "type": "integer", "example": 180, "description": "Altura em cm" },
+						"idade": { "type": "integer", "example": 30, "description": "Idade em anos" },
+						"nivelAtividade": { "type": "string", "example": "moderado", "description": "sedentario, leve, moderado, ativo, muito_ativo" }
+					},
+					"required": ["genero", "peso", "altura", "idade"]
+				},
+
 			}
 		},
 
@@ -1104,7 +1135,7 @@ module.exports = {
 						"Calculadora de Transferência de Dados"
 					],
 					"summary": "Calculadora de Transferência de Dados",
-					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n* **tamanho:** Informe o tamanho total do arquivo que será transferido. * **unidadeTamanho:** Selecione a unidade de medida correspondente ao tamanho do arquivo (por exemplo, MB, GB, TB). * **velocidade:** Digite a velocidade disponível para a transferência dos dados. * **unidadeVelocidade:** Selecione a unidade de medida da velocidade de transferência (por exemplo, Mbps, MB/s, Gbps).\n## Valores Válidos para o Campo `unidadeTamanho`\n- `B` – Bytes (B)\n- `kB` – Kilobytes (kB)\n- `MB` – Megabytes (MB)\n- `GB` – Gigabytes (GB)\n- `TB` – Terabytes (TB)\n- `PB` – Petabytes (PB)\n- `bit` – Bits (bit)\n- `kbit` – Kilobits (kbit)\n- `Mbit` – Megabits (Mbit)\n- `Gbit` – Gigabits (Gbit)\n- `Tbit` – Terabits (Tbit)\n- `Pbit` – Petabits (Pbit)\n- `KiB` – Kibibytes (KiB)\n- `MiB` – Mebibytes (MiB)\n- `GiB` – Gibibytes (GiB)\n- `TiB` – Tebibytes (TiB)\n- `PiB` – Pebibytes (PiB)\n- `kibit` – Kibibits (kibit)\n- `Mibit` – Mebibits (Mibit)\n- `Gibit` – Gibibits (Gibit)\n- `Tibit` – Tebibits (Tibit)\n- `Pibit` – Pebibits (Pibit)\n## Valores Válidos para o Campo `unidadeVelocidade`\n- `B` – Bytes por segundo (B/s)\n- `kB` – Kilobytes por segundo (kB/s)\n- `MB` – Megabytes por segundo (MB/s)\n- `GB` – Gigabytes por segundo (GB/s)\n- `TB` – Terabytes por segundo (TB/s)\n- `PB` – Petabytes por segundo (PB/s)\n- `bit` – Bits por segundo (b/s)\n- `kbit` – Kilobits por segundo (kb/s)\n- `Mbit` – Megabits por segundo (Mb/s)\n- `Gbit` – Gigabits por segundo (Gb/s)\n- `Tbit` – Terabits por segundo (Tb/s)\n- `Pbit` – Petabits por segundo (Pb/s)\n- `KiB` – Kibibytes por segundo (KiB/s)\n- `MiB` – Mebibytes por segundo (MiB/s)\n- `GiB` – Gibibytes por segundo (GiB/s)\n- `TiB` – Tebibytes por segundo (TiB/s)\n- `PiB` – Pebibytes por segundo (PiB/s)\n- `kibit` – Kibibits por segundo (kib/s)\n- `Mibit` – Mebibits por segundo (Mib/s)\n- `Gibit` – Gibibits por segundo (Gib/s)\n- `Tibit` – Tebibits por segundo (Tib/s)\n- `Pibit` – Pebibits por segundo (Pib/s)\n",
+					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n* **tamanho:** Informe o tamanho total do arquivo que será transferido.\n* **unidadeTamanho:** Selecione a unidade de medida correspondente ao tamanho do arquivo (por exemplo, MB, GB, TB).\n* **velocidade:** Digite a velocidade disponível para a transferência dos dados.\n* **unidadeVelocidade:** Selecione a unidade de medida da velocidade de transferência (por exemplo, Mbps, MB/s, Gbps).\n## Valores Válidos para o Campo `unidadeTamanho`\n- `B` – Bytes (B)\n- `kB` – Kilobytes (kB)\n- `MB` – Megabytes (MB)\n- `GB` – Gigabytes (GB)\n- `TB` – Terabytes (TB)\n- `PB` – Petabytes (PB)\n- `bit` – Bits (bit)\n- `kbit` – Kilobits (kbit)\n- `Mbit` – Megabits (Mbit)\n- `Gbit` – Gigabits (Gbit)\n- `Tbit` – Terabits (Tbit)\n- `Pbit` – Petabits (Pbit)\n- `KiB` – Kibibytes (KiB)\n- `MiB` – Mebibytes (MiB)\n- `GiB` – Gibibytes (GiB)\n- `TiB` – Tebibytes (TiB)\n- `PiB` – Pebibytes (PiB)\n- `kibit` – Kibibits (kibit)\n- `Mibit` – Mebibits (Mibit)\n- `Gibit` – Gibibits (Gibit)\n- `Tibit` – Tebibits (Tibit)\n- `Pibit` – Pebibits (Pibit)\n## Valores Válidos para o Campo `unidadeVelocidade`\n- `B` – Bytes por segundo (B/s)\n- `kB` – Kilobytes por segundo (kB/s)\n- `MB` – Megabytes por segundo (MB/s)\n- `GB` – Gigabytes por segundo (GB/s)\n- `TB` – Terabytes por segundo (TB/s)\n- `PB` – Petabytes por segundo (PB/s)\n- `bit` – Bits por segundo (b/s)\n- `kbit` – Kilobits por segundo (kb/s)\n- `Mbit` – Megabits por segundo (Mb/s)\n- `Gbit` – Gigabits por segundo (Gb/s)\n- `Tbit` – Terabits por segundo (Tb/s)\n- `Pbit` – Petabits por segundo (Pb/s)\n- `KiB` – Kibibytes por segundo (KiB/s)\n- `MiB` – Mebibytes por segundo (MiB/s)\n- `GiB` – Gibibytes por segundo (GiB/s)\n- `TiB` – Tebibytes por segundo (TiB/s)\n- `PiB` – Pebibytes por segundo (PiB/s)\n- `kibit` – Kibibits por segundo (kib/s)\n- `Mibit` – Mebibits por segundo (Mib/s)\n- `Gibit` – Gibibits por segundo (Gib/s)\n- `Tibit` – Tebibits por segundo (Tib/s)\n- `Pibit` – Pebibits por segundo (Pib/s)\n",
 					"parameters": [
 
 					],
@@ -1148,7 +1179,7 @@ module.exports = {
 											"error": true,
 											"status": 400,
 											"result": null,
-											"message": "O MAC Address deve ser preenchido. Por favor, corrija e tente novamente."
+											"message": "Todos os valores devem ser preenchidos: tamanho, unidadeTamanho, velocidade, unidadeVelocidade. Por favor, corrija e tente novamente."
 										}
 									}
 								}
@@ -1165,13 +1196,79 @@ module.exports = {
 											"error": true,
 											"status": 500,
 											"result": null,
-											"message": "MAC Address inválido ou não encontrado."
+											"message": "Erro ao realizar o cálculo de transferência."
 										}
 									}
 								}
 							}
 						}
 
+					}
+				}
+			},
+
+			"/api/LatenciaLarguraBandaRAM": {
+				"post": {
+					"tags": ["Cálculo de Latência e Largura de Banda"],
+					"summary": "Calcula Latência Real e Largura de Banda da RAM",
+					"requestBody": {
+						"required": true,
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CalculadoraRAMRequest" } } }
+					},
+					"responses": {
+						"200": {
+							"description": "Sucesso",
+							"content": { "application/json": { "schema": { "type": "object", "example": {
+								"error": false,
+								"status": 200,
+								"result": { "latencia_ns": 10, "largura_banda_mbs": 25600, "largura_banda_gbs": 25.6 },
+								"message": "Cálculo de RAM realizado com sucesso."
+							}}}}
+						}
+					}
+				}
+			},
+
+			"/api/CalculadoraRAID": {
+				"post": {
+					"tags": ["Calculadora de RAID"],
+					"summary": "Calcula capacidade útil de arranjos RAID",
+					"requestBody": {
+						"required": true,
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CalculadoraRAIDRequest" } } }
+					},
+					"responses": {
+						"200": {
+							"description": "Sucesso",
+							"content": { "application/json": { "schema": { "type": "object", "example": {
+								"error": false,
+								"status": 200,
+								"result": { "nivel_raid": "RAID 5", "capacidade_util": 12000, "eficiencia": "75.0%" },
+								"message": "Cálculo de RAID realizado com sucesso."
+							}}}}
+						}
+					}
+				}
+			},
+
+			"/api/CalculadoraTMB": {
+				"post": {
+					"tags": ["Calculadora de Metabolismo Basal (TMB)"],
+					"summary": "Calcula Taxa Metabólica Basal e Gasto Calórico",
+					"requestBody": {
+						"required": true,
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CalculadoraTMBRequest" } } }
+					},
+					"responses": {
+						"200": {
+							"description": "Sucesso",
+							"content": { "application/json": { "schema": { "type": "object", "example": {
+								"error": false,
+								"status": 200,
+								"result": { "tmb_basal": 1850, "gasto_calorico_total": 2868, "nivel_atividade": "moderado" },
+								"message": "Cálculo de TMB realizado com sucesso."
+							}}}}
+						}
 					}
 				}
 			},

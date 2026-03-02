@@ -154,7 +154,7 @@ class IP {
     // Private methods
 
     /**
-    * checkVersion - Determins this IP version.
+    * checkVersion - Determines this IP version.
     * @private
     * @param {string} addr
     * @return {number}  -> 4 or 6
@@ -362,7 +362,7 @@ const _longestZerosGroup = (splittedAddr) => {
     let startOfLongest = 0;
     let hasZeros = false;
 
-    while (curr < splittedAddr.length-2) {
+    while (curr < splittedAddr.length) {
         let startOfRun = curr;
         let notEnd = curr < splittedAddr.length;
         while (notEnd && splittedAddr[curr] === '0000') {

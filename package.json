@@ -1,7 +1,7 @@
 {
-	"name": "connectzap-api-node-validate-tokens",
+	"name": "eletroinfo",
 	"version": "1.0.0",
-	"description": "Este projeto usa como base o Venom e/ou WPPConnect, um navegador virtual sem interface gráfica que abre o whatsapp web e executa todos os comandos via código possibilitando assim a automação de todas as funções.",
+	"description": "EletroInfo :: Para assegurar a excelência dos nossos serviços, a Eletroinfo continua a explorar e adotar constantemente inovações tecnológicas, com o objetivo primordial de satisfazer plenamente os nossos clientes.",
 	"main": "index.js",
 	"private": true,
 	"scripts": {
@@ -10,7 +10,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/AlanMartines/connectzap-api-node-validate-tokens.git"
+		"url": "https://github.com/AlanMartines/eletroinfo.git"
 	},
 	"keywords": [
 		"whatsapp",
@@ -31,9 +31,9 @@
 	"author": "Alan Martines <alancpmartines@hotmail.com>",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/AlanMartines/connectzap-api-node-validate-tokens/issues"
+		"url": "https://github.com/AlanMartines/eletroinfo/issues"
 	},
-	"homepage": "https://github.com/AlanMartines/connectzap-api-node-validate-tokens#readme",
+	"homepage": "https://github.com/AlanMartines/eletroinfo#readme",
 	"dependencies": {
 		"axios": "^1.7.7",
 		"body-parser": "^1.20.3",
@@ -48,10 +48,8 @@
 		"moment": "^2.30.1",
 		"pino": "^9.5.0",
 		"pino-pretty": "^13.0.0",
-		"request-promise": "^4.2.6",
 		"request-ip": "^3.3.0",
 		"socket.io": "^4.8.1",
-		"superagent": "^10.1.1",
 		"swagger-autogen": "^2.23.7",
 		"swagger-codegen-cli": "^2.2.3",
 		"swagger-ui-express": "^5.0.1",

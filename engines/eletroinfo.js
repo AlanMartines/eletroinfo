@@ -2,14 +2,16 @@
 const express = require("express");
 const router = express.Router();
 const moment = require('moment');
-moment()?.format('YYYY-MM-DD HH:mm:ss');
 moment?.locale('pt-br');
-const requestIp = require('request-ip')
+const requestIp = require('request-ip');
 const { logger } = require('../utils/logger');
 const { calcularAutonomia } = require('../middleware/AutonomiaNobreak');
 const { ViabilidadeCFTV } = require('../middleware/ViabilidadeCFTV');
 const { calculateIPInfo } = require('../middleware/CalculadoraIP');
 const { testMultiplePorts } = require('../middleware/TestePortasRede');
+const { calcularRAM } = require('../middleware/CalculadoraRAM');
+const { calcularRAID } = require('../middleware/CalculadoraRAID');
+const { calcularTMB } = require('../middleware/CalculadoraTMB');
 //
 // Helper para limpar e converter números (aceita "10,5" ou "10.5")
 function parseNumber(value) {
@@ -253,7 +255,6 @@ router.post('/ConsultaIP', async (req, res, next) => {
 	// Garantir que o valor seja tratado como string antes de usar o .replace()
 	let ip = String(requestBody?.ip || '').replace(/\s+/g, '');
 
-	let ipCliente = req?.connection?.remoteAddress || req?.socket?.remoteAddress || req?.connection?.socket?.remoteAddress;
 	let clientIp = ip ? ip : requestIp?.getClientIp(req);
 	//
 	try {
@@ -351,43 +352,43 @@ router.post('/TestePortasRede', async (req, res, next) => {
 
 	// Verificando se os campos obrigatórios estão ausentes
 	if (!host || !port || !timeout) {
-		return {
+		return res.status(400).json({
 			error: true,
 			status: 400,
 			result: null,
 			message: 'Todos os valores devem ser preenchidos: host, port, timeout. Por favor, corrija e tente novamente.'
-		};
+		});
 	}
 
 	// Verificar se o host é uma string válida
 	if (typeof host !== 'string' || host.trim() === '') {
-		return {
+		return res.status(400).json({
 			error: true,
 			status: 400,
 			result: null,
 			message: 'O campo "host" deve ser uma string válida.'
-		};
+		});
 	}
 
 	// Verificar se o port é um array de números válidos
 	if (!Array.isArray(port) || port.some((p) => typeof p !== 'number' || p <= 0)) {
-		return {
+		return res.status(400).json({
 			error: true,
 			status: 400,
 			result: null,
 			message: 'O campo "port" deve ser um array de números válidos maiores que 0.'
-		};
+		});
 	}
 
 	// Garantir que o timeout seja um número positivo
 	timeout = Number(timeout);
 	if (isNaN(timeout) || timeout <= 0) {
-		return {
+		return res.status(400).json({
 			error: true,
 			status: 400,
 			result: null,
 			message: 'O campo "timeout" deve ser um número positivo.'
-		};
+		});
 	}
 
 	try {
@@ -505,111 +506,163 @@ router.post('/ConsultaFabricanteMAC', async (req, res, next) => {
 	//
 });
 //
-//
-router.post('/CalculadoraTransferenciaDados', async (req, res, next) => {
+// Helper para conversão de unidades para bits
+const getMultiplier = (unit) => {
+	const units = {
+		'bit': 1, 'kbit': 1e3, 'Mbit': 1e6, 'Gbit': 1e9, 'Tbit': 1e12, 'Pbit': 1e15,
+		'B': 8, 'kB': 8e3, 'MB': 8e6, 'GB': 8e9, 'TB': 8e12, 'PB': 8e15,
+		'KiB': 8 * 1024, 'MiB': 8 * 1024**2, 'GiB': 8 * 1024**3, 'TiB': 8 * 1024**4, 'PiB': 8 * 1024**5,
+		'kibit': 1024, 'Mibit': 1024**2, 'Gibit': 1024**3, 'Tibit': 1024**4, 'Pibit': 1024**5
+	};
+	return units[unit] || 0;
+};
+
+router.post('/CalculadoraDataTransfer', async (req, res, next) => {
 	//
-	let requestBody = req?.body;
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	try {
+		const { tamanho, unidadeTamanho, velocidade, unidadeVelocidade } = req.body || {};
+
+		if (!tamanho || !unidadeTamanho || !velocidade || !unidadeVelocidade) {
+			return res.status(400).json({
+				error: true,
+				status: 400,
+				result: null,
+				message: 'Todos os valores devem ser preenchidos: tamanho, unidadeTamanho, velocidade, unidadeVelocidade.'
+			});
+		}
+
+		const sizeMult = getMultiplier(unidadeTamanho);
+		const speedMult = getMultiplier(unidadeVelocidade);
+
+		if (sizeMult === 0 || speedMult === 0) {
+			return res.status(400).json({
+				error: true,
+				status: 400,
+				result: null,
+				message: 'Unidade de medida inválida.'
+			});
+		}
+
+		const totalBits = tamanho * sizeMult;
+		const bitsPerSecond = velocidade * speedMult;
+
+		if (bitsPerSecond <= 0) {
+			return res.status(400).json({
+				error: true,
+				status: 400,
+				result: null,
+				message: 'A velocidade deve ser maior que zero.'
+			});
+		}
+
+		const seconds = totalBits / bitsPerSecond;
+		const duration = moment.duration(seconds, 'seconds');
+		const formattedTime = moment.utc(duration.asMilliseconds()).format("HH:mm:ss");
+
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: {
+				tempo_estimado: formattedTime,
+				segundos_totais: seconds
+			},
+			message: "Cálculo realizado com sucesso."
 		});
-		//
+	} catch (error) {
+		logger.error(`- Erro CalculadoraDataTransfer: ${error.message}`);
+		return res.status(500).json({
+			error: true,
+			status: 500,
+			result: null,
+			message: 'Erro ao realizar o cálculo.'
+		});
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
 });
 //
 //
 router.post('/LatenciaLarguraBandaRAM', async (req, res, next) => {
-	//
-	let requestBody = req?.body;
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	try {
+		const { cas, frequencia } = req.body || {};
+
+		if (!cas || !frequencia) {
+			return res.status(400).json({
+				error: true,
+				status: 400,
+				message: 'Informe CAS (CL) e Frequência (MHz).'
+			});
+		}
+
+		const resultado = calcularRAM(Number(cas), Number(frequencia));
+
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: resultado,
+			message: "Cálculo de RAM realizado com sucesso."
 		});
-		//
+	} catch (error) {
+		logger.error(`- Erro RAM: ${error.message}`);
+		return res.status(500).json({ error: true, status: 500, message: error.message });
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
 });
 //
 //
 router.post('/CalculadoraRAID', async (req, res, next) => {
-	//
-	let requestBody = req?.body;
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	try {
+		const { capacidadeDisco, qtdDiscos, nivelRaid } = req.body || {};
+
+		if (!capacidadeDisco || !qtdDiscos || nivelRaid === undefined) {
+			return res.status(400).json({
+				error: true,
+				status: 400,
+				message: 'Informe capacidadeDisco, qtdDiscos e nivelRaid.'
+			});
+		}
+
+		const resultado = calcularRAID(Number(capacidadeDisco), Number(qtdDiscos), String(nivelRaid));
+
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: resultado,
+			message: "Cálculo de RAID realizado com sucesso."
 		});
-		//
+	} catch (error) {
+		logger.error(`- Erro RAID: ${error.message}`);
+		return res.status(400).json({ error: true, status: 400, message: error.message });
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
 });
 //
 router.post('/CalculadoraTMB', async (req, res, next) => {
-	//
-	let requestBody = req?.body;
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
-	if (req?.body == undefined || req?.body?.SessionName == undefined) {
-		var resultRes = {
-			"error": true,
-			"status": 404,
-			"message": 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		return res.status(resultRes.status).json({
-			"Status": resultRes
+	try {
+		const { genero, peso, altura, idade, nivelAtividade } = req.body || {};
+
+		if (!genero || !peso || !altura || !idade) {
+			return res.status(400).json({
+				error: true,
+				status: 400,
+				message: 'Informe genero, peso, altura e idade.'
+			});
+		}
+
+		const resultado = calcularTMB(
+			String(genero).toLowerCase(),
+			Number(peso),
+			Number(altura),
+			Number(idade),
+			String(nivelAtividade || 'sedentario').toLowerCase()
+		);
+
+		return res.status(200).json({
+			error: false,
+			status: 200,
+			result: resultado,
+			message: "Cálculo de TMB realizado com sucesso."
 		});
-		//
+	} catch (error) {
+		logger.error(`- Erro TMB: ${error.message}`);
+		return res.status(400).json({ error: true, status: 400, message: error.message });
 	}
-	//
-	logger?.info('=====================================================================================================');
-	logger?.info('=====================================================================================================');
-	//
 });
 //
 /*
