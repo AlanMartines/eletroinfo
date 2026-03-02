@@ -1,7 +1,7 @@
 {
 	"_type": "export",
 	"__export_format": 4,
-	"__export_date": "2024-11-23T17:00:00.000Z",
+	"__export_date": "2024-11-23T18:00:00.000Z",
 	"__export_source": "insomnia.desktop.app:v10.1.1",
 	"resources": [
 		{
@@ -11,7 +11,7 @@
 			"created": 1731718615856,
 			"url": "{{ _.host }}/api/AutonomiaNobreak",
 			"name": "Cálculo de Autonomia de Nobreak",
-			"description": "",
+			"description": "Calcula a autonomia de um nobreak com base no consumo, potência e tempo de operação, ajudando a determinar o modelo mais adequado para sua necessidade.\n\nEntradas Necessárias:\n- carga_aplicada: Consumo do equipamento em watts (W).\n- tensao_bateria: Tensão nominal da bateria em volts (V).\n- capacidade_bateria: Capacidade nominal da bateria em ampere-hora (Ah).\n- quantidade_baterias: Quantidade de baterias no sistema.\n- tipo_bateria: Tipo da bateria (veja lista de valores válidos).\n- tipo_banco: Tipo de ligação do banco (serie ou paralelo). Padrão: paralelo.\n\nValores Válidos para o Campo tipo_bateria:\n- chumbo_acido\n- ion_litio\n- niquel_cadmio\n- niquel_hidreto_metalico\n- lithium_ferro_fosfato\n- lithium_polimero\n- zinco_ar\n- niquel_ferro\n- sodio_enxofre\n- zinco_brometo\n- magnesio\n- chumbo_carbono\n- fluxo_redox\n- aluminio_ar\n- lithium_enxofre\n- desconhecida",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -43,7 +43,7 @@
 			"created": 1731722586899,
 			"url": "{{ _.host }}/api/ViabilidadeCFTV",
 			"name": "Viabilidade da Instalação CFTV",
-			"description": "",
+			"description": "Analisa a viabilidade de instalação de sistemas de CFTV considerando fatores como área coberta, quantidade de câmeras e infraestrutura disponível.\n\nEntradas Necessárias:\n- tensao_fonte: Tensão da fonte de alimentação em volts (V).\n- bitola_cabo: Bitola do cabo em milímetros quadrados (mm²).\n- distancia: Distância entre a fonte e a câmera em metros (m).\n- tensao_camera: Tensão mínima necessária para o funcionamento da câmera em volts (V).\n- corrente_camera: Corrente consumida pela câmera em amperes (A).\n\nValores Válidos para o Campo bitola_cabo:\n- 0 - 26AWG (0.14 mm²)\n- 1 - 24AWG (0.20 mm²)\n- 2 - 22AWG (0.33 mm²)\n- 3 - 20AWG (0.50 mm²)\n- 4 - 17AWG (1.00 mm²)\n- 5 - 15AWG (1.50 mm²)\n- 6 - 13AWG (2.50 mm²)\n- 7 - 11AWG (4.00 mm²)",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -75,7 +75,7 @@
 			"created": 1731879230512,
 			"url": "{{ _.host }}/api/CalculadoraIPv4",
 			"name": "Calculadora de IP (IPv4)",
-			"description": "",
+			"description": "Realiza cálculos de sub-redes IPv4, exibindo detalhes como máscara de rede, IP inicial e final, além da quantidade de hosts disponíveis.\n\nEntradas Necessárias:\n- ipAddress: Representa o endereço IP que será analisado.\n- subnetMask: Deve ser informado no formato CIDR (ex.: /22) (ex.: 255.255.252.0).",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -107,7 +107,7 @@
 			"created": 1732280836148,
 			"url": "{{ _.host }}/api/CalculadoraIPv6",
 			"name": "Calculadora de IP (IPv6)",
-			"description": "",
+			"description": "Calcula sub-redes IPv6, gerando informações como prefixo de rede, IP inicial e final, e o total de endereços disponíveis na sub-rede.\n\nEntradas Necessárias:\n- ipAddress: Representa o endereço IP que será analisado.\n- subnetMask: Deve ser informado no formato CIDR (ex.: /64).",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -139,7 +139,7 @@
 			"created": 1731780163168,
 			"url": "{{ _.host }}/api/ConsultaIP",
 			"name": "Consulta de IP",
-			"description": "",
+			"description": "Fornece informações detalhadas sobre um endereço IP, como tipo (IPv4/IPv6), localização aproximada e provedor de internet.\n\nEntradas Necessárias:\n- ip: Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -171,7 +171,7 @@
 			"created": 1732298900689,
 			"url": "{{ _.host }}/api/GeolocalizacaoIP",
 			"name": "Geolocalização de IP",
-			"description": "",
+			"description": "Localiza geograficamente um endereço IP, como tipo (IPv4/IPv6), fornecendo informações como país, cidade e provedor associado ao endereço.\n\nEntradas Necessárias:\n- ip: Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -203,7 +203,7 @@
 			"created": 1732363141658,
 			"url": "{{ _.host }}/api/TestePortasRede",
 			"name": "Teste de Portas de Rede",
-			"description": "",
+			"description": "Verifica a disponibilidade ou bloqueio de portas específicas em uma rede, auxiliando no diagnóstico de problemas de conectividade.\n\nEntradas Necessárias:\n- host: Endereço IP ou hostname que se deseja consultar.\n- port: Lista de portas a serem testadas.\n- timeout: Timeout em milissegundos.",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -235,7 +235,7 @@
 			"created": 1732363141659,
 			"url": "{{ _.host }}/api/ConsultaFabricanteMAC",
 			"name": "Consulta Fabricante pelo Endereço MAC",
-			"description": "",
+			"description": "Identifica o fabricante de dispositivos a partir de endereços MAC, útil para diagnósticos e organização de redes.\n\nEntradas Necessárias:\n- macaddress: Endereço MAC que se deseja consultar.",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -267,7 +267,7 @@
 			"created": 1732363141660,
 			"url": "{{ _.host }}/api/CalculadoraDataTransfer",
 			"name": "Calculadora de Transferência de Dados",
-			"description": "",
+			"description": "Calcula o tempo necessário para transferir arquivos com base no tamanho e na velocidade da conexão, otimizando o planejamento de transferências.\n\nEntradas Necessárias:\n- tamanho: Informe o tamanho total do arquivo que será transferido.\n- unidadeTamanho: Selecione a unidade de medida correspondente ao tamanho do arquivo (ex: MB, GB).\n- velocidade: Digite a velocidade disponível para a transferência dos dados.\n- unidadeVelocidade: Selecione a unidade de medida da velocidade de transferência (ex: Mbps, MB/s).",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -299,7 +299,7 @@
 			"created": 1732363141661,
 			"url": "{{ _.host }}/api/LatenciaLarguraBandaRAM",
 			"name": "Cálculo de Latência e Largura de Banda",
-			"description": "",
+			"description": "Avalia a performance da memória RAM calculando a latência e a largura de banda, fornecendo métricas detalhadas para otimização do sistema.\n\nEntradas Necessárias:\n- cas: Latência CAS (CL).\n- frequencia: Frequência em MHz (MT/s).\n- canais: Número de canais de memória (ex: 1, 2, 4). Padrão: 1.\n- largura_bus: Largura do barramento em bits. Padrão: 64.",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -331,11 +331,11 @@
 			"created": 1732363141662,
 			"url": "{{ _.host }}/api/CalculadoraRAID",
 			"name": "Calculadora de RAID",
-			"description": "",
+			"description": "A Calculadora de Capacidade RAID faz uma estimativa da utilização de armazenamento de várias configurações de unidades e níveis RAID.\n\nEntradas Necessárias:\n- capacidadeDisco: Capacidade de um disco (GB ou TB).\n- qtdDiscos: Quantidade de discos.\n- nivelRaid: Nível RAID (0, 1, 5, 6, 10, 50, 60).",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n    \"capacidadeDisco\": 4000,\n    \"qtdDiscos\": 4,\n    \"nivelRaid\": \"5\"\n}"
+				"text": "{\n    \"capacidadeDisco\": 4,\n    \"qtdDiscos\": 4,\n    \"nivelRaid\": \"5\"\n}"
 			},
 			"parameters": [],
 			"headers": [
@@ -363,7 +363,7 @@
 			"created": 1732363141663,
 			"url": "{{ _.host }}/api/CalculadoraMassaMagra",
 			"name": "Calculadora de Massa Magra",
-			"description": "",
+			"description": "Calcula o percentual de gordura corporal, massa gorda e massa magra com base em medidas corporais (Método da Marinha, Exército e YMCA).\n\nEntradas Necessárias:\n- genero: \"masculino\" ou \"feminino\".\n- cintura: Circunferência da cintura em cm.\n- pescoco: Circunferência do pescoço em cm.\n- quadril: Circunferência do quadril em cm (Obrigatório para mulheres).\n- altura: Altura em cm.\n- peso: Peso em kg.",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -395,7 +395,7 @@
 			"created": 1732363141664,
 			"url": "{{ _.host }}/api/CalculadoraTMB",
 			"name": "Calculadora de Metabolismo Basal (TMB)",
-			"description": "",
+			"description": "Calcula o metabolismo basal de uma pessoa usando dados como idade, peso, altura e gênero, auxiliando no planejamento de dietas e treinos.\n\nEntradas Necessárias:\n- formula: \"harris-benedict\", \"mifflin-st-jeor\", \"katch-mcardle\", \"cunningham\".\n- genero: \"masculino\" ou \"feminino\".\n- peso: Peso em kg.\n- altura: Altura em cm.\n- idade: Idade em anos.\n- massa_magra: Massa magra em kg (Opcional, usado em algumas fórmulas).\n- nivelAtividade: \"sedentario\", \"levemente_ativo\", \"moderadamente_ativo\", \"muito_ativo\", \"extra_ativo\".",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
@@ -427,7 +427,7 @@
 			"created": 1732363141665,
 			"url": "{{ _.host }}/api/CalculadoraEletrica",
 			"name": "Calculadora Elétrica",
-			"description": "Realiza diversos cálculos elétricos (Lei de Ohm, Potência, Consumo)",
+			"description": "Realiza diversos cálculos elétricos fundamentais (Lei de Ohm, Potência, Consumo de Energia) em um único endpoint.\n\nEntradas Necessárias:\n- acao: Tipo de cálculo (\"tensao_lei_ohm\", \"tensao_potencia\", \"corrente_lei_ohm\", \"corrente_potencia\", \"potencia_dc\", \"custo_energia\").\n- tensao, corrente, resistencia, potencia_w, horas_uso, dias_uso, preco_kwh: Parâmetros dependendo da ação escolhida.",
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",

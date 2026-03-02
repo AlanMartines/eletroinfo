@@ -105,6 +105,7 @@ Os seguintes parâmetros devem ser fornecidos no corpo da requisição:
 - **capacidade_bateria:** Capacidade nominal da bateria em ampere-hora (Ah).
 - **quantidade_baterias:** Quantidade de baterias no sistema.
 - **tipo_bateria:** Tipo da bateria (veja lista de valores válidos).
+- **tipo_banco:** Tipo de ligação do banco (serie ou paralelo). Padrão: paralelo.
 
 ## Valores Válidos para o Campo `tipo_bateria`
 
@@ -135,7 +136,8 @@ O corpo da requisição deve ser enviado no formato JSON, contendo os seguintes 
   "tensao_bateria": 12,
   "capacidade_bateria": 50,
   "quantidade_baterias": 2,
-  "tipo_bateria": "ion_litio"
+  "tipo_bateria": "ion_litio",
+  "tipo_banco": "serie"
 }
 ```
 
@@ -885,7 +887,7 @@ Os seguintes parâmetros devem ser fornecidos no corpo da requisição:
 
 ```json
 {
-  "capacidadeDisco": 4000,
+  "capacidadeDisco": 4,
   "qtdDiscos": 4,
   "nivelRaid": "5"
 }
@@ -900,9 +902,9 @@ Os seguintes parâmetros devem ser fornecidos no corpo da requisição:
   "result": {
     "nivel_raid": "RAID 5",
     "quantidade_discos": 4,
-    "tamanho_por_disco": 4000,
+    "tamanho_por_disco": 4,
     "capacidade_util": 12000,
-    "protecao_dados": 4000,
+    "protecao_dados": 4,
     "espaco_nao_utilizado": 0,
     "eficiencia": "75.0%"
   },
