@@ -52,6 +52,7 @@ typings/
 
 # Optional eslint cache
 .eslintcache
+swagger.yaml
 
 # Microbundle cache
 .rpt2_cache/
