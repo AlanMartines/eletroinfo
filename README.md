@@ -78,6 +78,7 @@ pm2 unstartup systemd
 12. [Endpoint - Calculadora de Massa Magra](#endpoint---calculadora-de-massa-magra)
 13. [Endpoint - Calculadora de Metabolismo Basal (TMB)](#endpoint---calculadora-de-metabolismo-basal-tmb)
 14. [Endpoint - Calculadora Elétrica](#endpoint---calculadora-eletrica)
+15. [Gerando Código Cliente (SDKs) e Snippets](#gerando-codigo-cliente-sdks-e-snippets)
 
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
@@ -668,8 +669,6 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 
 ---
 
----
-
 ## Endpoint - Consulta Fabricante pelo Endereço MAC
 
 ## Detalhes do Endpoint
@@ -1018,6 +1017,48 @@ Os seguintes parâmetros devem ser fornecidos no corpo da requisição:
   "unidade": "Volts (V)",
   "message": "Cálculo realizado com sucesso."
 }
+```
+
+---
+
+## Gerando Código Cliente (SDKs) e Snippets
+
+### Visualizando cURL no Shell
+
+O Swagger UI já possui suporte nativo para **cURL**. Para visualizá-lo:
+1. Abra a documentação da API no navegador.
+2. Escolha um endpoint e clique em **"Try it out"**.
+3. Preencha os dados e clique em **"Execute"**.
+4. O comando **cURL** correspondente aparecerá logo abaixo, pronto para ser copiado e usado no terminal.
+
+### Gerando Clientes (PHP, Node.js, Python)
+
+Para gerar bibliotecas de cliente (SDKs) completas para consumir esta API, utilize o `swagger-codegen-cli` já configurado no projeto.
+
+Certifique-se de que a aplicação está rodando (para fornecer o JSON da API) ou aponte para o arquivo de definição.
+
+**Exemplos de comandos para gerar clientes:**
+
+> **Nota:** Substitua `http://localhost:3000/api-docs-json` pela URL onde seu JSON do Swagger está acessível, ou pelo caminho do arquivo local (ex: `swagger-output.json`).
+
+#### PHP
+```bash
+npm run codegen generate -- -i http://localhost:3000/api-docs-json -l php -o ./clients/php
+```
+
+#### Node.js
+```bash
+npm run codegen generate -- -i http://localhost:3000/api-docs-json -l javascript -o ./clients/node
+```
+
+#### Python
+```bash
+npm run codegen generate -- -i http://localhost:3000/api-docs-json -l python -o ./clients/python
+```
+
+Para ver todas as linguagens suportadas:
+```bash
+npm run codegen langs
 ```
 
 ---

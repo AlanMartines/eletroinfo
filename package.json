@@ -6,7 +6,8 @@
 	"private": true,
 	"scripts": {
 		"start": "node index.js",
-		"test": "echo \"Erro: nenhum teste especificado\" && exit 1"
+		"test": "echo \"Erro: nenhum teste especificado\" && exit 1",
+		"codegen": "swagger-codegen"
 	},
 	"repository": {
 		"type": "git",
