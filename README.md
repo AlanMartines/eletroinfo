@@ -8,7 +8,7 @@ A API da EletroInfo oferece soluções para cálculos técnicos e consultas volt
 
 ![](https://img.shields.io/github/stars/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/tag/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/v/release/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/github/issues/AlanMartines/eletroinfo.svg) ![](https://img.shields.io/badge/express-v4.21.1-green.svg) ![](https://img.shields.io/badge/node-v20.18.1-green.svg) ![](https://img.shields.io/badge/npm-v10.9.0-green.svg) ![](https://img.shields.io/github/license/AlanMartines/eletroinfo) ![](https://img.shields.io/github/downloads/AlanMartines/eletroinfo/total) ![](https://img.shields.io/github/forks/AlanMartines/eletroinfo)
 
-## Dependências Ubuntu/Debian (e.g. Debian) 64bits
+## Dependências Debian (e.g. Ubuntu) 64bits
 
 ```sh
 # Instalar Oracle JDK 21
@@ -71,6 +71,13 @@ pm2 unstartup systemd
 5.  [Endpoint - Calculadora de IP (IPv6)](#endpoint---calculadora-de-ip-ipv6)
 6.  [Endpoint - Geolocalização de IP](#endpoint---geolocalização-de-ip)
 7.  [Endpoint - Teste de Portas de Rede](#endpoint---teste-de-portas-de-rede)
+8.  [Endpoint - Consulta Fabricante pelo Endereço MAC](#endpoint---consulta-fabricante-pelo-endereco-mac)
+9.  [Endpoint - Calculadora de Transferência de Dados](#endpoint---calculadora-de-transferencia-de-dados)
+10. [Endpoint - Cálculo de Latência e Largura de Banda](#endpoint---calculo-de-latencia-e-largura-de-banda)
+11. [Endpoint - Calculadora de RAID](#endpoint---calculadora-de-raid)
+12. [Endpoint - Calculadora de Massa Magra](#endpoint---calculadora-de-massa-magra)
+13. [Endpoint - Calculadora de Metabolismo Basal (TMB)](#endpoint---calculadora-de-metabolismo-basal-tmb)
+14. [Endpoint - Calculadora Elétrica](#endpoint---calculadora-eletrica)
 
 ## Endpoint - Cálculo de Autonomia de Nobreak
 
@@ -728,6 +735,290 @@ A resposta será um JSON com os resultados do cálculo e a viabilidade da instal
 
 - O parâmetro `macadress` deve conter um dos valores válidos.
 - Certifique-se de enviar os dados no formato JSON correto.
+
+---
+
+---
+
+---
+
+## Endpoint - Calculadora de Transferência de Dados
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/CalculadoraDataTransfer`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+Os seguintes parâmetros devem ser fornecidos no corpo da requisição:
+
+- **tamanho:** Informe o tamanho total do arquivo que será transferido.
+- **unidadeTamanho:** Selecione a unidade de medida correspondente ao tamanho do arquivo (ex: MB, GB).
+- **velocidade:** Digite a velocidade disponível para a transferência dos dados.
+- **unidadeVelocidade:** Selecione a unidade de medida da velocidade de transferência (ex: Mbps, MB/s).
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "tamanho": 500,
+  "unidadeTamanho": "GB",
+  "velocidade": 100,
+  "unidadeVelocidade": "Mbps"
+}
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": {
+    "tempo_estimado": "11:06:40",
+    "segundos_totais": 40000,
+    "detalhes": {
+      "dias": 0,
+      "horas": 11,
+      "minutos": 6,
+      "segundos": 40
+    }
+  },
+  "message": "Cálculo realizado com sucesso."
+}
+```
+
+---
+
+---
+
+## Endpoint - Cálculo de Latência e Largura de Banda
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/LatenciaLarguraBandaRAM`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+- **cas:** Latência CAS (CL).
+- **frequencia:** Frequência em MHz (MT/s).
+- **canais:** Número de canais de memória (ex: 1, 2, 4). Padrão: 1.
+- **largura_bus:** Largura do barramento em bits. Padrão: 64.
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "cas": 16,
+  "frequencia": 3200,
+  "canais": 2
+}
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": {
+    "frequencia_efetiva": 3200,
+    "clock_real": 1600,
+    "cas_latency": 16,
+    "canais": 2,
+    "largura_bus": 64,
+    "largura_banda_mbs": 51200,
+    "largura_banda_gbs": 51.2,
+    "tempo_ciclo_ns": 0.625,
+    "latencia_ns": 10
+  },
+  "message": "Cálculo de RAM realizado com sucesso."
+}
+```
+
+---
+
+---
+
+## Endpoint - Calculadora de RAID
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/CalculadoraRAID`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Headers Necessários
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+## Entradas Necessárias
+
+- **capacidadeDisco:** Capacidade de um disco (GB ou TB).
+- **qtdDiscos:** Quantidade de discos.
+- **nivelRaid:** Nível RAID (0, 1, 5, 6, 10, 50, 60).
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "capacidadeDisco": 4000,
+  "qtdDiscos": 4,
+  "nivelRaid": "5"
+}
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": {
+    "nivel_raid": "RAID 5",
+    "quantidade_discos": 4,
+    "tamanho_por_disco": 4000,
+    "capacidade_util": 12000,
+    "protecao_dados": 4000,
+    "espaco_nao_utilizado": 0,
+    "eficiencia": "75.0%"
+  },
+  "message": "Cálculo de RAID realizado com sucesso."
+}
+```
+
+---
+
+---
+
+## Endpoint - Calculadora de Massa Magra
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/CalculadoraMassaMagra`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Entradas Necessárias
+
+- **genero:** "masculino" ou "feminino".
+- **cintura:** Circunferência da cintura em cm.
+- **pescoco:** Circunferência do pescoço em cm.
+- **quadril:** Circunferência do quadril em cm (Obrigatório para mulheres).
+- **altura:** Altura em cm.
+- **peso:** Peso em kg.
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "genero": "masculino",
+  "cintura": 90,
+  "pescoco": 40,
+  "altura": 180,
+  "peso": 85
+}
+```
+
+---
+
+---
+
+## Endpoint - Calculadora de Metabolismo Basal (TMB)
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/CalculadoraTMB`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Entradas Necessárias
+
+- **formula:** "harris-benedict", "mifflin-st-jeor", "katch-mcardle", "cunningham".
+- **genero:** "masculino" ou "feminino".
+- **peso:** Peso em kg.
+- **altura:** Altura em cm.
+- **idade:** Idade em anos.
+- **massa_magra:** Massa magra em kg (Opcional, usado em algumas fórmulas).
+- **nivelAtividade:** "sedentario", "levemente_ativo", "moderadamente_ativo", "muito_ativo", "extra_ativo".
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "formula": "harris-benedict",
+  "genero": "masculino",
+  "peso": 80,
+  "altura": 180,
+  "idade": 30,
+  "nivelAtividade": "moderadamente_ativo"
+}
+```
+
+---
+
+---
+
+## Endpoint - Calculadora Elétrica
+
+## Detalhes do Endpoint
+
+- **Método:** POST
+- **URL:** `{base_url}/api/CalculadoraEletrica`
+- **Descrição:** Substitua `{base_url}` pela URL da API fornecida pelo servidor.
+
+## Entradas Necessárias
+
+- **acao:** Tipo de cálculo ("tensao_lei_ohm", "tensao_potencia", "corrente_lei_ohm", "corrente_potencia", "potencia_dc", "custo_energia", "autonomia_bateria").
+- **tensao, corrente, resistencia, potencia_w, horas_uso, dias_uso, preco_kwh, bateria_ah:** Parâmetros dependendo da ação escolhida.
+- **acao:** Tipo de cálculo ("tensao_lei_ohm", "tensao_potencia", "corrente_lei_ohm", "corrente_potencia", "potencia_dc", "custo_energia").
+- **tensao, corrente, resistencia, potencia_w, horas_uso, dias_uso, preco_kwh:** Parâmetros dependendo da ação escolhida.
+
+## Exemplo de Requisição (Body)
+
+```json
+{
+  "acao": "tensao_lei_ohm",
+  "resistencia": 20,
+  "corrente": 10
+}
+```
+
+## Exemplo de Resposta
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "result": 200,
+  "unidade": "Volts (V)",
+  "message": "Cálculo realizado com sucesso."
+}
+```
 
 ---
 

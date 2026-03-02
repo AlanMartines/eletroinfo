@@ -56,8 +56,16 @@ module.exports = {
 				"description": "A Calculadora de Capacidade RAID faz uma estimativa da utilização de armazenamento de várias configurações de unidades e níveis RAID."
 			},
 			{
+				"name": "Calculadora de Massa Magra",
+				"description": "Calcula o percentual de gordura corporal, massa gorda e massa magra com base em medidas corporais (Método da Marinha, Exército e YMCA)."
+			},
+			{
 				"name": "Calculadora de Metabolismo Basal (TMB)",
 				"description": "Calcula o metabolismo basal de uma pessoa usando dados como idade, peso, altura e gênero, auxiliando no planejamento de dietas e treinos."
+			},
+			{
+				"name": "Calculadora Elétrica",
+				"description": "Realiza diversos cálculos elétricos fundamentais (Lei de Ohm, Potência, Consumo de Energia) em um único endpoint."
 			}
 		],
 		"servers": [
@@ -95,6 +103,11 @@ module.exports = {
 							"type": "string",
 							"description": "Tipo da bateria.",
 							"example": "chumbo_acido"
+						},
+						"tipo_banco": {
+							"type": "string",
+							"description": "Tipo de ligação do banco de baterias (serie ou paralelo).",
+							"example": "serie"
 						}
 					},
 					"required": [
@@ -266,7 +279,9 @@ module.exports = {
 					"type": "object",
 					"properties": {
 						"cas": { "type": "integer", "example": 16, "description": "Latência CAS (CL)" },
-						"frequencia": { "type": "integer", "example": 3200, "description": "Frequência em MHz" }
+						"frequencia": { "type": "integer", "example": 3200, "description": "Frequência em MHz (MT/s)" },
+						"canais": { "type": "integer", "example": 2, "description": "Número de canais de memória (ex: 1, 2, 4). Padrão: 1" },
+						"largura_bus": { "type": "integer", "example": 64, "description": "Largura do barramento em bits. Padrão: 64" }
 					},
 					"required": ["cas", "frequencia"]
 				},
@@ -276,21 +291,56 @@ module.exports = {
 					"properties": {
 						"capacidadeDisco": { "type": "integer", "example": 4000, "description": "Capacidade de um disco (GB)" },
 						"qtdDiscos": { "type": "integer", "example": 4, "description": "Quantidade de discos" },
-						"nivelRaid": { "type": "string", "example": "5", "description": "Nível RAID (0, 1, 5, 6, 10)" }
+						"nivelRaid": { "type": "string", "example": "5", "description": "Nível RAID (0, 1, 5, 6, 10, 50, 60)" }
 					},
 					"required": ["capacidadeDisco", "qtdDiscos", "nivelRaid"]
+				},
+
+				"CalculadoraMassaMagraRequest": {
+					"type": "object",
+					"properties": {
+						"genero": { "type": "string", "example": "masculino", "description": "masculino ou feminino" },
+						"cintura": { "type": "number", "example": 90, "description": "Circunferência da cintura em cm" },
+						"pescoco": { "type": "number", "example": 40, "description": "Circunferência do pescoço em cm" },
+						"quadril": { "type": "number", "example": 0, "description": "Circunferência do quadril em cm (Obrigatório para mulheres)" },
+						"altura": { "type": "number", "example": 180, "description": "Altura em cm" },
+						"peso": { "type": "number", "example": 85, "description": "Peso em kg" }
+					},
+					"required": ["genero", "cintura", "pescoco", "altura", "peso"]
 				},
 
 				"CalculadoraTMBRequest": {
 					"type": "object",
 					"properties": {
+						"formula": { "type": "string", "example": "harris-benedict", "description": "harris-benedict, mifflin-st-jeor, katch-mcardle, cunningham" },
 						"genero": { "type": "string", "example": "masculino", "description": "masculino ou feminino" },
 						"peso": { "type": "number", "example": 80, "description": "Peso em kg" },
 						"altura": { "type": "integer", "example": 180, "description": "Altura em cm" },
 						"idade": { "type": "integer", "example": 30, "description": "Idade em anos" },
-						"nivelAtividade": { "type": "string", "example": "moderado", "description": "sedentario, leve, moderado, ativo, muito_ativo" }
+						"massa_magra": { "type": "number", "example": 65, "description": "Massa magra em kg (Obrigatório para Katch-McArdle e Cunningham)" },
+						"nivelAtividade": { "type": "string", "example": "moderadamente_ativo", "description": "sedentario, levemente_ativo, moderadamente_ativo, muito_ativo, extra_ativo" }
 					},
-					"required": ["genero", "peso", "altura", "idade"]
+					"required": ["formula", "genero", "peso", "altura", "idade", "nivelAtividade"]
+				},
+
+				"CalculadoraEletricaRequest": {
+					"type": "object",
+					"properties": {
+						"acao": { 
+							"type": "string", 
+							"description": "Tipo de cálculo a ser realizado.",
+							"enum": ["tensao_lei_ohm", "tensao_potencia", "corrente_lei_ohm", "corrente_potencia", "potencia_dc", "custo_energia"],
+							"example": "tensao_lei_ohm"
+						},
+						"tensao": { "type": "number", "description": "Tensão em Volts (V)", "example": 220 },
+						"corrente": { "type": "number", "description": "Corrente em Amperes (A)", "example": 10 },
+						"resistencia": { "type": "number", "description": "Resistência em Ohms (Ω)", "example": 22 },
+						"potencia_w": { "type": "number", "description": "Potência em Watts (W)", "example": 2200 },
+						"horas_uso": { "type": "number", "description": "Horas de uso por dia", "example": 8 },
+						"dias_uso": { "type": "integer", "description": "Dias de uso no mês", "example": 30 },
+						"preco_kwh": { "type": "number", "description": "Preço do kWh", "example": 0.85 }
+					},
+					"required": ["acao"]
 				},
 
 			}
@@ -303,7 +353,7 @@ module.exports = {
 						"Cálculo de Autonomia de Nobreak"
 					],
 					"summary": "Cálculo de Autonomia de Nobreak",
-					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n\n- **carga_aplicada:** Consumo do equipamento em watts (W).\n- **tensao_bateria:** Tensão nominal da bateria em volts (V).\n- **capacidade_bateria:** Capacidade nominal da bateria em ampere-hora (Ah).\n- **quantidade_baterias:** Quantidade de baterias no sistema.\n- **tipo_bateria:** Tipo da bateria (veja lista de valores válidos).\n\n## Valores Válidos para o Campo `tipo_bateria`\n\n- `chumbo_acido` - Chumbo-Ácido (Lead-Acid)\n- `ion_litio` - Íon de Lítio (Li-ion)\n- `niquel_cadmio` - Níquel-Cádmio (NiCd)\n- `niquel_hidreto_metalico` - Níquel-Hidreto Metálico (NiMH)\n- `lithium_ferro_fosfato` - Lítio-Ferro-Fosfato (LiFePO4)\n- `lithium_polimero` - Lítio-Polímero (LiPo)\n- `zinco_ar` - Zinco-Ar (Zn-Air)\n- `niquel_ferro` - Níquel-Ferro (NiFe)\n- `sodio_enxofre` - Sódio-Enxofre (NaS)\n- `zinco_brometo` - Zinco-Brometo (ZnBr)\n- `magnesio` - Magnésio\n- `chumbo_carbono` - Chumbo-Carbono\n- `fluxo_redox` - Fluxo Redox\n- `aluminio_ar` - Alumínio-Ar (Al-Air)\n- `lithium_enxofre` - Lítio-Enxofre (Li-S)\n- `desconhecida` - Tipo de bateria desconhecido\n",
+					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n\n- **carga_aplicada:** Consumo do equipamento em watts (W).\n- **tensao_bateria:** Tensão nominal da bateria em volts (V).\n- **capacidade_bateria:** Capacidade nominal da bateria em ampere-hora (Ah).\n- **quantidade_baterias:** Quantidade de baterias no sistema.\n- **tipo_bateria:** Tipo da bateria (veja lista de valores válidos).\n- **tipo_banco:** Tipo de ligação do banco (serie ou paralelo). Padrão: paralelo.\n\n## Valores Válidos para o Campo `tipo_bateria`\n\n- `chumbo_acido` - Chumbo-Ácido (Lead-Acid)\n- `ion_litio` - Íon de Lítio (Li-ion)\n- `niquel_cadmio` - Níquel-Cádmio (NiCd)\n- `niquel_hidreto_metalico` - Níquel-Hidreto Metálico (NiMH)\n- `lithium_ferro_fosfato` - Lítio-Ferro-Fosfato (LiFePO4)\n- `lithium_polimero` - Lítio-Polímero (LiPo)\n- `zinco_ar` - Zinco-Ar (Zn-Air)\n- `niquel_ferro` - Níquel-Ferro (NiFe)\n- `sodio_enxofre` - Sódio-Enxofre (NaS)\n- `zinco_brometo` - Zinco-Brometo (ZnBr)\n- `magnesio` - Magnésio\n- `chumbo_carbono` - Chumbo-Carbono\n- `fluxo_redox` - Fluxo Redox\n- `aluminio_ar` - Alumínio-Ar (Al-Air)\n- `lithium_enxofre` - Lítio-Enxofre (Li-S)\n- `desconhecida` - Tipo de bateria desconhecido\n",
 					"parameters": [
 
 					],
@@ -806,7 +856,7 @@ module.exports = {
 						"Geolocalização de IP"
 					],
 					"summary": "Geolocalização de IP",
-					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar.\n",
+					"description": "## Entradas Necessárias\n\nOs seguintes parâmetros devem ser enviados no corpo da requisição:\n\n- **ip:** Endereço IP que se deseja consultar (opcional). Se vazio, retorna informações sobre o IP público atual.\n",
 					"parameters": [
 
 					],
@@ -873,7 +923,7 @@ module.exports = {
 											"error": true,
 											"status": 400,
 											"result": null,
-											"message": "O ip deve ser preenchido. Por favor, corrija e tente novamente."
+											"message": "Não foi possível determinar o endereço IP."
 										}
 									}
 								}
@@ -1073,16 +1123,11 @@ module.exports = {
 											"error": false,
 											"status": 200,
 											"result": {
-												"startHex": "001A2B000000",
-												"endHex": "001A2BFFFFFF",
-												"startDec": "112390569984",
-												"endDec": "112407347199",
-												"company": "Ayecom Technology Co., Ltd.",
-												"addressL1": "No. 25, R&D Road 2, Science-Based Industrial Park",
-												"addressL2": "Hsinchu    300",
-												"addressL3": "",
-												"country": "TW",
-												"type": "MA-L"
+												"company": "Apple, Inc.",
+												"address": "1 Infinite Loop, Cupertino, CA 95014, USA",
+												"country": "US",
+												"mac": "00:1A:2B:3C:4D:5E",
+												"updated": "2024-01-01"
 											},
 											"message": "Consulta realizada com sucesso."
 										}
@@ -1135,7 +1180,7 @@ module.exports = {
 						"Calculadora de Transferência de Dados"
 					],
 					"summary": "Calculadora de Transferência de Dados",
-					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n* **tamanho:** Informe o tamanho total do arquivo que será transferido.\n* **unidadeTamanho:** Selecione a unidade de medida correspondente ao tamanho do arquivo (por exemplo, MB, GB, TB).\n* **velocidade:** Digite a velocidade disponível para a transferência dos dados.\n* **unidadeVelocidade:** Selecione a unidade de medida da velocidade de transferência (por exemplo, Mbps, MB/s, Gbps).\n## Valores Válidos para o Campo `unidadeTamanho`\n- `B` – Bytes (B)\n- `kB` – Kilobytes (kB)\n- `MB` – Megabytes (MB)\n- `GB` – Gigabytes (GB)\n- `TB` – Terabytes (TB)\n- `PB` – Petabytes (PB)\n- `bit` – Bits (bit)\n- `kbit` – Kilobits (kbit)\n- `Mbit` – Megabits (Mbit)\n- `Gbit` – Gigabits (Gbit)\n- `Tbit` – Terabits (Tbit)\n- `Pbit` – Petabits (Pbit)\n- `KiB` – Kibibytes (KiB)\n- `MiB` – Mebibytes (MiB)\n- `GiB` – Gibibytes (GiB)\n- `TiB` – Tebibytes (TiB)\n- `PiB` – Pebibytes (PiB)\n- `kibit` – Kibibits (kibit)\n- `Mibit` – Mebibits (Mibit)\n- `Gibit` – Gibibits (Gibit)\n- `Tibit` – Tebibits (Tibit)\n- `Pibit` – Pebibits (Pibit)\n## Valores Válidos para o Campo `unidadeVelocidade`\n- `B` – Bytes por segundo (B/s)\n- `kB` – Kilobytes por segundo (kB/s)\n- `MB` – Megabytes por segundo (MB/s)\n- `GB` – Gigabytes por segundo (GB/s)\n- `TB` – Terabytes por segundo (TB/s)\n- `PB` – Petabytes por segundo (PB/s)\n- `bit` – Bits por segundo (b/s)\n- `kbit` – Kilobits por segundo (kb/s)\n- `Mbit` – Megabits por segundo (Mb/s)\n- `Gbit` – Gigabits por segundo (Gb/s)\n- `Tbit` – Terabits por segundo (Tb/s)\n- `Pbit` – Petabits por segundo (Pb/s)\n- `KiB` – Kibibytes por segundo (KiB/s)\n- `MiB` – Mebibytes por segundo (MiB/s)\n- `GiB` – Gibibytes por segundo (GiB/s)\n- `TiB` – Tebibytes por segundo (TiB/s)\n- `PiB` – Pebibytes por segundo (PiB/s)\n- `kibit` – Kibibits por segundo (kib/s)\n- `Mibit` – Mebibits por segundo (Mib/s)\n- `Gibit` – Gibibits por segundo (Gib/s)\n- `Tibit` – Tebibits por segundo (Tib/s)\n- `Pibit` – Pebibits por segundo (Pib/s)\n",
+					"description": "## Entradas Necessárias\nOs seguintes parâmetros devem ser fornecidos no corpo da requisição:\n* **tamanho:** Informe o tamanho total do arquivo que será transferido.\n* **unidadeTamanho:** Selecione a unidade de medida correspondente ao tamanho do arquivo (por exemplo, MB, GB, TB).\n* **velocidade:** Digite a velocidade disponível para a transferência dos dados.\n* **unidadeVelocidade:** Selecione a unidade de medida da velocidade de transferência (por exemplo, Mbps, MB/s, Gbps).\n## Valores Válidos para o Campo `unidadeTamanho`\n- `B` – Bytes (B)\n- `kB` – Kilobytes (kB)\n- `MB` – Megabytes (MB)\n- `GB` – Gigabytes (GB)\n- `TB` – Terabytes (TB)\n- `PB` – Petabytes (PB)\n- `EB` – Exabytes (EB)\n- `ZB` – Zettabytes (ZB)\n- `YB` – Yottabytes (YB)\n- `bit` – Bits (bit)\n- `kbit` – Kilobits (kbit)\n- `Mbit` – Megabits (Mbit)\n- `Gbit` – Gigabits (Gbit)\n- `Tbit` – Terabits (Tbit)\n- `Pbit` – Petabits (Pbit)\n- `Ebit` – Exabits (Ebit)\n- `Zbit` – Zettabits (Zbit)\n- `Ybit` – Yottabits (Ybit)\n- `KiB` – Kibibytes (KiB)\n- `MiB` – Mebibytes (MiB)\n- `GiB` – Gibibytes (GiB)\n- `TiB` – Tebibytes (TiB)\n- `PiB` – Pebibytes (PiB)\n- `EiB` – Exbibytes (EiB)\n- `ZiB` – Zebibytes (ZiB)\n- `YiB` – Yobibytes (YiB)\n- `kibit` – Kibibits (kibit)\n- `Mibit` – Mebibits (Mibit)\n- `Gibit` – Gibibits (Gibit)\n- `Tibit` – Tebibits (Tibit)\n- `Pibit` – Pebibits (Pibit)\n- `Eibit` – Exbibits (Eibit)\n- `Zibit` – Zebibits (Zibit)\n- `Yibit` – Yobibits (Yibit)\n## Valores Válidos para o Campo `unidadeVelocidade`\n- `B` – Bytes por segundo (B/s)\n- `kB` – Kilobytes por segundo (kB/s)\n- `MB` – Megabytes por segundo (MB/s)\n- `GB` – Gigabytes por segundo (GB/s)\n- `TB` – Terabytes por segundo (TB/s)\n- `PB` – Petabytes por segundo (PB/s)\n- `EB` – Exabytes por segundo (EB/s)\n- `ZB` – Zettabytes por segundo (ZB/s)\n- `YB` – Yottabytes por segundo (YB/s)\n- `bit` – Bits por segundo (b/s)\n- `kbit` – Kilobits por segundo (kb/s)\n- `Mbit` – Megabits por segundo (Mb/s)\n- `Gbit` – Gigabits por segundo (Gb/s)\n- `Tbit` – Terabits por segundo (Tb/s)\n- `Pbit` – Petabits por segundo (Pb/s)\n- `Ebit` – Exabits por segundo (Eb/s)\n- `Zbit` – Zettabits por segundo (Zb/s)\n- `Ybit` – Yottabits por segundo (Yb/s)\n- `KiB` – Kibibytes por segundo (KiB/s)\n- `MiB` – Mebibytes por segundo (MiB/s)\n- `GiB` – Gibibytes por segundo (GiB/s)\n- `TiB` – Tebibytes por segundo (TiB/s)\n- `PiB` – Pebibytes por segundo (PiB/s)\n- `EiB` – Exbibytes por segundo (EiB/s)\n- `ZiB` – Zebibytes por segundo (ZiB/s)\n- `YiB` – Yobibytes por segundo (YiB/s)\n- `kibit` – Kibibits por segundo (kib/s)\n- `Mibit` – Mebibits por segundo (Mib/s)\n- `Gibit` – Gibibits por segundo (Gib/s)\n- `Tibit` – Tebibits por segundo (Tib/s)\n- `Pibit` – Pebibits por segundo (Pib/s)\n- `Eibit` – Exbibits por segundo (Eib/s)\n- `Zibit` – Zebibits por segundo (Zib/s)\n- `Yibit` – Yobibits por segundo (Yib/s)\n",
 					"parameters": [
 
 					],
@@ -1221,7 +1266,17 @@ module.exports = {
 							"content": { "application/json": { "schema": { "type": "object", "example": {
 								"error": false,
 								"status": 200,
-								"result": { "latencia_ns": 10, "largura_banda_mbs": 25600, "largura_banda_gbs": 25.6 },
+								"result": {
+									"frequencia_efetiva": 3200,
+									"clock_real": 1600,
+									"cas_latency": 16,
+									"canais": 2,
+									"largura_bus": 64,
+									"largura_banda_mbs": 51200,
+									"largura_banda_gbs": 51.2,
+									"tempo_ciclo_ns": 0.625,
+									"latencia_ns": 10
+								},
 								"message": "Cálculo de RAM realizado com sucesso."
 							}}}}
 						}
@@ -1243,8 +1298,38 @@ module.exports = {
 							"content": { "application/json": { "schema": { "type": "object", "example": {
 								"error": false,
 								"status": 200,
-								"result": { "nivel_raid": "RAID 5", "capacidade_util": 12000, "eficiencia": "75.0%" },
+								"result": {
+									"nivel_raid": "RAID 5",
+									"quantidade_discos": 4,
+									"tamanho_por_disco": 4000,
+									"capacidade_util": 12000,
+									"protecao_dados": 4000,
+									"espaco_nao_utilizado": 0,
+									"eficiencia": "75.0%"
+								},
 								"message": "Cálculo de RAID realizado com sucesso."
+							}}}}
+						}
+					}
+				}
+			},
+
+			"/api/CalculadoraMassaMagra": {
+				"post": {
+					"tags": ["Calculadora de Massa Magra"],
+					"summary": "Calcula Percentual de Gordura e Massa Magra",
+					"requestBody": {
+						"required": true,
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CalculadoraMassaMagraRequest" } } }
+					},
+					"responses": {
+						"200": {
+							"description": "Sucesso",
+							"content": { "application/json": { "schema": { "type": "object", "example": {
+								"error": false,
+								"status": 200,
+								"result": { "porcentagem_gordura_marinha": 20.5, "classificacao": "Média", "massa_gorda_kg": 17.4, "massa_magra_kg": 67.6 },
+								"message": "Cálculo de composição corporal realizado com sucesso."
 							}}}}
 						}
 					}
@@ -1265,8 +1350,31 @@ module.exports = {
 							"content": { "application/json": { "schema": { "type": "object", "example": {
 								"error": false,
 								"status": 200,
-								"result": { "tmb_basal": 1850, "gasto_calorico_total": 2868, "nivel_atividade": "moderado" },
+								"result": { "tmb": 1850, "tdee_manutencao": 2868, "perda_peso": 2418, "ganho_peso": 3318, "formula_usada": "harris-benedict" },
 								"message": "Cálculo de TMB realizado com sucesso."
+							}}}}
+						}
+					}
+				}
+			},
+
+			"/api/CalculadoraEletrica": {
+				"post": {
+					"tags": ["Calculadora Elétrica"],
+					"summary": "Realiza diversos cálculos elétricos (Lei de Ohm, Potência, Consumo)",
+					"requestBody": {
+						"required": true,
+						"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CalculadoraEletricaRequest" } } }
+					},
+					"responses": {
+						"200": {
+							"description": "Sucesso",
+							"content": { "application/json": { "schema": { "type": "object", "example": {
+								"error": false,
+								"status": 200,
+								"result": 220,
+								"unidade": "Volts (V)",
+								"message": "Cálculo realizado com sucesso."
 							}}}}
 						}
 					}

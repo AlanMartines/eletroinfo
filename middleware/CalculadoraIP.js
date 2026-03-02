@@ -1,100 +1,131 @@
-const config = require('../config.global.js');
-const Network = require('../function/network.js');
+const IP = require('../function/ip');
 
+function calculateIPInfo(ipAddr, maskInput) {
+    if (!ipAddr || !maskInput) throw new Error("IP e Máscara são obrigatórios.");
 
-// Determina se o IP é público ou privado
-function calculateIPType(ipAddress) {
-	const ipParts = ipAddress.split('.').map(part => parseInt(part, 10)); // Converte para array de inteiros
-	const privateRanges = [
-			['10.0.0.0', '10.255.255.255'],
-			['172.16.0.0', '172.31.255.255'],
-			['192.168.0.0', '192.168.255.255']
-	];
+    let ip;
+    try {
+        ip = new IP(ipAddr);
+    } catch (e) {
+        throw new Error("Endereço IP inválido.");
+    }
 
-	for (const [start, end] of privateRanges) {
-			const startIP = start.split('.').map(part => parseInt(part, 10));
-			const endIP = end.split('.').map(part => parseInt(part, 10));
-			const inRange = ipParts.every((part, index) => part >= startIP[index] && part <= endIP[index]);
-			if (inRange) {
-					return 'Private';
-			}
-	}
-	return 'Public';
+    if (ip.version === 4) {
+        return calculateIPv4(ip, maskInput);
+    } else {
+        return calculateIPv6(ip, maskInput);
+    }
 }
 
-/*
- * Calcula informações detalhadas sobre um IP e sua rede a partir de uma entrada de dados.
- */
-function calculateIPInfo(ipAddress, subnetMask) {
+function calculateIPv4(ipObj, maskInput) {
+    let cidr;
+    let maskInt;
 
-	const prefix = parseInt(subnetMask.replace('/', ''), 10); // Remove '/' da máscara
-	const network = new Network(ipAddress, prefix);
+    // Determina o CIDR (aceita "/24" ou "255.255.255.0")
+    if (maskInput.toString().startsWith('/')) {
+        cidr = parseInt(maskInput.replace('/', ''), 10);
+        if (isNaN(cidr) || cidr < 0 || cidr > 32) throw new Error("Prefixo CIDR inválido.");
+    } else {
+        try {
+            const maskObj = new IP(maskInput);
+            if (maskObj.version !== 4) throw new Error("Máscara inválida.");
+            const tempMaskInt = maskObj.toInteger();
+            // Conta os bits '1' para achar o CIDR
+            cidr = tempMaskInt.toString(2).split('1').length - 1;
+        } catch (e) {
+            throw new Error("Máscara de sub-rede inválida.");
+        }
+    }
 
+    // Calcula Máscara Inteira a partir do CIDR
+    const maxVal = (BigInt(2) ** BigInt(32));
+    maskInt = maxVal - (BigInt(2) ** BigInt(32 - cidr));
 
-	if (network.version === 4) {
-		const wildcardMask = IPv4Wildcard(network.getMask());
-		let ipType = calculateIPType(network.address);
-		return {
-			ipAddress: ipAddress,
-			networkAddress: network.getNetwork(),
-			usableIPRange: `${network.hostFirst()} - ${network.hostLast()}`,
-			broadcastAddress: network.getBroadcast(),
-			totalHosts: parseInt(network.networkSize().toString()).toLocaleString(config.LOCALE),
-			usableHosts: (parseInt(network.networkSize().toString()) - 2).toLocaleString(config.LOCALE),
-			subnetMask: network.getMask(),
-			wildcardMask: wildcardMask,
-			binarySubnetMask: subnetMaskToBinary(network.getMask()),
-			ipClass: getIPv4Class(network.address),
-			cidrNotation: subnetMask,
-			ipType: network.printInfo(),
-			shortIp: `${ipAddress}${subnetMask}`
-		};
-	} else {
-		return {
-			ipAddress: ipAddress,
-			ipAddressFull: network.toDottedNotation(network.toInteger()),
-			networkAddress: network.toCompressed(network.getNetwork(), network.version),
-			usableIPRange: `${network.toDottedNotation(network.networkToInteger())} - ${network.toDottedNotation(network.broadcastToLong())}`,
-			totalHosts: parseInt(network.networkSize().toString()).toLocaleString(config.LOCALE),
-			cidrNotation: subnetMask,
-			shortIp: `${ipAddress}${subnetMask}`
-	};
-	}
+    const ipInt = ipObj.toInteger();
+    const networkInt = ipInt & maskInt;
+    const wildcardInt = (BigInt(2) ** BigInt(32)) - BigInt(1) - maskInt;
+    const broadcastInt = networkInt | wildcardInt;
+
+    const usableStartInt = networkInt + 1n;
+    const usableEndInt = broadcastInt - 1n;
+
+    const totalHosts = BigInt(2) ** BigInt(32 - cidr);
+    const usableHosts = (cidr >= 31) ? 0n : totalHosts - 2n;
+
+    // Formatação
+    const networkAddress = ipObj.toDottedNotation(networkInt);
+    const broadcastAddress = ipObj.toDottedNotation(broadcastInt);
+    const usableStart = ipObj.toDottedNotation(usableStartInt);
+    const usableEnd = ipObj.toDottedNotation(usableEndInt);
+    const subnetMaskStr = ipObj.toDottedNotation(maskInt);
+    const wildcardMaskStr = ipObj.toDottedNotation(wildcardInt);
+
+    // Máscara Binária
+    let binaryMask = maskInt.toString(2).padStart(32, '0');
+    binaryMask = binaryMask.match(/.{1,8}/g).join('.');
+
+    // Classe e Tipo
+    const parts = ipObj.address.split('.').map(Number);
+    const first = parts[0];
+    let ipClass = 'E';
+    if (first >= 0 && first <= 127) ipClass = 'A';
+    else if (first >= 128 && first <= 191) ipClass = 'B';
+    else if (first >= 192 && first <= 223) ipClass = 'C';
+    else if (first >= 224 && first <= 239) ipClass = 'D';
+
+    let ipType = "Public";
+    if (first === 10) ipType = "Private";
+    else if (first === 172 && parts[1] >= 16 && parts[1] <= 31) ipType = "Private";
+    else if (first === 192 && parts[1] === 168) ipType = "Private";
+    else if (first === 127) ipType = "Loopback";
+    else if (first >= 224 && first <= 239) ipType = "Multicast";
+
+    return {
+        ipAddress: ipObj.address,
+        networkAddress: networkAddress,
+        usableIPRange: `${usableStart} - ${usableEnd}`,
+        broadcastAddress: broadcastAddress,
+        totalHosts: totalHosts.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+        usableHosts: usableHosts.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+        subnetMask: subnetMaskStr,
+        wildcardMask: wildcardMaskStr,
+        binarySubnetMask: binaryMask,
+        ipClass: ipClass,
+        cidrNotation: `/${cidr}`,
+        ipType: ipType,
+        shortIp: `${ipObj.address}/${cidr}`
+    };
 }
 
-/*
- * Converte uma máscara de sub-rede em formato decimal para binário.
- */
-function subnetMaskToBinary(subnetMask) {
-	return subnetMask
-		.split('.')
-		.map(octet => parseInt(octet, 10).toString(2).padStart(8, '0'))
-		.join('.');
+function calculateIPv6(ipObj, maskInput) {
+    let cidr = parseInt(maskInput.toString().replace('/', ''), 10);
+
+    if (isNaN(cidr) || cidr < 0 || cidr > 128) throw new Error("Prefixo CIDR IPv6 inválido.");
+
+    const ipInt = ipObj.toInteger();
+    
+    // Máscara 128 bits
+    const maxVal = (BigInt(2) ** BigInt(128));
+    const maskInt = maxVal - (BigInt(2) ** BigInt(128 - cidr));
+
+    const networkInt = ipInt & maskInt;
+    const wildcardInt = (BigInt(2) ** BigInt(128)) - BigInt(1) - maskInt;
+    const lastInt = networkInt | wildcardInt;
+
+    const totalHosts = BigInt(2) ** BigInt(128 - cidr);
+    const networkAddress = ipObj.toDottedNotation(networkInt);
+    const lastAddress = ipObj.toDottedNotation(lastInt);
+    const ipAddressFull = ipObj.toDottedNotation(ipInt);
+
+    return {
+        ipAddress: ipObj.address,
+        ipAddressFull: ipAddressFull,
+        networkAddress: networkAddress,
+        usableIPRange: `${networkAddress} - ${lastAddress}`,
+        totalHosts: totalHosts.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+        cidrNotation: `/${cidr}`,
+        shortIp: `${ipObj.address}/${cidr}`
+    };
 }
 
-/*
- * Determina a máscara curinga (wildcard) a partir da máscara de sub-rede.
- */
-function IPv4Wildcard(subnetMask) {
-	return subnetMask
-		.split('.')
-		.map(octet => 255 - parseInt(octet, 10))
-		.join('.');
-}
-
-/*
- * Determina a classe de um endereço IPv4. A classe do IP ("A", "B", "C", "D" ou "E")
- */
-function getIPv4Class(ipAddress) {
-	const firstOctet = parseInt(ipAddress.split('.')[0], 10);
-	if (firstOctet >= 1 && firstOctet <= 126) return 'A';
-	if (firstOctet >= 128 && firstOctet <= 191) return 'B';
-	if (firstOctet >= 192 && firstOctet <= 223) return 'C';
-	if (firstOctet >= 224 && firstOctet <= 239) return 'D';
-	return 'E';
-}
-
-// Exportando as funções
-module.exports = {
-	calculateIPInfo
-};
+module.exports = { calculateIPInfo };

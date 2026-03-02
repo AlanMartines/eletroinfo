@@ -6,11 +6,14 @@ const dns = require('dns/promises');
  * @param {string} host - O endereço IP ou hostname do servidor.
  * @param {number} port - A porta a ser testada.
  * @param {number} timeout - Tempo limite em milissegundos para a conexão (default: 2000ms).
+ * @param {string} [ip] - Endereço IP pré-resolvido (opcional).
  * @returns {Promise<object>} - Objeto com os detalhes do teste.
  */
-async function testPort(host, port, timeout = 2000) {
+async function testPort(host, port, timeout = 2000, ip = null) {
 	const start = Date.now(); // Marca o início do teste.
 	const socket = new net.Socket();
+
+	const targetIp = ip || await resolveIp(host);
 
 	let status = 'fechada'; // Valor padrão.
 	return new Promise((resolve) => {
@@ -39,19 +42,20 @@ async function testPort(host, port, timeout = 2000) {
 		});
 
 		// Evento ao fechar o socket, resolvendo o status.
-		socket.on('close', async () => {
+		socket.on('close', () => {
 			const end = Date.now(); // Marca o fim do teste.
 			resolve({
 				host,
-				ip: await resolveIp(host),
+				ip: targetIp,
 				port,
 				status,
 				responseTime: `${end - start}ms`,
 			});
 		});
 
-		// Tenta conectar à porta e host.
-		socket.connect(port, host);
+		// Tenta conectar usando o IP resolvido para evitar novo lookup, ou host se falhar
+		const connectionTarget = (targetIp && targetIp !== 'desconhecido') ? targetIp : host;
+		socket.connect(port, connectionTarget);
 	});
 }
 
@@ -80,24 +84,17 @@ async function testMultiplePorts(host, ports, timeout) {
 	if (typeof timeout !== 'number' || isNaN(timeout) || timeout <= 0) {
 		timeout = 2000; // Valor padrão.
 	}
-	const results = [];
-	for (const port of ports) {
-		try {
-			const result = await testPort(host, port, timeout);
-			results.push(result);
-		} catch (error) {
-			results.push({
-				host,
-				ip: 'desconhecido',
-				port,
-				status: 'erro',
-				errorMessage: error.message,
-			});
-		}
-	}
+
+	// Resolve o IP uma única vez
+	const ip = await resolveIp(host);
+
+	// Executa todos os testes em paralelo
+	const promises = ports.map(port => testPort(host, port, timeout, ip));
+	const results = await Promise.all(promises);
+
 	return {
 		host,
-		ip: await resolveIp(host),
+		ip,
 		testedPorts: ports.length,
 		results,
 	};

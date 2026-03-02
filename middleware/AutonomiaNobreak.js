@@ -1,121 +1,120 @@
-// Função para calcular a tensão de corte
-function calcularTensaoCorte(tipoBateriaRaw, quantidade, tensaoTotalBanco) {
-	// Normaliza a string para evitar erros (ex: "Ion Litio" vira "ion_litio")
-	// Se o input já vier correto (com underscore), isso não quebra.
-	const tipoNormalizado = tipoBateriaRaw.toLowerCase().replace(/\s+/g, '_');
+/**
+ * Calcula a tensão de corte para uma única bateria.
+ * @param {string} tipoBateria
+ * @param {number} tensaoIndividual
+ * @returns {number}
+ */
+function calcularTensaoCorte(tipoBateria, tensaoIndividual) {
+    const batterySpecs = {
+        'chumbo_acido': { nominal: 2.1, corte: 1.75 },
+        'ion_litio': { nominal: 3.7, corte: 3.0 },
+        'niquel_cadmio': { nominal: 1.2, corte: 1.0 },
+        'niquel_hidreto_metalico': { nominal: 1.2, corte: 1.0 },
+        'lithium_ferro_fosfato': { nominal: 3.2, corte: 2.5 },
+        'lithium_polimero': { nominal: 3.7, corte: 3.0 },
+        'zinco_ar': { nominal: 1.65, corte: 1.0 },
+        'niquel_ferro': { nominal: 1.2, corte: 1.0 },
+        'sodio_enxofre': { nominal: 2.08, corte: 1.5 },
+        'zinco_brometo': { nominal: 1.8, corte: 1.0 },
+        'magnesio': { nominal: 1.1, corte: 0.9 },
+        'chumbo_carbono': { nominal: 2.1, corte: 1.75 },
+        'fluxo_redox': { nominal: 1.5, corte: 1.0 },
+        'aluminio_ar': { nominal: 2.7, corte: 0.0 },
+        'lithium_enxofre': { nominal: 2.1, corte: 1.7 }
+    };
 
-	let dadosCelula = { corte: 0, nominal: 0 };
+    if (batterySpecs[tipoBateria]) {
+        const specs = batterySpecs[tipoBateria];
+        const tensaoPorCelula = specs.nominal;
+        const tensaoCortePorCelula = specs.corte;
 
-	switch (tipoNormalizado) {
-			case 'chumbo_acido':
-			case 'chumbo_carbono': // Comportamento similar
-					dadosCelula = { corte: 1.75, nominal: 2.1 }; // 12V = 6 células
-					break;
-			case 'ion_litio':
-			case 'lithium_polimero':
-					dadosCelula = { corte: 3.0, nominal: 3.7 };
-					break;
-			case 'lithium_ferro_fosfato': // LiFePO4
-					dadosCelula = { corte: 2.5, nominal: 3.2 };
-					break;
-			case 'niquel_cadmio':
-			case 'niquel_hidreto_metalico':
-					dadosCelula = { corte: 1.0, nominal: 1.2 };
-					break;
-			case 'aluminio_ar':
-					dadosCelula = { corte: 1.2, nominal: 2.7 }; // Ajustado corte para valor realista
-					break;
-			default:
-					// Fallback genérico: corta em 85% da tensão total se não reconhecer o tipo
-					return Number((0.85 * tensaoTotalBanco).toFixed(2));
-	}
+        if (tensaoPorCelula === 0) return 0.0;
 
-	// Estima o número de células em série baseada na tensão total do banco informada
-	// Ex: 12V Chumbo / 2.1 = 5.71 -> Arredonda para 6 células
-	const numeroCelulasSerie = Math.ceil(tensaoTotalBanco / dadosCelula.nominal);
-	
-	// Tensão de corte total = (Células em Série * Tensão Corte Célula) * Quantidade de Bancos (se série)
-	// OBS: Assume-se que 'quantidade' refere-se a bancos em paralelo ou que a tensão total já considera a série.
-	// O cálculo original multiplicava 'quantidade * tensaocorteBateria'. Isso sugere que 'quantidade' aumenta a tensão (série).
-	// Se 'quantidade' for bancos paralelos, a tensão de corte não muda, apenas a capacidade.
-	// Mantendo a lógica original de que Quantidade afeta a tensão final (Série de monoblocos):
-	
-	const tensaoCorteFinal = numeroCelulasSerie * dadosCelula.corte * quantidade;
-
-	return Number(tensaoCorteFinal.toFixed(2));
+        const numeroCelulas = tensaoIndividual / tensaoPorCelula;
+        const numCel = Math.ceil(numeroCelulas);
+        return numCel * tensaoCortePorCelula;
+    } else {
+        return 0.85 * tensaoIndividual;
+    }
 }
 
-function calcularAutonomia(carga, tensao, capacidade, quantidade, tipoBateria) {
-	const EFICIENCIA_INVERSOR = 0.85; 
-	
-	// Corrente Total necessária do banco de baterias (I = P / V)
-	// Tensão Total = Tensão da Bateria * Quantidade (assumindo série conforme lógica original)
-	const tensaoTotal = tensao * quantidade;
-	const correnteDescarga = carga / (tensaoTotal * EFICIENCIA_INVERSOR);
-	
-	// Capacidade Total do Banco (Ah)
-	// Se 'quantidade' for série, a capacidade em Ah não muda, mantém a da unidade.
-	// O código original fazia: nnom = carga / ... / (capacidade * quantidade).
-	// Isso sugere que a capacidade aumentava com a quantidade? 
-	// VAMOS ASSUMIR O CENÁRIO PADRÃO DE NOBREAK:
-	// Tensão = Tensão do barramento DC. Capacidade = Ah das baterias.
-	
-	// C-Rate (Taxa de descarga) = Corrente / Capacidade
-	const cRate = correnteDescarga / capacidade; 
+/**
+ * Calcula a autonomia do nobreak.
+ * @param {number} carga - Carga em Watts
+ * @param {number} tensaoIndividual - Tensão de uma bateria
+ * @param {number} capacidadeIndividual - Capacidade de uma bateria (Ah)
+ * @param {number} quantidade - Quantidade de baterias
+ * @param {string} tipoBateria - Tipo da bateria
+ * @param {string} tipoBanco - 'serie' ou 'paralelo'
+ */
+function calcularAutonomia(carga, tensaoIndividual, capacidadeIndividual, quantidade, tipoBateria, tipoBanco) {
+    const eficienciaInversor = 0.85;
+    let tensaoTotal, capacidadeTotalAh;
 
-	// --- FATOR DE PEUKERT / UTILIZAÇÃO ---
-	// A fórmula original (-0.184 * log + 0.496) é muito agressiva e específica para Chumbo-Ácido.
-	// Para Lítio, o fator de utilização é próximo de 1 (ou 100%) até taxas altas.
-	
-	let fatorUtilizacao = 1.0;
-	
-	const tipo = tipoBateria.toLowerCase();
-	
-	if (tipo.includes('chumbo') || tipo.includes('plomo')) {
-			// Fórmula original (Aproximação de Peukert para Chumbo)
-			// Adicionei Math.max para evitar nnom zero ou negativo log
-			const nnomSeguro = cRate <= 0 ? 0.001 : cRate;
-			fatorUtilizacao = -0.184 * Math.log(nnomSeguro) + 0.496;
-			
-			// Limites físicos: a bateria não entrega mais que 100% nem menos que 0% (teoricamente)
-			if (fatorUtilizacao > 1) fatorUtilizacao = 1;
-			if (fatorUtilizacao < 0.1) fatorUtilizacao = 0.1;
-	} else {
-			// Para Lítio e outros, a curva é muito melhor. 
-			// Simplificação: Perda de 5% a cada 1C de taxa.
-			fatorUtilizacao = 1 - (cRate * 0.05);
-			if (fatorUtilizacao < 0.8) fatorUtilizacao = 0.8; // Lítio raramente entrega menos que isso
-	}
+    // Lógica do Banco (Switch)
+    if (tipoBanco === 'serie') {
+        // SÉRIE: Tensão soma, Ah permanece o mesmo
+        tensaoTotal = tensaoIndividual * quantidade;
+        capacidadeTotalAh = capacidadeIndividual;
+    } else {
+        // PARALELO (padrão): Tensão permanece, Ah soma
+        tensaoTotal = tensaoIndividual;
+        capacidadeTotalAh = capacidadeIndividual * quantidade;
+    }
 
-	// Cálculo do tempo
-	// Tempo (h) = (Capacidade Ah * Fator) / Corrente A
-	const horasDecimais = (capacidade * fatorUtilizacao) / correnteDescarga;
-	
-	const minutosTotais = horasDecimais * 60;
+    if (tensaoTotal <= 0 || eficienciaInversor <= 0 || capacidadeTotalAh <= 0) {
+        return {
+            autonomia: "00:00:00",
+            tensaocorte: 0,
+            mensagem: "Parâmetros inválidos para cálculo."
+        };
+    }
 
-	const horas = Math.floor(minutosTotais / 60);
-	const minutos = Math.floor(minutosTotais % 60);
-	const segundos = Math.round((minutosTotais % 1) * 60);
+    // Corrente de descarga (Amperes) drenada do banco
+    const corrente = carga / (tensaoTotal * eficienciaInversor);
 
-	// Formatação
-	const pad = (num) => String(num).padStart(2, '0');
-	
-	// Se a carga for maior que a capacidade suportada (tempo negativo ou infinito)
-	if (!isFinite(horas) || horas < 0) {
-			return {
-					tensaocorte: 0,
-					autonomia: "00:00:00",
-					aviso: "Carga excessiva para o banco de baterias."
-			};
-	}
+    if (corrente <= 0) {
+        return {
+            autonomia: "??:??:??",
+            tensaocorte: 0,
+            mensagem: "Corrente calculada inválida."
+        };
+    }
 
-	const tensaoCorte = calcularTensaoCorte(tipoBateria, quantidade, tensao);
+    // Fator de descarga (C-rate)
+    const nnom = corrente / capacidadeTotalAh;
+    
+    // Fator de capacidade útil (Aprox. Peukert)
+    let ut = -0.184 * Math.log(nnom) + 0.496;
 
-	return {
-			tensaocorte: tensaoCorte,
-			autonomia: `${pad(horas)}:${pad(minutos)}:${pad(segundos)}`
-	};
+    if (ut <= 0) ut = 0.01;
+    if (ut > 1) ut = 1.0;
+
+    // Carga útil (Ah real) do banco
+    const cargautil = ut * capacidadeTotalAh;
+    
+    // Tempo total em minutos
+    const min = (cargautil / corrente) * 60;
+
+    const horas = Math.floor(min / 60);
+    const minutosFracionarios = (min / 60) - horas;
+    const minutos = Math.floor(minutosFracionarios * 60);
+    const segundosFracionarios = (minutosFracionarios * 60) - minutos;
+    const seg = Math.round(segundosFracionarios * 60);
+
+    const horasF = String(horas).padStart(2, '0');
+    const minutosF = String(minutos).padStart(2, '0');
+    const segF = String(seg).padStart(2, '0');
+
+    // Cálculo da Tensão de Corte Total
+    const tensaoCorteIndividual = calcularTensaoCorte(tipoBateria, tensaoIndividual);
+    const tensaoCorteTotal = (tipoBanco === 'serie') ? (tensaoCorteIndividual * quantidade) : tensaoCorteIndividual;
+
+    return {
+        autonomia: `${horasF}:${minutosF}:${segF}`,
+        tensaocorte: parseFloat(tensaoCorteTotal.toFixed(2)),
+        mensagem: "Cálculo realizado com sucesso."
+    };
 }
 
-// Exportando as funções
-module.exports = { calcularTensaoCorte, calcularAutonomia };
+module.exports = { calcularAutonomia };

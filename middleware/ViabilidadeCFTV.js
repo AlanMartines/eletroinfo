@@ -22,60 +22,52 @@ function ViabilidadeCFTV(indiceBitola, tensaoFonte, tensaoNominalCam, correnteNo
 			throw new Error(`Bitola do cabo inválida (Índice: ${indiceBitola}). Deve estar entre 0 e 7.`);
 	}
 	
-	const resistenciaPorMetro = cabo.r;
+	const resistencia = cabo.r;
 
-	// 2. Definições do Sistema
-	// Câmeras geralmente toleram +-10%. O cálculo original usava 0.9 (90%).
-	const tensaoMinimaAceitavel = tensaoNominalCam * 0.9; 
+	// Lógica portada do PHP (calcviabilidadecftv.php)
 
-	// Resistência do Cabo (Ida e Volta = distancia * 2)
-	const resistenciaTotalFio = distancia * 2 * resistenciaPorMetro;
+	// Calculando a tensão mínima da câmera (90%)
+	const vcmim = tensaoNominalCam * 0.9;
 
-	// Resistência da Câmera (Lei de Ohm: R = V / I)
-	// Assumindo carga resistiva baseada nos dados nominais
-	const resistenciaCamera = tensaoNominalCam / correnteNominalCam;
+	// Calculando a resistência máxima permitida para a instalação
+	// $rmax = (($vfonte / $vcmim) - 1) * ($vcamera / $icamera) / 2;
+	let rmax = ((tensaoFonte / vcmim) - 1) * (tensaoNominalCam / correnteNominalCam) / 2;
 
-	// 3. Cálculos do Circuito (Divisor de Tensão)
-	// Circuito Série: Fonte -> Fio -> Câmera -> Fio -> Terra
-	// Resistência Total do Circuito = R_fio + R_camera
-	const resistenciaCircuito = resistenciaTotalFio + resistenciaCamera;
+	// Calculando a resistência total do cabo com base na distância
+	// $rtotal = ($distanciau * 2 * $resistencia);
+	let rtotal = distancia * 2 * resistencia;
 
-	// Corrente Real que vai circular (I = V_fonte / R_total_circuito)
-	const correnteReal = tensaoFonte / resistenciaCircuito;
+	// Calculando a distância máxima permitida para a instalação
+	// $distanciamax = ($rmax / $resistencia);
+	let distanciamax = rmax / resistencia;
 
-	// Tensão que chega na Câmera (V = I_real * R_camera)
-	const tensaoNaCamera = correnteReal * resistenciaCamera;
+	// Calculando a corrente de saída
+	// $isaida = $vfonte / (($rtotal / 2) * 2 + $vcamera / $icamera);
+	let isaida = tensaoFonte / (rtotal + (tensaoNominalCam / correnteNominalCam));
 
-	// Queda de tensão no fio
-	const quedaTensao = tensaoFonte - tensaoNaCamera;
+	// Calculando a tensão de saída
+	// $vsaida = $vfonte - ($isaida * ($rtotal / 2) * 2);
+	let vsaida = tensaoFonte - (isaida * rtotal);
 
-	// 4. Análise de Viabilidade
-	// É viável se a tensão que chega for maior ou igual à mínima necessária
-	const viavel = tensaoNaCamera >= tensaoMinimaAceitavel;
-
-	// 5. Cálculo da Distância Máxima Teórica
-	// Para achar a dist máx, assumimos V_camera = V_minima.
-	// I_limite = V_min / R_camera
-	// V_drop_max = V_fonte - V_min
-	// R_fio_max = V_drop_max / I_limite
-	// Distancia_max = R_fio_max / (2 * resistenciaPorMetro)
+	// Formatando os valores para apresentação (conforme PHP)
+	distanciamax = Math.floor(distanciamax);
 	
-	const correnteNoLimite = tensaoMinimaAceitavel / resistenciaCamera;
-	const quedaMaximaPermitida = tensaoFonte - tensaoMinimaAceitavel;
-	const resistenciaFioMaxima = quedaMaximaPermitida / correnteNoLimite;
-	
-	// Proteção contra divisão por zero se resistenciaPorMetro for 0 (idealmente impossível)
-	const distanciaMaxima = resistenciaFioMaxima / (2 * resistenciaPorMetro);
+	// PHP usa intval, que trunca o valor
+	const rtotalInt = Math.trunc(rtotal);
+	const rmaxInt = Math.trunc(rmax);
+
+	// Determinando a viabilidade
+	// $res = $rmax < ($rtotal / 2) ? ...
+	// Se rmax for menor que a resistência de uma perna do fio, é inviável.
+	const viavel = !(rmaxInt < (rtotalInt / 2));
 
 	return {
-			cabo_descricao: cabo.desc, // Útil para o frontend confirmar o que usou
-			resistencia_metro: resistenciaPorMetro.toFixed(6), // Aumentei precisão visual
-			resistencia_total_fio: Number(resistenciaTotalFio.toFixed(2)),
-			tensao_chegada_camera: Number(tensaoNaCamera.toFixed(2)),
-			queda_tensao: Number(quedaTensao.toFixed(2)),
-			distancia_maxima_teorica: Number(distanciaMaxima.toFixed(2)),
-			status: viavel ? "VIÁVEL" : "INVIÁVEL",
-			viavel: viavel
+		resistencia_metro: resistencia,
+		resistencia_total: rtotalInt,
+		tensao_fornecida: vsaida.toFixed(1),
+		corrente_fornecida: isaida.toFixed(2),
+		distancia_maxima: distanciamax,
+		viavel: viavel
 	};
 }
 
