@@ -81,3 +81,5 @@ function calcularRAID(capacidadeDisco, qtdDiscos, nivelRaid) {
         eficiencia: eficiencia.toFixed(1) + '%'
     };
 }
+
+module.exports = { calcularRAID };
